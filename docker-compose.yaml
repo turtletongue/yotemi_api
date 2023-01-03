@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./
+    container_name: meetlane-api-dev
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "3030:3030"
+      - "9229:9229"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+  db:
+    image: postgres:15.1-alpine3.17
+    container_name: meetlane-db-dev
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7.0.7-alpine3.17
+    container_name: meetlane-redis-dev
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    entrypoint: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:meetlane-redis-dev:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+
+volumes:
+  db_data:
+    name: meetlane-db-data
+  redis_data:
+    name: meetlane-redis-data

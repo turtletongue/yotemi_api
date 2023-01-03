@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_CONNECTION")
+}
+
+model Admin {
+  id             String             @id @default(uuid())
+  username       String             @unique
+  password       String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@map("admins")
+}
+
+model User {
+  id             String             @id @default(uuid())
+  accountAddress String             @unique
+  authId         String
+  fullName       String
+  biography      String             @default("")
+  isVerified     Boolean            @default(false)
+  topics         Topic[]
+  feedbacks      Review[]           @relation(name: "reviewOfUser")
+  reviews        Review[]           @relation(name: "reviewFromUser")
+  followers      User[]             @relation(name: "subscriptions")
+  following      User[]             @relation(name: "subscriptions")
+  interviews     Interview[]
+  messages       InterviewMessage[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@map("users")
+}
+
+model Topic {
+  id             String             @id @default(uuid())
+  name           String
+  colorHex       String             @db.VarChar(6)
+  users          User[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@map("topics")
+}
+
+model Review {
+  id             String             @id @default(uuid())
+  points         Int
+  comment        String
+  user           User               @relation(fields: [userId], references: [id], name: "reviewOfUser", onDelete: Cascade)
+  userId         String
+  reviewer       User               @relation(fields: [reviewerId], references: [id], name: "reviewFromUser", onDelete: Cascade)
+  reviewerId     String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model Interview {
+  id             String             @id @default(uuid())
+  price          Decimal            @db.Decimal(30, 18)
+  time           DateTime
+  status         InterviewStatus
+  creator        User               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId      String
+  messages       InterviewMessage[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+enum InterviewStatus {
+  published
+  paid
+  started
+  finished
+  canceled
+}
+
+model InterviewMessage {
+  id             String             @id @default(uuid())
+  content        String
+  author         User?              @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId       String?
+  interview      Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interviewId    String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
