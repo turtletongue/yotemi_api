@@ -20,8 +20,8 @@ export default class ChangeAdminPasswordCase {
       ...dto,
     });
 
-    const updatedAdmin = await this.adminsRepository.update(admin.getPlain());
-    const plain = updatedAdmin.getPlain();
+    const changedAdmin = await this.adminsRepository.update(admin.getPlain());
+    const plain = changedAdmin.getPlain();
 
     return {
       id: plain.id,

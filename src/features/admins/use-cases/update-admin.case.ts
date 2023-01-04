@@ -3,11 +3,14 @@ import { Injectable } from '@nestjs/common';
 import UpdateAdminDto from './dto/update-admin.dto';
 import AdminsRepository from '../admins.repository';
 import { UsernameIsTakenException } from '../exceptions';
-import { PlainAdmin } from '../entities';
+import { AdminFactory, PlainAdmin } from '../entities';
 
 @Injectable()
 export default class UpdateAdminCase {
-  constructor(private readonly adminsRepository: AdminsRepository) {}
+  constructor(
+    private readonly adminsRepository: AdminsRepository,
+    private readonly adminFactory: AdminFactory,
+  ) {}
 
   public async apply(
     dto: UpdateAdminDto,
@@ -22,8 +25,14 @@ export default class UpdateAdminCase {
       }
     }
 
-    const admin = await this.adminsRepository.update(dto);
-    const plain = admin.getPlain();
+    const existingProperties = await this.adminsRepository.findById(dto.id);
+    const admin = await this.adminFactory.build({
+      ...existingProperties.getPlain(),
+      ...dto,
+    });
+
+    const updatedAdmin = await this.adminsRepository.update(admin.getPlain());
+    const plain = updatedAdmin.getPlain();
 
     return {
       id: plain.id,
