@@ -40,6 +40,7 @@ export default class CheckUserAuthIdCase {
       biography: plain.biography,
       authId: plain.authId,
       isVerified: plain.isVerified,
+      topics: plain.topics,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

@@ -51,7 +51,7 @@ export default class AdminsController {
   }
 
   /**
-   * Update some of admin fields.
+   * Update some administrator's fields.
    */
   @Patch(':id')
   public async update(

@@ -1,4 +1,5 @@
 import { Id } from '@app/app.declarations';
+import { PlainTopic } from '@features/topics/entities';
 
 export default interface PlainUser {
   id: Id;
@@ -7,6 +8,7 @@ export default interface PlainUser {
   fullName: string;
   biography: string;
   isVerified: boolean;
+  topics: PlainTopic[];
   createdAt: Date;
   updatedAt: Date;
 }

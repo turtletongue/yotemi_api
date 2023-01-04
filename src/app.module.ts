@@ -6,6 +6,7 @@ import AdminsModule from '@features/admins';
 import PasswordChangingModule from '@features/password-changing';
 import AuthenticationModule from '@features/authentication';
 import UsersModule from '@features/users';
+import TopicsModule from '@features/topics';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import UsersModule from '@features/users';
     PasswordChangingModule,
     UsersModule,
     AuthenticationModule,
+    TopicsModule,
   ],
 })
 export class AppModule {}

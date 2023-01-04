@@ -1,4 +1,5 @@
 import { Id } from '@app/app.declarations';
+import BuildTopicDto from '@features/topics/entities/dto/build-topic.dto';
 
 export default class BuildUserDto {
   public id?: Id;
@@ -7,6 +8,7 @@ export default class BuildUserDto {
   public fullName: string;
   public biography?: string;
   public isVerified?: boolean;
+  public topics?: BuildTopicDto[];
   public createdAt?: Date;
   public updatedAt?: Date;
 }

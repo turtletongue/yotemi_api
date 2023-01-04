@@ -23,6 +23,7 @@ export default class DeleteUserCase {
       fullName: plain.fullName,
       biography: plain.biography,
       isVerified: plain.isVerified,
+      topics: plain.topics,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

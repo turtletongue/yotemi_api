@@ -1,5 +1,5 @@
 import { ApiHideProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import { Id } from '@app/app.declarations';
 import UserDto from './user.dto';
@@ -18,4 +18,11 @@ export default class PatchUserDto extends PartialType(
   @IsString()
   @IsOptional()
   public biography?: string;
+
+  /**
+   * Array of topics' identifiers to connect with user.
+   * @example ['39b6694a-8b50-44bf-907f-46d371801370']
+   */
+  @IsArray()
+  public topics?: Id[];
 }

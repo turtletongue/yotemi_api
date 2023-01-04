@@ -10,6 +10,6 @@ export default class PasswordsService {
   }
 
   public async compare(hash: string, password: string): Promise<boolean> {
-    return await bcrypt.compare(hash, password);
+    return await bcrypt.compare(password, hash);
   }
 }

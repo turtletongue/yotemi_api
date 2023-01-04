@@ -8,6 +8,18 @@ import { UserNotFoundException } from './exceptions';
 import BuildUserDto from './entities/dto/build-user.dto';
 import { PlainUser, UserEntity, UserFactory } from './entities';
 
+const includeTopicsOptions = {
+  include: {
+    labels: {
+      select: {
+        id: true,
+        value: true,
+        language: true,
+      },
+    },
+  },
+};
+
 @Injectable()
 export default class UsersRepository {
   constructor(
@@ -22,6 +34,9 @@ export default class UsersRepository {
         where: {
           id,
         },
+        include: {
+          topics: includeTopicsOptions,
+        },
       })
       .catch(() => {
         throw new UserNotFoundException();
@@ -35,6 +50,9 @@ export default class UsersRepository {
       .findUniqueOrThrow({
         where: {
           accountAddress: address,
+        },
+        include: {
+          topics: includeTopicsOptions,
         },
       })
       .catch(() => {
@@ -63,7 +81,12 @@ export default class UsersRepository {
       this.prisma.user,
       page,
       limit,
-      options,
+      {
+        ...options,
+        include: {
+          topics: includeTopicsOptions,
+        },
+      },
     );
 
     return {
@@ -75,8 +98,17 @@ export default class UsersRepository {
   }
 
   public async create(user: PlainUser): Promise<UserEntity> {
+    const { topics, ...data } = user;
+
     const result = await this.prisma.user.create({
-      data: user,
+      data: {
+        ...data,
+        topics: {
+          connect: topics.map((topic) => ({
+            id: topic.id,
+          })),
+        },
+      },
     });
 
     return await this.userFactory.build(result);
@@ -87,11 +119,22 @@ export default class UsersRepository {
   ): Promise<UserEntity> {
     const existingUser = await this.findById(user.id);
 
+    const { topics, ...data } = user;
+
     const result = await this.prisma.user.update({
       where: {
         id: existingUser.getId(),
       },
-      data: user,
+      data: {
+        ...data,
+        topics: {
+          set: [],
+          connect: topics.map((topic) => ({ id: topic.id })),
+        },
+      },
+      include: {
+        topics: includeTopicsOptions,
+      },
     });
 
     return await this.userFactory.build(result);
@@ -103,6 +146,9 @@ export default class UsersRepository {
     const result = await this.prisma.user.delete({
       where: {
         id: existingUser.getId(),
+      },
+      include: {
+        topics: includeTopicsOptions,
       },
     });
 

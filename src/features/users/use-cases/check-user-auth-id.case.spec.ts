@@ -52,6 +52,7 @@ describe('The CheckUserAuthIdCase', () => {
           'Tom Land',
           '',
           false,
+          [],
           new Date(),
           new Date(),
         );
@@ -65,6 +66,7 @@ describe('The CheckUserAuthIdCase', () => {
             'Tom Land',
             '',
             false,
+            [],
             new Date(),
             new Date(),
           ),
@@ -103,6 +105,7 @@ describe('The CheckUserAuthIdCase', () => {
           'Tom Land',
           '',
           false,
+          [],
           new Date(),
           new Date(),
         );

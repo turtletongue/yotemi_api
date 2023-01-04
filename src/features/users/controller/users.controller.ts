@@ -51,7 +51,7 @@ export default class UsersController {
   }
 
   /**
-   * Update some of user fields.
+   * Update some user's fields.
    */
   @ApiBearerAuth()
   @UseGuards(AccessGuard)

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import TopicsRepository from '@features/topics/topics.repository';
 import AddUserDto from './dto/add-user.dto';
 import UsersRepository from '../users.repository';
 import { AddressIsTakenException } from '../exceptions';
@@ -10,10 +11,15 @@ export default class AddUserCase {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly userFactory: UserFactory,
+    private readonly topicsRepository: TopicsRepository,
   ) {}
 
   public async apply(dto: AddUserDto): Promise<PlainUser> {
-    const user = await this.userFactory.build(dto);
+    const topics = await this.topicsRepository.findByIds(dto.topics);
+    const user = await this.userFactory.build({
+      ...dto,
+      topics: topics.map((topic) => topic.getPlain()),
+    });
 
     const isAddressTaken = await this.usersRepository.isAccountAddressTaken(
       dto.accountAddress,
@@ -33,6 +39,7 @@ export default class AddUserCase {
       fullName: plain.fullName,
       biography: plain.biography,
       isVerified: plain.isVerified,
+      topics: plain.topics,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

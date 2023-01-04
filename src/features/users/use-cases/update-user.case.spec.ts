@@ -50,6 +50,7 @@ describe('The UpdateUserCase', () => {
         'Tom Land',
         '',
         false,
+        [],
         new Date(),
         new Date(),
       );

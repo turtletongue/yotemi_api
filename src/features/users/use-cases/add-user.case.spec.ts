@@ -52,6 +52,7 @@ describe('The AddUserCase', () => {
           'Tom Land',
           '',
           false,
+          [],
           new Date(),
           new Date(),
         );

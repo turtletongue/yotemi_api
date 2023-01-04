@@ -1,5 +1,6 @@
 import { Id } from '@app/app.declarations';
 import UserDto from './user.dto';
+import GetTopicDto from '@features/topics/controller/dto/get-topic.dto';
 
 export default class GetUserDto extends UserDto {
   /**
@@ -26,6 +27,11 @@ export default class GetUserDto extends UserDto {
    * @example false
    */
   public isVerified: boolean;
+
+  /**
+   * Array of user's content topics.
+   */
+  public topics: GetTopicDto[];
 
   /**
    * Date and time of user creation.

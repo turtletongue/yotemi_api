@@ -1,4 +1,5 @@
 import { Id } from '@app/app.declarations';
+import { TopicEntity } from '@features/topics/entities';
 import PlainUser from './interfaces/plain-user';
 
 export default class UserEntity {
@@ -11,6 +12,7 @@ export default class UserEntity {
     private readonly fullName: string,
     private readonly biography: string,
     private readonly isVerified: boolean,
+    private readonly topics: TopicEntity[],
     private readonly createdAt: Date,
     private readonly updatedAt: Date,
   ) {}
@@ -39,6 +41,10 @@ export default class UserEntity {
     return this.isVerified;
   }
 
+  public getTopics(): TopicEntity[] {
+    return this.topics;
+  }
+
   public getCreatedAt(): Date {
     return this.createdAt;
   }
@@ -55,6 +61,7 @@ export default class UserEntity {
       fullName: this.fullName,
       biography: this.biography,
       isVerified: this.isVerified,
+      topics: this.topics.map((topic) => topic.getPlain()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

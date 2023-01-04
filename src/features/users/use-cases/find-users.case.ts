@@ -40,6 +40,7 @@ export default class FindUsersCase {
           fullName: plain.fullName,
           biography: plain.biography,
           isVerified: plain.isVerified,
+          topics: plain.topics,
           createdAt: plain.createdAt,
           updatedAt: plain.updatedAt,
         };

@@ -27,7 +27,10 @@ export default class AdminsRepository {
         throw new AdminNotFoundException();
       });
 
-    return await this.adminFactory.build(admin);
+    return await this.adminFactory.build({
+      ...admin,
+      passwordHash: admin.password,
+    });
   }
 
   public async findByUsername(username: string): Promise<AdminEntity> {
@@ -41,7 +44,10 @@ export default class AdminsRepository {
         throw new AdminNotFoundException();
       });
 
-    return await this.adminFactory.build(admin);
+    return await this.adminFactory.build({
+      ...admin,
+      passwordHash: admin.password,
+    });
   }
 
   public async isUsernameTaken(username: string): Promise<boolean> {
@@ -70,7 +76,11 @@ export default class AdminsRepository {
       ...paginated,
       items: await Promise.all(
         paginated.items.map(
-          async (admin) => await this.adminFactory.build(admin),
+          async (admin) =>
+            await this.adminFactory.build({
+              ...admin,
+              passwordHash: admin.password,
+            }),
         ),
       ),
     };
@@ -81,7 +91,10 @@ export default class AdminsRepository {
       data: admin,
     });
 
-    return await this.adminFactory.build(result);
+    return await this.adminFactory.build({
+      ...result,
+      passwordHash: result.password,
+    });
   }
 
   public async update(
@@ -96,7 +109,10 @@ export default class AdminsRepository {
       data: admin,
     });
 
-    return await this.adminFactory.build(result);
+    return await this.adminFactory.build({
+      ...result,
+      passwordHash: result.password,
+    });
   }
 
   public async delete(id: Id): Promise<AdminEntity> {
@@ -108,6 +124,9 @@ export default class AdminsRepository {
       },
     });
 
-    return await this.adminFactory.build(result);
+    return await this.adminFactory.build({
+      ...result,
+      passwordHash: result.password,
+    });
   }
 }
