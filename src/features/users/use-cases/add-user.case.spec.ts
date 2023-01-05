@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
 import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { TopicFactory } from '@features/topics/entities';
+import TopicsRepository from '@features/topics/topics.repository';
 import AddUserCase from './add-user.case';
 import UsersRepository from '../users.repository';
 import { UserEntity, UserFactory } from '../entities';
@@ -24,12 +26,18 @@ describe('The AddUserCase', () => {
         UsersRepository,
         PasswordsService,
         IdentifiersService,
+        TopicFactory,
+        TopicsRepository,
       ],
     })
       .overrideProvider(UsersRepository)
       .useValue({
         isAccountAddressTaken,
         create,
+      })
+      .overrideProvider(TopicsRepository)
+      .useValue({
+        findByIds: () => Promise.resolve([]),
       })
       .overrideProvider(PasswordsService)
       .useValue(PasswordsServiceMock)
@@ -53,6 +61,7 @@ describe('The AddUserCase', () => {
           '',
           false,
           [],
+          0,
           new Date(),
           new Date(),
         );

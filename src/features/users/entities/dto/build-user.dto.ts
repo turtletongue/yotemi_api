@@ -9,6 +9,7 @@ export default class BuildUserDto {
   public biography?: string;
   public isVerified?: boolean;
   public topics?: BuildTopicDto[];
+  public followersCount?: number;
   public createdAt?: Date;
   public updatedAt?: Date;
 }

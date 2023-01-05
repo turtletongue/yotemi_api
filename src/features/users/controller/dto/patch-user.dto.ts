@@ -24,5 +24,6 @@ export default class PatchUserDto extends PartialType(
    * @example ['39b6694a-8b50-44bf-907f-46d371801370']
    */
   @IsArray()
-  public topics?: Id[];
+  @IsOptional()
+  public topics: Id[] = [];
 }

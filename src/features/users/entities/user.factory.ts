@@ -20,6 +20,7 @@ export default class UserFactory {
     fullName,
     biography = '',
     isVerified = false,
+    followersCount = 0,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildUserDto): Promise<UserEntity> {
@@ -35,6 +36,7 @@ export default class UserFactory {
       biography,
       isVerified,
       topicEntities,
+      followersCount,
       createdAt,
       updatedAt,
     );

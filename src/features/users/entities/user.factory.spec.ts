@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
 import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { TopicFactory } from '@features/topics/entities';
 import UserFactory from './user.factory';
 import UserEntity from './user.entity';
 
@@ -11,7 +12,12 @@ describe('The UserFactory', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [UserFactory, PasswordsService, IdentifiersService],
+      providers: [
+        UserFactory,
+        PasswordsService,
+        IdentifiersService,
+        TopicFactory,
+      ],
     })
       .overrideProvider(PasswordsService)
       .useValue(PasswordsServiceMock)
@@ -22,7 +28,7 @@ describe('The UserFactory', () => {
     userFactory = await module.get(UserFactory);
   });
 
-  describe('when building user', () => {
+  describe('when building a user', () => {
     it('should return instance of UserEntity', async () => {
       const user = await userFactory.build({
         accountAddress:

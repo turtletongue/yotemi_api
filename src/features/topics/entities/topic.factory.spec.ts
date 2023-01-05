@@ -19,7 +19,7 @@ describe('The TopicFactory', () => {
     topicFactory = await module.get(TopicFactory);
   });
 
-  describe('when building topic', () => {
+  describe('when building a topic', () => {
     it('should return instance of TopicEntity', async () => {
       const topic = await topicFactory.build({
         labels: [{ value: 'Computer Science', language: 'en' }],

@@ -13,6 +13,6 @@ import AdminsController, { userServices } from './controller';
   imports: [IdentifiersModule, PaginationModule, PrismaModule, TopicsModule],
   controllers: [AdminsController],
   providers: [UserFactory, UsersRepository, ...userUseCases, ...userServices],
-  exports: [...userUseCases, UsersRepository],
+  exports: [...userUseCases, UserFactory, UsersRepository],
 })
 export default class UsersModule {}

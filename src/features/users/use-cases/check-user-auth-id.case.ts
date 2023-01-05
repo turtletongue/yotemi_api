@@ -41,6 +41,7 @@ export default class CheckUserAuthIdCase {
       authId: plain.authId,
       isVerified: plain.isVerified,
       topics: plain.topics,
+      followersCount: plain.followersCount,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

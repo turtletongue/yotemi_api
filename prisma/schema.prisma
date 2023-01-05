@@ -32,7 +32,8 @@ model User {
   reviews        Review[]           @relation(name: "reviewFromUser")
   followers      User[]             @relation(name: "subscriptions")
   following      User[]             @relation(name: "subscriptions")
-  interviews     Interview[]
+  ownInterviews  Interview[]        @relation(name: "ownInterviews")
+  interviews     Interview[]        @relation(name: "interviews")
   messages       InterviewMessage[]
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
@@ -68,28 +69,21 @@ enum Language {
   ru
 }
 
-model Review {
-  id             String             @id @default(uuid())
-  points         Int
-  comment        String
-  user           User               @relation(fields: [userId], references: [id], name: "reviewOfUser", onDelete: Cascade)
-  userId         String
-  reviewer       User               @relation(fields: [reviewerId], references: [id], name: "reviewFromUser", onDelete: Cascade)
-  reviewerId     String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-}
-
 model Interview {
   id             String             @id @default(uuid())
   price          Decimal            @db.Decimal(30, 18)
-  time           DateTime
+  date           DateTime
   status         InterviewStatus
-  creator        User               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator        User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
   creatorId      String
+  participant    User?              @relation(fields: [participantId], references: [id], name: "interviews", onDelete: SetNull)
+  participantId  String?
+  payerComment   String?
   messages       InterviewMessage[]
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
+
+  @@map("interviews")
 }
 
 enum InterviewStatus {
@@ -109,4 +103,20 @@ model InterviewMessage {
   interviewId    String
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
+
+  @@map("interview_messages")
+}
+
+model Review {
+  id             String             @id @default(uuid())
+  points         Int
+  comment        String
+  user           User               @relation(fields: [userId], references: [id], name: "reviewOfUser", onDelete: Cascade)
+  userId         String
+  reviewer       User               @relation(fields: [reviewerId], references: [id], name: "reviewFromUser", onDelete: Cascade)
+  reviewerId     String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@map("reviews")
 }

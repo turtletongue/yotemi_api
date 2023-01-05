@@ -13,6 +13,7 @@ export default class UserEntity {
     private readonly biography: string,
     private readonly isVerified: boolean,
     private readonly topics: TopicEntity[],
+    private readonly followersCount: number,
     private readonly createdAt: Date,
     private readonly updatedAt: Date,
   ) {}
@@ -45,6 +46,10 @@ export default class UserEntity {
     return this.topics;
   }
 
+  public getFollowersCount(): number {
+    return this.followersCount;
+  }
+
   public getCreatedAt(): Date {
     return this.createdAt;
   }
@@ -62,6 +67,7 @@ export default class UserEntity {
       biography: this.biography,
       isVerified: this.isVerified,
       topics: this.topics.map((topic) => topic.getPlain()),
+      followersCount: this.followersCount,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

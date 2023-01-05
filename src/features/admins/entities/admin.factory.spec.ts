@@ -22,7 +22,7 @@ describe('The AdminFactory', () => {
     adminFactory = await module.get(AdminFactory);
   });
 
-  describe('when building admin', () => {
+  describe('when building an admin', () => {
     it('should return instance of AdminEntity', async () => {
       const admin = await adminFactory.build({
         username: 'username',

@@ -29,37 +29,59 @@ export default class UsersRepository {
   ) {}
 
   public async findById(id: Id): Promise<UserEntity> {
-    const user = await this.prisma.user
+    const {
+      _count: { followers },
+      ...user
+    } = await this.prisma.user
       .findUniqueOrThrow({
         where: {
           id,
         },
         include: {
           topics: includeTopicsOptions,
+          _count: {
+            select: {
+              followers: true,
+            },
+          },
         },
       })
       .catch(() => {
         throw new UserNotFoundException();
       });
 
-    return await this.userFactory.build(user);
+    return await this.userFactory.build({
+      ...user,
+      followersCount: followers,
+    });
   }
 
   public async findByAccountAddress(address: string): Promise<UserEntity> {
-    const user = await this.prisma.user
+    const {
+      _count: { followers },
+      ...user
+    } = await this.prisma.user
       .findUniqueOrThrow({
         where: {
           accountAddress: address,
         },
         include: {
           topics: includeTopicsOptions,
+          _count: {
+            select: {
+              followers: true,
+            },
+          },
         },
       })
       .catch(() => {
         throw new UserNotFoundException();
       });
 
-    return await this.userFactory.build(user);
+    return await this.userFactory.build({
+      ...user,
+      followersCount: followers,
+    });
   }
 
   public async isAccountAddressTaken(address: string): Promise<boolean> {
@@ -77,22 +99,30 @@ export default class UsersRepository {
     limit: number,
     options?: Prisma.UserFindManyArgs,
   ): Promise<PaginationResult<UserEntity>> {
-    const paginated = await this.pagination.paginate<BuildUserDto>(
-      this.prisma.user,
-      page,
-      limit,
-      {
-        ...options,
-        include: {
-          topics: includeTopicsOptions,
+    const paginated = await this.pagination.paginate<
+      BuildUserDto & { _count: { followers: number } }
+    >(this.prisma.user, page, limit, {
+      ...options,
+      include: {
+        topics: includeTopicsOptions,
+        _count: {
+          select: {
+            followers: true,
+          },
         },
       },
-    );
+    });
 
     return {
       ...paginated,
       items: await Promise.all(
-        paginated.items.map(async (user) => await this.userFactory.build(user)),
+        paginated.items.map(
+          async ({ _count: { followers }, ...user }) =>
+            await this.userFactory.build({
+              ...user,
+              followersCount: followers,
+            }),
+        ),
       ),
     };
   }
@@ -102,12 +132,19 @@ export default class UsersRepository {
 
     const result = await this.prisma.user.create({
       data: {
-        ...data,
+        id: data.id,
+        accountAddress: data.accountAddress,
+        authId: data.authId,
+        fullName: data.fullName,
+        biography: data.biography,
+        isVerified: data.isVerified,
         topics: {
           connect: topics.map((topic) => ({
             id: topic.id,
           })),
         },
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
       },
     });
 
@@ -121,37 +158,66 @@ export default class UsersRepository {
 
     const { topics, ...data } = user;
 
-    const result = await this.prisma.user.update({
+    const {
+      _count: { followers },
+      ...result
+    } = await this.prisma.user.update({
       where: {
         id: existingUser.getId(),
       },
       data: {
-        ...data,
+        id: data.id,
+        accountAddress: data.accountAddress,
+        authId: data.authId,
+        fullName: data.fullName,
+        biography: data.biography,
+        isVerified: data.isVerified,
         topics: {
           set: [],
           connect: topics.map((topic) => ({ id: topic.id })),
         },
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
       },
       include: {
         topics: includeTopicsOptions,
+        _count: {
+          select: {
+            followers: true,
+          },
+        },
       },
     });
 
-    return await this.userFactory.build(result);
+    return await this.userFactory.build({
+      ...result,
+      followersCount: followers,
+    });
   }
 
   public async delete(id: Id): Promise<UserEntity> {
     const existingUser = await this.findById(id);
 
-    const result = await this.prisma.user.delete({
+    const {
+      _count: { followers },
+      ...result
+    } = await this.prisma.user.delete({
       where: {
         id: existingUser.getId(),
       },
       include: {
         topics: includeTopicsOptions,
+        _count: {
+          select: {
+            followers: true,
+          },
+        },
       },
     });
 
-    return await this.userFactory.build(result);
+    return await this.userFactory.build({
+      ...result,
+      followersCount: followers,
+    });
   }
 }

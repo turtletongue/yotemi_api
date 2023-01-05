@@ -68,7 +68,7 @@ export default class TopicsRepository {
     };
   }
 
-  public async findByIds(ids: Id[]): Promise<TopicEntity[]> {
+  public async findByIds(ids: Id[] = []): Promise<TopicEntity[]> {
     const topics = await this.prisma.topic.findMany({
       where: {
         id: {

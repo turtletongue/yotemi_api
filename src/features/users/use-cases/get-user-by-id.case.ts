@@ -20,6 +20,7 @@ export default class GetUserByIdCase {
       biography: plain.biography,
       isVerified: plain.isVerified,
       topics: plain.topics,
+      followersCount: plain.followersCount,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

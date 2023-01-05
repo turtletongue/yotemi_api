@@ -9,6 +9,7 @@ export default interface PlainUser {
   biography: string;
   isVerified: boolean;
   topics: PlainTopic[];
+  followersCount: number;
   createdAt: Date;
   updatedAt: Date;
 }

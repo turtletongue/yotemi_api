@@ -41,6 +41,7 @@ export default class FindUsersCase {
           biography: plain.biography,
           isVerified: plain.isVerified,
           topics: plain.topics,
+          followersCount: plain.followersCount,
           createdAt: plain.createdAt,
           updatedAt: plain.updatedAt,
         };
