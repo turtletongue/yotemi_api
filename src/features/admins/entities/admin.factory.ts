@@ -26,7 +26,7 @@ export default class AdminFactory {
       this: AdminEntity,
       password: string,
     ): Promise<boolean> {
-      const hashedPassword = this.getHashedPassword();
+      const hashedPassword = this.hashedPassword;
 
       if (!hashedPassword) {
         return false;

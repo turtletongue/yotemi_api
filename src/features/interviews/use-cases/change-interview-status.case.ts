@@ -15,35 +15,32 @@ export default class ChangeInterviewStatusCase {
   public async apply(dto: ChangeInterviewStatus): Promise<PlainInterview> {
     const existingProperties = await this.interviewsRepository.findById(dto.id);
 
-    if (existingProperties.getCreatorId() !== dto.executor.getId()) {
+    if (existingProperties.creatorId !== dto.executor.id) {
       throw new UnauthorizedException();
     }
 
-    if (
-      dto.status === 'started' &&
-      existingProperties.getStatus() === 'canceled'
-    ) {
+    if (dto.status === 'started' && existingProperties.status === 'canceled') {
       throw new InvalidInterviewStatusChangeException(
         'Interview is already canceled',
       );
     }
 
-    if (
-      dto.status === 'started' &&
-      existingProperties.getParticipant() === null
-    ) {
+    if (dto.status === 'started' && existingProperties.participant === null) {
       throw new InvalidInterviewStatusChangeException('Interview is not paid');
     }
 
+    if (!existingProperties.isStartTimeCome) {
+      throw new InvalidInterviewStatusChangeException(
+        `It is not time for the interview yet. You can start the interview when there are ${existingProperties.remainingMinutesToStart} minutes left`,
+      );
+    }
+
     const interview = await this.interviewFactory.build({
-      ...existingProperties.getPlain(),
+      ...existingProperties.plain,
       ...dto,
     });
 
-    const canceledInterview = await this.interviewsRepository.update(
-      interview.getPlain(),
-    );
-    const plain = canceledInterview.getPlain();
+    const { plain } = await this.interviewsRepository.update(interview.plain);
 
     return {
       id: plain.id,

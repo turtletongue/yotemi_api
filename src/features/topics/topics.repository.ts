@@ -125,7 +125,7 @@ export default class TopicsRepository {
 
       return await prisma.topic.update({
         where: {
-          id: existingTopic.getId(),
+          id: existingTopic.id,
         },
         data,
         include: {
@@ -142,7 +142,7 @@ export default class TopicsRepository {
 
     const result = await this.prisma.topic.delete({
       where: {
-        id: existingTopic.getId(),
+        id: existingTopic.id,
       },
       include: {
         labels: includeLabelsOptions,

@@ -16,15 +16,14 @@ export default class AddAdminCase {
     const admin = await this.adminFactory.build(dto);
 
     const isUsernameTaken = await this.adminsRepository.isUsernameTaken(
-      admin.getUsername(),
+      admin.username,
     );
 
     if (isUsernameTaken) {
       throw new UsernameIsTakenException();
     }
 
-    const createdAdmin = await this.adminsRepository.create(admin.getPlain());
-    const plain = createdAdmin.getPlain();
+    const { plain } = await this.adminsRepository.create(admin.plain);
 
     return {
       id: plain.id,

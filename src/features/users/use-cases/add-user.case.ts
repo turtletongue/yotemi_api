@@ -18,7 +18,7 @@ export default class AddUserCase {
     const topics = await this.topicsRepository.findByIds(dto.topics);
     const user = await this.userFactory.build({
       ...dto,
-      topics: topics.map((topic) => topic.getPlain()),
+      topics: topics.map((topic) => topic.plain),
     });
 
     const isAddressTaken = await this.usersRepository.isAccountAddressTaken(
@@ -29,8 +29,7 @@ export default class AddUserCase {
       throw new AddressIsTakenException();
     }
 
-    const createdAdmin = await this.usersRepository.create(user.getPlain());
-    const plain = createdAdmin.getPlain();
+    const { plain } = await this.usersRepository.create(user.plain);
 
     return {
       id: plain.id,

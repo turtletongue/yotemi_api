@@ -5,39 +5,39 @@ export default class AdminEntity {
   public readonly kind = 'admin';
 
   constructor(
-    private readonly id: Id,
-    private readonly username: string,
-    private readonly passwordHash: string,
-    private readonly createdAt: Date,
-    private readonly updatedAt: Date,
+    private _id: Id,
+    private _username: string,
+    private _passwordHash: string,
+    private _createdAt: Date,
+    private _updatedAt: Date,
     public readonly isPasswordMatch: (password: string) => Promise<boolean>,
   ) {}
 
-  public getId(): Id {
-    return this.id;
+  public get id(): Id {
+    return this._id;
   }
 
-  public getUsername(): string {
-    return this.username;
+  public get username(): string {
+    return this._username;
   }
 
-  public getHashedPassword(): string {
-    return this.passwordHash;
+  public get hashedPassword(): string {
+    return this._passwordHash;
   }
 
-  public getCreatedAt(): Date {
-    return this.createdAt;
+  public get createdAt(): Date {
+    return this._createdAt;
   }
 
-  public getUpdatedAt(): Date {
-    return this.updatedAt;
+  public get updatedAt(): Date {
+    return this._updatedAt;
   }
 
-  public getPlain(): PlainAdmin {
+  public get plain(): PlainAdmin {
     return {
       id: this.id,
       username: this.username,
-      password: this.passwordHash,
+      password: this.hashedPassword,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

@@ -163,7 +163,7 @@ export default class UsersRepository {
       ...result
     } = await this.prisma.user.update({
       where: {
-        id: existingUser.getId(),
+        id: existingUser.id,
       },
       data: {
         id: data.id,
@@ -203,7 +203,7 @@ export default class UsersRepository {
       ...result
     } = await this.prisma.user.delete({
       where: {
-        id: existingUser.getId(),
+        id: existingUser.id,
       },
       include: {
         topics: includeTopicsOptions,

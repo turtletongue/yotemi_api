@@ -14,7 +14,7 @@ export default class UpdateUserCase {
   ) {}
 
   public async apply(dto: UpdateUserDto): Promise<PlainUser> {
-    if (dto.id !== dto.executor.getId()) {
+    if (dto.id !== dto.executor.id) {
       throw new UnauthorizedException();
     }
 
@@ -22,13 +22,12 @@ export default class UpdateUserCase {
 
     const existingProperties = await this.usersRepository.findById(dto.id);
     const user = await this.userFactory.build({
-      ...existingProperties.getPlain(),
+      ...existingProperties.plain,
       ...dto,
-      topics: topics.map((topic) => topic.getPlain()),
+      topics: topics.map((topic) => topic.plain),
     });
 
-    const updatedUser = await this.usersRepository.update(user.getPlain());
-    const plain = updatedUser.getPlain();
+    const { plain } = await this.usersRepository.update(user.plain);
 
     return {
       id: plain.id,

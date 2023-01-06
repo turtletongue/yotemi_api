@@ -75,7 +75,7 @@ describe('The UpdateUserCase', () => {
         executor: user,
       });
 
-      expect(result.id).toEqual(user.getId());
+      expect(result.id).toEqual(user.id);
     });
   });
 });

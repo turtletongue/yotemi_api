@@ -9,12 +9,11 @@ export default class DeleteUserCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   public async apply({ id, executor }: DeleteUserDto): Promise<PlainUser> {
-    if (id !== executor.getId()) {
+    if (id !== executor.id) {
       throw new UnauthorizedException();
     }
 
-    const user = await this.usersRepository.delete(id);
-    const plain = user.getPlain();
+    const { plain } = await this.usersRepository.delete(id);
 
     return {
       id: plain.id,

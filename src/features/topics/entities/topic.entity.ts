@@ -4,34 +4,34 @@ import TopicLabel from './interfaces/topic-label.interface';
 
 export default class TopicEntity {
   constructor(
-    private readonly id: Id,
-    private readonly labels: TopicLabel[],
-    private readonly colorHex: string,
-    private readonly createdAt: Date,
-    private readonly updatedAt: Date,
+    private _id: Id,
+    private _labels: TopicLabel[],
+    private _colorHex: string,
+    private _createdAt: Date,
+    private _updatedAt: Date,
   ) {}
 
-  public getId(): Id {
-    return this.id;
+  public get id(): Id {
+    return this._id;
   }
 
-  public getLabels(): TopicLabel[] {
-    return this.labels;
+  public get labels(): TopicLabel[] {
+    return this._labels;
   }
 
-  public getColorHex(): string {
-    return this.colorHex;
+  public get colorHex(): string {
+    return this._colorHex;
   }
 
-  public getCreatedAt(): Date {
-    return this.createdAt;
+  public get createdAt(): Date {
+    return this._createdAt;
   }
 
-  public getUpdatedAt(): Date {
-    return this.updatedAt;
+  public get updatedAt(): Date {
+    return this._updatedAt;
   }
 
-  public getPlain(): PlainTopic {
+  public get plain(): PlainTopic {
     return {
       id: this.id,
       labels: this.labels,

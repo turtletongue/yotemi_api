@@ -11,8 +11,7 @@ export default class DeleteAdminCase {
   public async apply({
     id,
   }: DeleteAdminDto): Promise<Omit<PlainAdmin, 'password'>> {
-    const admin = await this.adminsRepository.delete(id);
-    const plain = admin.getPlain();
+    const { plain } = await this.adminsRepository.delete(id);
 
     return {
       id: plain.id,

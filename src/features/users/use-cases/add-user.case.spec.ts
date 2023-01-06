@@ -77,7 +77,7 @@ describe('The AddUserCase', () => {
           fullName: 'Tom Land',
         });
 
-        expect(result.id).toEqual(user.getId());
+        expect(result.id).toEqual(user.id);
       });
     });
 

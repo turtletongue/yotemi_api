@@ -46,17 +46,13 @@ export default class FindTopicsCase {
 
     return {
       ...result,
-      items: result.items.map((topic) => {
-        const plain = topic.getPlain();
-
-        return {
-          id: plain.id,
-          labels: plain.labels,
-          colorHex: plain.colorHex,
-          createdAt: plain.createdAt,
-          updatedAt: plain.updatedAt,
-        };
-      }),
+      items: result.items.map(({ plain }) => ({
+        id: plain.id,
+        labels: plain.labels,
+        colorHex: plain.colorHex,
+        createdAt: plain.createdAt,
+        updatedAt: plain.updatedAt,
+      })),
     };
   }
 }

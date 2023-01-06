@@ -16,12 +16,11 @@ export default class ChangeAdminPasswordCase {
   ): Promise<Omit<PlainAdmin, 'password'>> {
     const existingProperties = await this.adminsRepository.findById(dto.id);
     const admin = await this.adminFactory.build({
-      ...existingProperties.getPlain(),
+      ...existingProperties.plain,
       ...dto,
     });
 
-    const changedAdmin = await this.adminsRepository.update(admin.getPlain());
-    const plain = changedAdmin.getPlain();
+    const { plain } = await this.adminsRepository.update(admin.plain);
 
     return {
       id: plain.id,

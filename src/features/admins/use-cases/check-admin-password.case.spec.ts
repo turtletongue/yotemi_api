@@ -60,7 +60,7 @@ describe('The CheckAdminPasswordCase', () => {
           password: 'password',
         });
 
-        expect(result.id).toEqual(admin.getId());
+        expect(result.id).toEqual(admin.id);
       });
 
       it('should not return the password', async () => {

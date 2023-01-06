@@ -84,7 +84,7 @@ describe('The CheckUserAuthIdCase', () => {
           authId: 'authId',
         });
 
-        expect(result.id).toEqual(user.getId());
+        expect(result.id).toEqual(user.id);
       });
 
       it('should update authId', async () => {
@@ -94,7 +94,7 @@ describe('The CheckUserAuthIdCase', () => {
           authId: 'authId',
         });
 
-        expect(result.authId).not.toEqual(user.getAuthId());
+        expect(result.authId).not.toEqual(user.authId);
       });
     });
 

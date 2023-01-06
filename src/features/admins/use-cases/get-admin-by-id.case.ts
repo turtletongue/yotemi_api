@@ -9,8 +9,7 @@ export default class GetAdminByIdCase {
   constructor(private readonly adminsRepository: AdminsRepository) {}
 
   public async apply(id: Id): Promise<Omit<PlainAdmin, 'password'>> {
-    const admin = await this.adminsRepository.findById(id);
-    const plain = admin.getPlain();
+    const { plain } = await this.adminsRepository.findById(id);
 
     return {
       id: plain.id,

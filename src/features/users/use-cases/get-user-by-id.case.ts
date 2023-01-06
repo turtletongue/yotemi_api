@@ -9,8 +9,7 @@ export default class GetUserByIdCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   public async apply(id: Id): Promise<PlainUser> {
-    const user = await this.usersRepository.findById(id);
-    const plain = user.getPlain();
+    const { plain } = await this.usersRepository.findById(id);
 
     return {
       id: plain.id,

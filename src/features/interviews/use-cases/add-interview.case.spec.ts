@@ -84,7 +84,7 @@ describe('The AddInterviewCase', () => {
         ),
       });
 
-      expect(result.id).toEqual(interview.getId());
+      expect(result.id).toEqual(interview.id);
     });
   });
 });

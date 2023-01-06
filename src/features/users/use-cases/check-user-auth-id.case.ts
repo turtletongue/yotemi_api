@@ -19,19 +19,17 @@ export default class CheckUserAuthIdCase {
       accountAddress,
     );
 
-    if (user.getAuthId() !== authId) {
+    if (user.authId !== authId) {
       throw new UnauthorizedException();
     }
 
     const userWithNewAuthId = await this.userFactory.build({
-      ...user.getPlain(),
+      ...user.plain,
       authId: undefined,
     });
-    const updatedUser = await this.usersRepository.update(
-      userWithNewAuthId.getPlain(),
+    const { plain } = await this.usersRepository.update(
+      userWithNewAuthId.plain,
     );
-
-    const plain = updatedUser.getPlain();
 
     return {
       id: plain.id,

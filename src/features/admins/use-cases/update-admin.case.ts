@@ -27,12 +27,11 @@ export default class UpdateAdminCase {
 
     const existingProperties = await this.adminsRepository.findById(dto.id);
     const admin = await this.adminFactory.build({
-      ...existingProperties.getPlain(),
+      ...existingProperties.plain,
       ...dto,
     });
 
-    const updatedAdmin = await this.adminsRepository.update(admin.getPlain());
-    const plain = updatedAdmin.getPlain();
+    const { plain } = await this.adminsRepository.update(admin.plain);
 
     return {
       id: plain.id,

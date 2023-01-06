@@ -23,8 +23,7 @@ export default class AddTopicCase {
 
     const topic = await this.topicFactory.build(dto);
 
-    const createdTopic = await this.topicsRepository.create(topic.getPlain());
-    const plain = createdTopic.getPlain();
+    const { plain } = await this.topicsRepository.create(topic.plain);
 
     return {
       id: plain.id,

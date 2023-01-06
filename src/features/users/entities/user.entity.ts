@@ -6,59 +6,59 @@ export default class UserEntity {
   public readonly kind = 'user';
 
   constructor(
-    private readonly id: Id,
-    private readonly accountAddress: string,
-    private readonly authId: Id,
-    private readonly fullName: string,
-    private readonly biography: string,
-    private readonly isVerified: boolean,
-    private readonly topics: TopicEntity[],
-    private readonly followersCount: number,
-    private readonly createdAt: Date,
-    private readonly updatedAt: Date,
+    private _id: Id,
+    private _accountAddress: string,
+    private _authId: Id,
+    private _fullName: string,
+    private _biography: string,
+    private _isVerified: boolean,
+    private _topics: TopicEntity[],
+    private _followersCount: number,
+    private _createdAt: Date,
+    private _updatedAt: Date,
   ) {}
 
-  public getId(): Id {
-    return this.id;
+  public get id(): Id {
+    return this._id;
   }
 
-  public getAccountAddress(): string {
-    return this.accountAddress;
+  public get accountAddress(): string {
+    return this._accountAddress;
   }
 
-  public getAuthId(): string {
-    return this.authId;
+  public get authId(): string {
+    return this._authId;
   }
 
-  public getFullName(): string {
-    return this.fullName;
+  public get fullName(): string {
+    return this._fullName;
   }
 
-  public getBiography(): string {
-    return this.biography;
+  public get biography(): string {
+    return this._biography;
   }
 
-  public getIsVerified(): boolean {
-    return this.isVerified;
+  public get isVerified(): boolean {
+    return this._isVerified;
   }
 
-  public getTopics(): TopicEntity[] {
-    return this.topics;
+  public get topics(): TopicEntity[] {
+    return this._topics;
   }
 
-  public getFollowersCount(): number {
-    return this.followersCount;
+  public get followersCount(): number {
+    return this._followersCount;
   }
 
-  public getCreatedAt(): Date {
-    return this.createdAt;
+  public get createdAt(): Date {
+    return this._createdAt;
   }
 
-  public getUpdatedAt(): Date {
-    return this.updatedAt;
+  public get updatedAt(): Date {
+    return this._updatedAt;
   }
 
-  public getPlain(): PlainUser {
+  public get plain(): PlainUser {
     return {
       id: this.id,
       accountAddress: this.accountAddress,
@@ -66,7 +66,7 @@ export default class UserEntity {
       fullName: this.fullName,
       biography: this.biography,
       isVerified: this.isVerified,
-      topics: this.topics.map((topic) => topic.getPlain()),
+      topics: this.topics.map((topic) => topic.plain),
       followersCount: this.followersCount,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

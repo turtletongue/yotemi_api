@@ -19,13 +19,10 @@ export default class AddInterviewCase {
 
     const interview = await this.interviewFactory.build({
       ...dto,
-      creatorId: dto.executor.getId(),
+      creatorId: dto.executor.id,
     });
 
-    const createdInterview = await this.interviewsRepository.create(
-      interview.getPlain(),
-    );
-    const plain = createdInterview.getPlain();
+    const { plain } = await this.interviewsRepository.create(interview.plain);
 
     return {
       id: plain.id,

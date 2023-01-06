@@ -9,8 +9,7 @@ export default class DeleteTopicCase {
   constructor(private readonly topicsRepository: TopicsRepository) {}
 
   public async apply({ id }: DeleteTopicDto): Promise<PlainTopic> {
-    const admin = await this.topicsRepository.delete(id);
-    const plain = admin.getPlain();
+    const { plain } = await this.topicsRepository.delete(id);
 
     return {
       id: plain.id,

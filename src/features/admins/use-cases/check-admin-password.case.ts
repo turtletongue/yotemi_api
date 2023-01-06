@@ -19,7 +19,7 @@ export default class CheckAdminPasswordCase {
       throw new UnauthorizedException();
     }
 
-    const plain = admin.getPlain();
+    const plain = admin.plain;
 
     return {
       id: plain.id,

@@ -98,7 +98,7 @@ export default class InterviewsRepository {
 
     const result = await this.prisma.interview.update({
       where: {
-        id: existingInterview.getId(),
+        id: existingInterview.id,
       },
       data: {
         ...data,
@@ -120,7 +120,7 @@ export default class InterviewsRepository {
 
     const result = await this.prisma.interview.delete({
       where: {
-        id: existingInterview.getId(),
+        id: existingInterview.id,
       },
       include: {
         participant: includeParticipantOptions,

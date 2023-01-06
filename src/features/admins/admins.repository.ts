@@ -104,7 +104,7 @@ export default class AdminsRepository {
 
     const result = await this.prisma.admin.update({
       where: {
-        id: existingAdmin.getId(),
+        id: existingAdmin.id,
       },
       data: admin,
     });
@@ -120,7 +120,7 @@ export default class AdminsRepository {
 
     const result = await this.prisma.admin.delete({
       where: {
-        id: existingAdmin.getId(),
+        id: existingAdmin.id,
       },
     });
 

@@ -19,16 +19,12 @@ export default class FindAdminsCase {
 
     return {
       ...result,
-      items: result.items.map((admin) => {
-        const plain = admin.getPlain();
-
-        return {
-          id: plain.id,
-          username: plain.username,
-          createdAt: plain.createdAt,
-          updatedAt: plain.updatedAt,
-        };
-      }),
+      items: result.items.map(({ plain }) => ({
+        id: plain.id,
+        username: plain.username,
+        createdAt: plain.createdAt,
+        updatedAt: plain.updatedAt,
+      })),
     };
   }
 }

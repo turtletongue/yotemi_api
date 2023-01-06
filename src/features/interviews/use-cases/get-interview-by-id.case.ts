@@ -9,8 +9,7 @@ export default class GetInterviewByIdCase {
   constructor(private readonly interviewsRepository: InterviewsRepository) {}
 
   public async apply(id: Id): Promise<PlainInterview> {
-    const interview = await this.interviewsRepository.findById(id);
-    const plain = interview.getPlain();
+    const { plain } = await this.interviewsRepository.findById(id);
 
     return {
       id: plain.id,

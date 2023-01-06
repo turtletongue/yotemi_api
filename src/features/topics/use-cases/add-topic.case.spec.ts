@@ -55,7 +55,7 @@ describe('The AddTopicCase', () => {
           colorHex: '000000',
         });
 
-        expect(result.id).toEqual(topic.getId());
+        expect(result.id).toEqual(topic.id);
       });
     });
 

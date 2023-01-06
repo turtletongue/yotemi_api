@@ -8,6 +8,7 @@ import AuthenticationModule from '@features/authentication';
 import UsersModule from '@features/users';
 import TopicsModule from '@features/topics';
 import InterviewsModule from '@features/interviews';
+import InterviewMessagesModule from '@features/interview-messages';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import InterviewsModule from '@features/interviews';
     AuthenticationModule,
     TopicsModule,
     InterviewsModule,
+    InterviewMessagesModule,
   ],
 })
 export class AppModule {}

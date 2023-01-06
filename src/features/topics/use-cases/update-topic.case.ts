@@ -23,12 +23,11 @@ export default class UpdateTopicCase {
 
     const existingProperties = await this.topicsRepository.findById(dto.id);
     const topic = await this.topicFactory.build({
-      ...existingProperties.getPlain(),
+      ...existingProperties.plain,
       ...dto,
     });
 
-    const updatedTopic = await this.topicsRepository.update(topic.getPlain());
-    const plain = updatedTopic.getPlain();
+    const { plain } = await this.topicsRepository.update(topic.plain);
 
     return {
       id: plain.id,

@@ -9,8 +9,7 @@ export default class GetTopicByIdCase {
   constructor(private readonly topicsRepository: TopicsRepository) {}
 
   public async apply(id: Id): Promise<PlainTopic> {
-    const topic = await this.topicsRepository.findById(id);
-    const plain = topic.getPlain();
+    const { plain } = await this.topicsRepository.findById(id);
 
     return {
       id: plain.id,

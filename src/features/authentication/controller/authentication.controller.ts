@@ -105,7 +105,7 @@ export default class AuthenticationController {
     const token = request.cookies?.Refresh;
     const accessToken = await this.authentication.refreshAccess(token);
     const cookie = await this.refreshTokens.createRefreshTokenCookie(
-      executor.getId(),
+      executor.id,
       executor.kind,
     );
 
