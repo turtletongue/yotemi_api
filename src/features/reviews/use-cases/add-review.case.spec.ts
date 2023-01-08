@@ -126,28 +126,28 @@ describe('The AddReviewCase', () => {
         create.mockResolvedValue(review);
         isParticipated.mockResolvedValue(false);
       });
-    });
 
-    it('should throw the NotParticipatedToReviewException', async () => {
-      await expect(
-        addReviewCase.apply({
-          points: 5,
-          comment: 'Nice person!',
-          userId: 'userId',
-          reviewer: new UserEntity(
-            'id',
-            '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
-            'authId',
-            'Tom Land',
-            '',
-            false,
-            [],
-            0,
-            new Date(),
-            new Date(),
-          ),
-        }),
-      ).rejects.toThrowError(NotParticipatedToReviewException);
+      it('should throw the NotParticipatedToReviewException', async () => {
+        await expect(
+          addReviewCase.apply({
+            points: 5,
+            comment: 'Nice person!',
+            userId: 'userId',
+            reviewer: new UserEntity(
+              'id',
+              '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
+              'authId',
+              'Tom Land',
+              '',
+              false,
+              [],
+              0,
+              new Date(),
+              new Date(),
+            ),
+          }),
+        ).rejects.toThrowError(NotParticipatedToReviewException);
+      });
     });
   });
 });

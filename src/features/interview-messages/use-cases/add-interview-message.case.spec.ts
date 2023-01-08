@@ -78,6 +78,7 @@ describe('The AddInterviewMessageCase', () => {
             'interviewId',
             0.001,
             new Date(),
+            new Date(),
             'started',
             'creatorId',
             participant,
@@ -132,6 +133,7 @@ describe('The AddInterviewMessageCase', () => {
             'interviewId',
             0.001,
             new Date(),
+            new Date(),
             'finished',
             'creatorId',
             participant,
@@ -185,6 +187,7 @@ describe('The AddInterviewMessageCase', () => {
           new InterviewEntity(
             'interviewId',
             0.001,
+            new Date(),
             new Date(),
             'started',
             'creatorId',
