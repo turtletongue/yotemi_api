@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@common/mocks';
 import { TopicFactory } from '@features/topics/entities';
 import UserFactory from './user.factory';
 import UserEntity from './user.entity';
@@ -19,8 +19,6 @@ describe('The UserFactory', () => {
         TopicFactory,
       ],
     })
-      .overrideProvider(PasswordsService)
-      .useValue(PasswordsServiceMock)
       .overrideProvider(IdentifiersService)
       .useValue(IdentifiersServiceMock)
       .compile();

@@ -19,5 +19,14 @@ export default class InterviewDto {
   @IsDate()
   @Transform(({ value }) => new Date(value))
   @IsNotEmpty()
-  public date: Date;
+  public startAt: Date;
+
+  /**
+   * Date and time when to finish the interview.
+   * @example '2022-01-17T00:30:00.000Z'
+   */
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
+  @IsNotEmpty()
+  public endAt: Date;
 }

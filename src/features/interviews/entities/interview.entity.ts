@@ -11,7 +11,8 @@ export default class InterviewEntity {
   constructor(
     private _id: Id,
     private _price: number,
-    private _date: Date,
+    private _startAt: Date,
+    private _endAt: Date,
     private _status: InterviewStatus,
     private _creatorId: Id,
     private _participant: UserEntity | null,
@@ -28,8 +29,12 @@ export default class InterviewEntity {
     return this._price;
   }
 
-  public get date(): Date {
-    return this._date;
+  public get startAt(): Date {
+    return this._startAt;
+  }
+
+  public get endAt(): Date {
+    return this._endAt;
   }
 
   public get status(): InterviewStatus {
@@ -58,7 +63,7 @@ export default class InterviewEntity {
 
   public get isStartTimeCome(): boolean {
     return (
-      this.date.getTime() - Date.now() <=
+      this.startAt.getTime() - Date.now() <=
       this.remainingMinutesToStart * MS_IN_MINUTE
     );
   }
@@ -67,7 +72,8 @@ export default class InterviewEntity {
     return {
       id: this.id,
       price: this.price,
-      date: this.date,
+      startAt: this.startAt,
+      endAt: this.endAt,
       status: this.status,
       creatorId: this.creatorId,
       participant: this.participant?.plain ?? null,

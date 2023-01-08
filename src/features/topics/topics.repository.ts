@@ -51,7 +51,7 @@ export default class TopicsRepository {
       page,
       limit,
       {
-        ...options,
+        ...(options ?? {}),
         include: {
           labels: includeLabelsOptions,
         },

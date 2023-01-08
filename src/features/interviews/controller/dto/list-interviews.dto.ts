@@ -21,7 +21,7 @@ export class ListInterviewsParams {
   public creatorId: Id;
 
   /**
-   * Lowest boundary of creation date.
+   * Lowest boundary of interview's start date.
    * @example '2022-06-03T00:00:00.000Z'
    */
   @IsDate()
@@ -30,7 +30,7 @@ export class ListInterviewsParams {
   public from: Date;
 
   /**
-   * Highest boundary of creation date.
+   * Highest boundary of interview's start date.
    * @example '2022-06-04T00:00:00.000Z'
    */
   @IsDate()

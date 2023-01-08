@@ -6,7 +6,8 @@ import { Id } from '@app/app.declarations';
 export default class BuildInterviewDto {
   public id?: Id;
   public price: number;
-  public date: Date;
+  public startAt: Date;
+  public endAt: Date;
   public status?: InterviewStatus;
   public creatorId: Id;
   public participant?: BuildUserDto | null;

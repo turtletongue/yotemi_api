@@ -9,6 +9,7 @@ import UsersModule from '@features/users';
 import TopicsModule from '@features/topics';
 import InterviewsModule from '@features/interviews';
 import InterviewMessagesModule from '@features/interview-messages';
+import ReviewsModule from '@features/reviews';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import InterviewMessagesModule from '@features/interview-messages';
     TopicsModule,
     InterviewsModule,
     InterviewMessagesModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}

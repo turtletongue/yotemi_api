@@ -8,7 +8,7 @@ import FindInterviewsCase from './find-interviews.case';
 import InterviewsRepository from '../interviews.repository';
 import { InterviewFactory, InterviewEntity } from '../entities';
 
-describe('The FindInterviewsCase', () => {
+describe('The FindReviewsCase', () => {
   let findInterviewsCase: FindInterviewsCase;
   let findAll: jest.Mock;
 
@@ -44,6 +44,7 @@ describe('The FindInterviewsCase', () => {
         'id',
         0.001,
         new Date(),
+        new Date(Date.now() + 10000),
         'published',
         'creatorId',
         new UserEntity(

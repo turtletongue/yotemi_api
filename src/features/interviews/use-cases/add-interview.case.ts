@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import AddInterviewDto from './dto/add-interview.dto';
 import InterviewsRepository from '../interviews.repository';
 import { InterviewFactory, PlainInterview } from '../entities';
-import { InterviewInPastException } from '../exceptions';
+import {
+  InterviewInPastException,
+  InvalidInterviewEndDateException,
+} from '../exceptions';
 
 @Injectable()
 export default class AddInterviewCase {
@@ -13,8 +16,12 @@ export default class AddInterviewCase {
   ) {}
 
   public async apply(dto: AddInterviewDto): Promise<PlainInterview> {
-    if (dto.date < new Date()) {
+    if (dto.startAt < new Date()) {
       throw new InterviewInPastException();
+    }
+
+    if (dto.endAt <= dto.startAt) {
+      throw new InvalidInterviewEndDateException();
     }
 
     const interview = await this.interviewFactory.build({
@@ -27,7 +34,8 @@ export default class AddInterviewCase {
     return {
       id: plain.id,
       price: plain.price,
-      date: plain.date,
+      startAt: plain.startAt,
+      endAt: plain.endAt,
       status: plain.status,
       creatorId: plain.creatorId,
       participant: plain.participant,

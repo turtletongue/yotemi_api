@@ -45,7 +45,8 @@ export default class ChangeInterviewStatusCase {
     return {
       id: plain.id,
       price: plain.price,
-      date: plain.date,
+      startAt: plain.startAt,
+      endAt: plain.endAt,
       status: plain.status,
       creatorId: plain.creatorId,
       participant: plain.participant,

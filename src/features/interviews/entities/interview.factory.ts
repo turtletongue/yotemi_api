@@ -16,7 +16,8 @@ export default class InterviewFactory {
   public async build({
     id = this.identifiers.generate(),
     price,
-    date,
+    startAt,
+    endAt,
     status = InterviewStatus.published,
     creatorId,
     participant = null,
@@ -31,7 +32,8 @@ export default class InterviewFactory {
     return new InterviewEntity(
       id,
       price,
-      date,
+      startAt,
+      endAt,
       status,
       creatorId,
       participantEntity,

@@ -9,7 +9,7 @@ import { PlainInterview } from '../entities';
 interface FindOptions {
   where: {
     creatorId: Id;
-    date: {
+    startAt: {
       gte: Date;
       lte: Date;
     };
@@ -25,7 +25,7 @@ export default class FindInterviewsCase {
     const findOptions: FindOptions = {
       where: {
         creatorId: dto.creatorId,
-        date: {
+        startAt: {
           gte: dto.from,
           lte: dto.to,
         },
@@ -41,7 +41,8 @@ export default class FindInterviewsCase {
     return interviews.map(({ plain }) => ({
       id: plain.id,
       price: plain.price,
-      date: plain.date,
+      startAt: plain.startAt,
+      endAt: plain.endAt,
       status: plain.status,
       creatorId: plain.creatorId,
       participant: plain.participant,

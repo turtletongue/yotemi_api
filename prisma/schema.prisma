@@ -72,7 +72,8 @@ enum Language {
 model Interview {
   id             String             @id @default(uuid())
   price          Decimal            @db.Decimal(30, 18)
-  date           DateTime
+  startAt        DateTime
+  endAt          DateTime
   status         InterviewStatus
   creator        User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
   creatorId      String

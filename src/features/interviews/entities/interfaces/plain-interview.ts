@@ -6,7 +6,8 @@ import { Id } from '@app/app.declarations';
 export default interface PlainInterview {
   id: Id;
   price: number;
-  date: Date;
+  startAt: Date;
+  endAt: Date;
   status: InterviewStatus;
   creatorId: Id;
   participant: PlainUser | null;
