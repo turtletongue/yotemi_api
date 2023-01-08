@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InterviewStatus } from '@prisma/client';
 
 import { Id } from '@app/app.declarations';
+import { MS_IN_DAY } from '@app/app.constants';
 import FindInterviewsDto from './dto/find-interviews.dto';
 import InterviewsRepository from '../interviews.repository';
 import { PlainInterview } from '../entities';
+import { InterviewsTimeFilterTooWideException } from '../exceptions';
+import { MAX_DAYS_DIFF_FOR_FIND_INTERVIEWS_FILTER } from '../interviews.constants';
 
 interface FindOptions {
   where: {
@@ -22,6 +25,13 @@ export default class FindInterviewsCase {
   constructor(private readonly interviewsRepository: InterviewsRepository) {}
 
   public async apply(dto: FindInterviewsDto): Promise<PlainInterview[]> {
+    if (
+      dto.to.getTime() - dto.from.getTime() >
+      MAX_DAYS_DIFF_FOR_FIND_INTERVIEWS_FILTER * MS_IN_DAY
+    ) {
+      throw new InterviewsTimeFilterTooWideException();
+    }
+
     const findOptions: FindOptions = {
       where: {
         creatorId: dto.creatorId,

@@ -5,3 +5,5 @@ export { default as InvalidInterviewStatusChangeException } from './invalid-inte
 export { default as InterviewInPastException } from './interview-in-past.exception';
 
 export { default as InvalidInterviewEndDateException } from './invalid-interview-end-date.exception';
+
+export { default as InterviewsTimeFilterTooWideException } from './interviews-time-filter-too-wide.exception';
