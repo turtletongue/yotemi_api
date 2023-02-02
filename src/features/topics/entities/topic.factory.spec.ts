@@ -24,6 +24,7 @@ describe('The TopicFactory', () => {
       const topic = await topicFactory.build({
         labels: [{ value: 'Computer Science', language: 'en' }],
         colorHex: '000000',
+        isModerated: true,
       });
 
       expect(topic).toBeInstanceOf(TopicEntity);

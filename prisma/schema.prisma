@@ -45,6 +45,7 @@ model Topic {
   id             String             @id @default(uuid())
   labels         TopicLabel[]
   colorHex       String             @db.VarChar(6)
+  isModerated    Boolean
   users          User[]
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt

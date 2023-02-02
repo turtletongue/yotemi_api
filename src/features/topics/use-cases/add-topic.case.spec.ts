@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { IdentifiersService } from '@common/identifiers';
 import { IdentifiersServiceMock } from '@common/mocks';
+import { AdminEntity } from '@features/admins/entities';
 import AddTopicCase from './add-topic.case';
 import TopicsRepository from '../topics.repository';
 import { TopicFactory, TopicEntity } from '../entities';
@@ -42,6 +43,7 @@ describe('The AddTopicCase', () => {
           'id',
           [{ id: 'id', value: 'Computer Science', language: 'en' }],
           '000000',
+          true,
           new Date(),
           new Date(),
         );
@@ -50,10 +52,20 @@ describe('The AddTopicCase', () => {
       });
 
       it('should return the topic', async () => {
-        const result = await addTopicCase.apply({
-          labels: [{ value: 'Computer Science', language: 'en' }],
-          colorHex: '000000',
-        });
+        const result = await addTopicCase.apply(
+          {
+            labels: [{ value: 'Computer Science', language: 'en' }],
+            colorHex: '000000',
+          },
+          new AdminEntity(
+            'id',
+            'username',
+            'passwordHash',
+            new Date(),
+            new Date(),
+            () => Promise.resolve(true),
+          ),
+        );
 
         expect(result.id).toEqual(topic.id);
       });
@@ -62,13 +74,23 @@ describe('The AddTopicCase', () => {
     describe('and the languages are not unique', () => {
       it('should throw the NotUniqueLabelLanguageException', async () => {
         await expect(
-          addTopicCase.apply({
-            labels: [
-              { value: 'Computer Science', language: 'en' },
-              { value: 'Science of Computers', language: 'en' },
-            ],
-            colorHex: '000000',
-          }),
+          addTopicCase.apply(
+            {
+              labels: [
+                { value: 'Computer Science', language: 'en' },
+                { value: 'Science of Computers', language: 'en' },
+              ],
+              colorHex: '000000',
+            },
+            new AdminEntity(
+              'id',
+              'username',
+              'passwordHash',
+              new Date(),
+              new Date(),
+              () => Promise.resolve(true),
+            ),
+          ),
         ).rejects.toThrowError(NotUniqueLabelLanguageException);
       });
     });

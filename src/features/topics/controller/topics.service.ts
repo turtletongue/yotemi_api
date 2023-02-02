@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { AdminEntity } from '@features/admins/entities';
+import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
 import GetTopicDto from './dto/get-topic.dto';
 import ListTopicsDto, { ListTopicsParams } from './dto/list-topics.dto';
@@ -29,8 +31,11 @@ export default class TopicsService {
     return await this.findTopicsCase.apply(params);
   }
 
-  public async addTopic(dto: PostTopicDto): Promise<GetTopicDto> {
-    return await this.addTopicCase.apply(dto);
+  public async addTopic(
+    dto: PostTopicDto,
+    executor: AdminEntity | UserEntity,
+  ): Promise<GetTopicDto> {
+    return await this.addTopicCase.apply(dto, executor);
   }
 
   public async updateTopic(dto: PatchTopicDto): Promise<GetTopicDto> {

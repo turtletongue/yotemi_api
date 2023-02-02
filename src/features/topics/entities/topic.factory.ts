@@ -12,6 +12,7 @@ export default class TopicFactory {
     id = this.identifiers.generate(),
     labels,
     colorHex,
+    isModerated,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildTopicDto): Promise<TopicEntity> {
@@ -23,6 +24,7 @@ export default class TopicFactory {
         language: label.language,
       })),
       colorHex,
+      isModerated,
       createdAt,
       updatedAt,
     );

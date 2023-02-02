@@ -10,4 +10,5 @@ export default class UpdateTopicDto {
     language: Language;
   }[];
   public colorHex?: string;
+  public isModerated?: boolean;
 }

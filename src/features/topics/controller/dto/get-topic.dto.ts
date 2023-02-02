@@ -36,6 +36,11 @@ export default class GetTopicDto extends TopicDto {
   public labels: GetTopicLabelDto[];
 
   /**
+   * If true topic is shown in the topics select for all users.
+   */
+  public isModerated?: boolean;
+
+  /**
    * Date and time of topic creation.
    * @example '2022-07-25T00:00:00.000Z'
    */

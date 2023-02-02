@@ -15,6 +15,7 @@ export default class DeleteTopicCase {
       id: plain.id,
       labels: plain.labels,
       colorHex: plain.colorHex,
+      isModerated: plain.isModerated,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

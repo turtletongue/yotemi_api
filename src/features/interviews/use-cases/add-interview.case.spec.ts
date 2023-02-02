@@ -70,8 +70,8 @@ describe('The AddInterviewCase', () => {
     it('should return the interview', async () => {
       const result = await addInterviewCase.apply({
         price: 0.001,
-        startAt: new Date(),
-        endAt: new Date(Date.now() + 10000),
+        startAt: new Date(Date.now() + 1000 * 60 * 60),
+        endAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
         executor: new UserEntity(
           'id',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',

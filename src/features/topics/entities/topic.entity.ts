@@ -7,6 +7,7 @@ export default class TopicEntity {
     private _id: Id,
     private _labels: TopicLabel[],
     private _colorHex: string,
+    private _isModerated: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
@@ -23,6 +24,10 @@ export default class TopicEntity {
     return this._colorHex;
   }
 
+  public get isModerated(): boolean {
+    return this._isModerated;
+  }
+
   public get createdAt(): Date {
     return this._createdAt;
   }
@@ -36,6 +41,7 @@ export default class TopicEntity {
       id: this.id,
       labels: this.labels,
       colorHex: this.colorHex,
+      isModerated: this.isModerated,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
