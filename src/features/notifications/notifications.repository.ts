@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { Notification, Prisma } from '@prisma/client';
 
 import { PaginationResult, PaginationService } from '@common/pagination';
@@ -11,6 +12,7 @@ import {
 import { NotificationNotFoundException } from './exceptions';
 import BuildNotificationDto from './entities/dto/build-notification.dto';
 
+@Injectable()
 export default class NotificationsRepository {
   constructor(
     private readonly prisma: PrismaService,
@@ -59,6 +61,21 @@ export default class NotificationsRepository {
     };
   }
 
+  public async findAll(
+    options?: Prisma.NotificationFindManyArgs,
+  ): Promise<NotificationEntity[]> {
+    const notifications = await this.prisma.notification.findMany(options);
+
+    return await Promise.all(
+      notifications.map(
+        async (notification) =>
+          await this.notificationFactory.build(
+            this.mapToBuildDto(notification),
+          ),
+      ),
+    );
+  }
+
   public async create(
     notification: PlainNotification,
   ): Promise<NotificationEntity> {
@@ -79,7 +96,7 @@ export default class NotificationsRepository {
 
     const result = await this.prisma.notification.update({
       where: {
-        id: notification.id,
+        id: existingNotification.id,
       },
       data: {
         ...notification,

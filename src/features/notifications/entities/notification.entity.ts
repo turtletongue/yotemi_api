@@ -30,6 +30,11 @@ export default class NotificationEntity {
     return this._isSeen;
   }
 
+  public set isSeen(value: boolean) {
+    this._isSeen = value;
+    this._updatedAt = new Date();
+  }
+
   public get userId(): Id {
     return this._userId;
   }
