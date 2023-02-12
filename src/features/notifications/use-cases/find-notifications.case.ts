@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PaginationResult } from '@common/pagination';
 import FindNotificationsDto from './dto/find-notifications.dto';
 import NotificationsRepository from '../notifications.repository';
+import { FOLLOWING_NOTIFICATIONS } from '../notifications.constants';
 import { PlainNotification } from '../entities';
 
 @Injectable()
@@ -17,9 +18,29 @@ export default class FindNotificationsCase {
     const result = await this.notificationsRepository.findPaginated(
       dto.page,
       dto.pageSize,
+      dto.executor.id,
       {
         where: {
-          userId: dto.executor.id,
+          OR: [
+            {
+              type: {
+                notIn: FOLLOWING_NOTIFICATIONS,
+              },
+              userId: dto.executor.id,
+            },
+            {
+              type: {
+                in: FOLLOWING_NOTIFICATIONS,
+              },
+              user: {
+                followers: {
+                  some: {
+                    id: dto.executor.id,
+                  },
+                },
+              },
+            },
+          ],
         },
         orderBy: {
           createdAt: 'desc',

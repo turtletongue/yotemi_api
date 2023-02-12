@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import MarkNotificationAsSeenDto from './dto/mark-notification-as-seen.dto';
-import { PlainNotification } from '../entities';
 import NotificationsRepository from '../notifications.repository';
+import { PlainNotification } from '../entities';
 
 @Injectable()
 export default class MarkNotificationAsSeenCase {
@@ -14,16 +14,18 @@ export default class MarkNotificationAsSeenCase {
     id,
     executor,
   }: MarkNotificationAsSeenDto): Promise<PlainNotification> {
-    const notification = await this.notificationsRepository.findById(id);
+    const notification = await this.notificationsRepository.findById(
+      id,
+      executor.id,
+    );
 
     if (notification.userId !== executor.id) {
       throw new UnauthorizedException();
     }
 
-    notification.isSeen = true;
-
-    const { plain } = await this.notificationsRepository.update(
-      notification.plain,
+    const { plain } = await this.notificationsRepository.markAsSeen(
+      notification.id,
+      executor.id,
     );
 
     return {

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import MarkAllNotificationsAsSeenDto from './dto/mark-all-notifications-as-seen.dto';
 import NotificationsRepository from '../notifications.repository';
 import { PlainNotification } from '../entities';
+import { FOLLOWING_NOTIFICATIONS } from '../notifications.constants';
 
 @Injectable()
 export default class MarkAllNotificationsAsSeenCase {
@@ -13,16 +14,37 @@ export default class MarkAllNotificationsAsSeenCase {
   public async apply({
     executor,
   }: MarkAllNotificationsAsSeenDto): Promise<PlainNotification[]> {
-    const notifications = await this.notificationsRepository.findAll({
-      where: {
-        userId: executor.id,
-        isSeen: false,
+    const notifications = await this.notificationsRepository.findAll(
+      executor.id,
+      {
+        where: {
+          OR: [
+            {
+              type: {
+                notIn: FOLLOWING_NOTIFICATIONS,
+              },
+              userId: executor.id,
+            },
+            {
+              type: {
+                in: FOLLOWING_NOTIFICATIONS,
+              },
+              user: {
+                followers: {
+                  some: {
+                    id: executor.id,
+                  },
+                },
+              },
+            },
+          ],
+        },
       },
-    });
+    );
 
-    const results = await this.notificationsRepository.updateMany(
+    const results = await this.notificationsRepository.markAllAsSeen(
       notifications.map((notification) => notification.id),
-      { isSeen: true },
+      executor.id,
     );
 
     return results.map(({ plain }) => ({

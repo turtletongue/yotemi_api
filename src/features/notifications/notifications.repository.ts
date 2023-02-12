@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Notification, Prisma } from '@prisma/client';
+import { Notification, NotificationView, Prisma } from '@prisma/client';
 
 import { PaginationResult, PaginationService } from '@common/pagination';
 import { PrismaService } from '@common/prisma';
@@ -20,11 +20,18 @@ export default class NotificationsRepository {
     private readonly notificationFactory: NotificationFactory,
   ) {}
 
-  public async findById(id: Id): Promise<NotificationEntity> {
+  public async findById(id: Id, viewerId: Id): Promise<NotificationEntity> {
     const notification = await this.prisma.notification
       .findUniqueOrThrow({
         where: {
           id,
+        },
+        include: {
+          views: {
+            where: {
+              viewerId,
+            },
+          },
         },
       })
       .catch(() => {
@@ -36,17 +43,34 @@ export default class NotificationsRepository {
     );
   }
 
+  public async isExists(
+    where: Prisma.NotificationWhereInput,
+  ): Promise<boolean> {
+    const notification = await this.prisma.notification.findFirst({
+      where,
+    });
+
+    return !!notification;
+  }
+
   public async findPaginated(
     page: number,
     limit: number,
+    viewerId: Id,
     options?: Prisma.NotificationFindManyArgs,
   ): Promise<PaginationResult<NotificationEntity>> {
-    const paginated = await this.paginate.paginate<Notification>(
-      this.prisma.notification,
-      page,
-      limit,
-      options,
-    );
+    const paginated = await this.paginate.paginate<
+      Notification & { views: NotificationView[] }
+    >(this.prisma.notification, page, limit, {
+      ...(options ?? {}),
+      include: {
+        views: {
+          where: {
+            viewerId,
+          },
+        },
+      },
+    });
 
     return {
       ...paginated,
@@ -62,9 +86,19 @@ export default class NotificationsRepository {
   }
 
   public async findAll(
+    viewerId: Id,
     options?: Prisma.NotificationFindManyArgs,
   ): Promise<NotificationEntity[]> {
-    const notifications = await this.prisma.notification.findMany(options);
+    const notifications = await this.prisma.notification.findMany({
+      ...(options ?? {}),
+      include: {
+        views: {
+          where: {
+            viewerId,
+          },
+        },
+      },
+    });
 
     return await Promise.all(
       notifications.map(
@@ -81,52 +115,69 @@ export default class NotificationsRepository {
   ): Promise<NotificationEntity> {
     const result = await this.prisma.notification.create({
       data: {
-        ...notification,
+        id: notification.id,
+        type: notification.type,
         content: notification.content as Prisma.JsonObject | null,
+        userId: notification.userId,
+        createdAt: notification.createdAt,
+        updatedAt: notification.updatedAt,
+      },
+      include: {
+        views: true,
       },
     });
 
     return await this.notificationFactory.build(this.mapToBuildDto(result));
   }
 
-  public async update(
-    notification: Partial<PlainNotification> & Pick<PlainNotification, 'id'>,
-  ): Promise<NotificationEntity> {
-    const existingNotification = await this.findById(notification.id);
+  public async markAsSeen(id: Id, viewerId: Id): Promise<NotificationEntity> {
+    const existingNotification = await this.findById(id, viewerId);
 
     const result = await this.prisma.notification.update({
       where: {
         id: existingNotification.id,
       },
       data: {
-        ...notification,
-        content: notification.content as Prisma.JsonObject | null,
+        views: {
+          create: {
+            viewerId,
+          },
+        },
+      },
+      include: {
+        views: {
+          where: {
+            viewerId,
+          },
+        },
       },
     });
 
     return await this.notificationFactory.build(this.mapToBuildDto(result));
   }
 
-  public async updateMany(
+  public async markAllAsSeen(
     ids: Id[],
-    data: Partial<PlainNotification>,
+    viewerId: Id,
   ): Promise<NotificationEntity[]> {
-    await this.prisma.notification.updateMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-      data: {
-        ...data,
-        content: data.content as Prisma.JsonObject | null | undefined,
-      },
+    await this.prisma.notificationView.createMany({
+      data: ids.map((id) => ({
+        notificationId: id,
+        viewerId,
+      })),
     });
 
     const results = await this.prisma.notification.findMany({
       where: {
         id: {
           in: ids,
+        },
+      },
+      include: {
+        views: {
+          where: {
+            viewerId,
+          },
         },
       },
     });
@@ -141,19 +192,9 @@ export default class NotificationsRepository {
     );
   }
 
-  public async delete(id: Id): Promise<NotificationEntity> {
-    const existingNotification = await this.findById(id);
-
-    const result = await this.prisma.notification.delete({
-      where: {
-        id: existingNotification.id,
-      },
-    });
-
-    return await this.notificationFactory.build(this.mapToBuildDto(result));
-  }
-
-  private mapToBuildDto(notification: Notification): BuildNotificationDto {
+  private mapToBuildDto(
+    notification: Notification & { views: NotificationView[] },
+  ): BuildNotificationDto {
     return {
       ...notification,
       content: notification.content as Record<string, unknown> | null,

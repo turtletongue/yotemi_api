@@ -41,7 +41,7 @@ export default class InterviewsService {
     return await this.addInterviewCase.apply({ ...dto, executor });
   }
 
-  public async cancelInterview(
+  public async changeInterviewStatus(
     dto: PatchInterviewDto,
     executor: UserEntity,
   ): Promise<GetInterviewDto> {

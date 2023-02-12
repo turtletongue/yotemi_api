@@ -12,7 +12,10 @@ export default class GetNotificationByIdCase {
   ) {}
 
   public async apply(id: Id, executor: UserEntity): Promise<PlainNotification> {
-    const { plain } = await this.notificationsRepository.findById(id);
+    const { plain } = await this.notificationsRepository.findById(
+      id,
+      executor.id,
+    );
 
     if (plain.userId !== executor.id) {
       throw new UnauthorizedException();
