@@ -4,16 +4,25 @@ import { IdentifiersService } from '@common/identifiers';
 import { IdentifiersServiceMock } from '@common/mocks';
 import { UserEntity, UserFactory } from '@features/users/entities';
 import { TopicFactory } from '@features/topics/entities';
+import {
+  NotificationEntity,
+  NotificationFactory,
+} from '@features/notifications/entities';
+import AddNotificationCase from '@features/notifications/use-cases/add-notification.case';
+import NotificationsRepository from '@features/notifications/notifications.repository';
 import AddInterviewCase from './add-interview.case';
 import InterviewsRepository from '../interviews.repository';
 import { InterviewFactory, InterviewEntity } from '../entities';
+import { NotificationType } from '@prisma/client';
 
 describe('The AddInterviewCase', () => {
   let addInterviewCase: AddInterviewCase;
   let create: jest.Mock;
+  let hasTimeConflict: jest.Mock;
 
   beforeEach(async () => {
     create = jest.fn();
+    hasTimeConflict = jest.fn();
 
     const module = await Test.createTestingModule({
       providers: [
@@ -23,11 +32,28 @@ describe('The AddInterviewCase', () => {
         IdentifiersService,
         UserFactory,
         TopicFactory,
+        AddNotificationCase,
+        NotificationsRepository,
+        NotificationFactory,
       ],
     })
       .overrideProvider(InterviewsRepository)
       .useValue({
         create,
+        hasTimeConflict,
+      })
+      .overrideProvider(NotificationsRepository)
+      .useValue({
+        create: () =>
+          new NotificationEntity(
+            'id',
+            NotificationType.interviewScheduled,
+            null,
+            false,
+            'userId',
+            new Date(),
+            new Date(),
+          ),
       })
       .overrideProvider(IdentifiersService)
       .useValue(IdentifiersServiceMock)
@@ -65,6 +91,7 @@ describe('The AddInterviewCase', () => {
       );
 
       create.mockResolvedValue(interview);
+      hasTimeConflict.mockResolvedValue(false);
     });
 
     it('should return the interview', async () => {

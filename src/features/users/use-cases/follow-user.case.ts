@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { NotificationType } from '@prisma/client';
 
 import AddNotificationCase from '@features/notifications/use-cases/add-notification.case';
+import { NotificationAlreadyExistsException } from '@features/notifications/exceptions';
 import FollowUserDto from './dto/follow-user.dto';
 import UsersRepository from '../users.repository';
 import {
@@ -32,16 +33,22 @@ export default class FollowUserCase {
 
     const follower = await this.usersRepository.findById(dto.followerId);
 
-    await this.addNotificationCase.apply({
-      type: NotificationType.newFollower,
-      content: {
-        follower: {
-          id: follower.id,
-          fullName: follower.fullName,
+    try {
+      await this.addNotificationCase.apply({
+        type: NotificationType.newFollower,
+        content: {
+          follower: {
+            id: follower.id,
+            fullName: follower.fullName,
+          },
         },
-      },
-      userId: dto.followingId,
-    });
+        userId: dto.followingId,
+      });
+    } catch (error: unknown) {
+      if (!(error instanceof NotificationAlreadyExistsException)) {
+        throw error;
+      }
+    }
 
     await this.usersRepository.follow(dto.followingId, dto.followerId);
   }

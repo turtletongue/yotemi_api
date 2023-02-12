@@ -11,12 +11,12 @@ import NotificationsRepository from '../notifications.repository';
 
 describe('The MarkNotificationAsSeenCase', () => {
   let markNotificationAsSeenCase: MarkNotificationAsSeenCase;
-  let update: jest.Mock;
+  let markAsSeen: jest.Mock;
   let findById: jest.Mock;
 
   beforeEach(async () => {
     findById = jest.fn();
-    update = jest.fn();
+    markAsSeen = jest.fn();
 
     const module = await Test.createTestingModule({
       providers: [
@@ -28,7 +28,7 @@ describe('The MarkNotificationAsSeenCase', () => {
     })
       .overrideProvider(NotificationsRepository)
       .useValue({
-        update,
+        markAsSeen,
         findById,
       })
       .overrideProvider(IdentifiersService)
@@ -53,7 +53,7 @@ describe('The MarkNotificationAsSeenCase', () => {
           new Date(),
         );
 
-        update.mockResolvedValue(notification);
+        markAsSeen.mockResolvedValue(notification);
         findById.mockResolvedValue(notification);
       });
 
@@ -92,7 +92,7 @@ describe('The MarkNotificationAsSeenCase', () => {
           new Date(),
         );
 
-        update.mockResolvedValue(notification);
+        markAsSeen.mockResolvedValue(notification);
         findById.mockResolvedValue(notification);
       });
 
