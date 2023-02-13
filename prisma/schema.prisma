@@ -21,46 +21,48 @@ model Admin {
 }
 
 model User {
-  id             String             @id @default(uuid())
-  accountAddress String             @unique
-  authId         String
-  fullName       String
-  biography      String             @default("")
-  isVerified     Boolean            @default(false)
-  topics         Topic[]
-  feedbacks      Review[]           @relation(name: "reviewOfUser")
-  reviews        Review[]           @relation(name: "reviewFromUser")
-  followers      User[]             @relation(name: "subscriptions")
-  following      User[]             @relation(name: "subscriptions")
-  ownInterviews  Interview[]        @relation(name: "ownInterviews")
-  interviews     Interview[]        @relation(name: "interviews")
-  messages       InterviewMessage[]
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  accountAddress    String             @unique
+  authId            String
+  fullName          String
+  biography         String             @default("")
+  isVerified        Boolean            @default(false)
+  topics            Topic[]
+  feedbacks         Review[]           @relation(name: "reviewOfUser")
+  reviews           Review[]           @relation(name: "reviewFromUser")
+  followers         User[]             @relation(name: "subscriptions")
+  following         User[]             @relation(name: "subscriptions")
+  ownInterviews     Interview[]        @relation(name: "ownInterviews")
+  interviews        Interview[]        @relation(name: "interviews")
+  messages          InterviewMessage[]
+  notifications     Notification[]
+  notificationViews NotificationView[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@map("users")
 }
 
 model Topic {
-  id             String             @id @default(uuid())
-  labels         TopicLabel[]
-  colorHex       String             @db.VarChar(6)
-  isModerated    Boolean
-  users          User[]
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  labels            TopicLabel[]
+  colorHex          String             @db.VarChar(6)
+  isModerated       Boolean
+  users             User[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@map("topics")
 }
 
 model TopicLabel {
-  id             String             @id @default(uuid())
-  value          String
-  language       Language
-  topic          Topic              @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  topicId        String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  value             String
+  language          Language
+  topic             Topic              @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId           String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@map("topic_labels")
 }
@@ -71,19 +73,19 @@ enum Language {
 }
 
 model Interview {
-  id             String             @id @default(uuid())
-  price          Decimal            @db.Decimal(30, 18)
-  startAt        DateTime
-  endAt          DateTime
-  status         InterviewStatus
-  creator        User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
-  creatorId      String
-  participant    User?              @relation(fields: [participantId], references: [id], name: "interviews", onDelete: SetNull)
-  participantId  String?
-  payerComment   String?
-  messages       InterviewMessage[]
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  price             Decimal            @db.Decimal(30, 18)
+  startAt           DateTime
+  endAt             DateTime
+  status            InterviewStatus
+  creator           User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
+  creatorId         String
+  participant       User?              @relation(fields: [participantId], references: [id], name: "interviews", onDelete: SetNull)
+  participantId     String?
+  payerComment      String?
+  messages          InterviewMessage[]
+  createdAt         DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   @@map("interviews")
 }
@@ -97,28 +99,61 @@ enum InterviewStatus {
 }
 
 model InterviewMessage {
-  id             String             @id @default(uuid())
-  content        String
-  author         User?              @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  authorId       String?
-  interview      Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
-  interviewId    String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  content           String
+  author            User?              @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId          String?
+  interview         Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interviewId       String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@map("interview_messages")
 }
 
 model Review {
-  id             String             @id @default(uuid())
-  points         Int
-  comment        String
-  user           User               @relation(fields: [userId], references: [id], name: "reviewOfUser", onDelete: Cascade)
-  userId         String
-  reviewer       User               @relation(fields: [reviewerId], references: [id], name: "reviewFromUser", onDelete: Cascade)
-  reviewerId     String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  points            Int
+  comment           String
+  user              User               @relation(fields: [userId], references: [id], name: "reviewOfUser", onDelete: Cascade)
+  userId            String
+  reviewer          User               @relation(fields: [reviewerId], references: [id], name: "reviewFromUser", onDelete: Cascade)
+  reviewerId        String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@map("reviews")
+}
+
+model Notification {
+  id                String             @id @default(uuid())
+  type              NotificationType
+  content           Json?
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  views             NotificationView[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  interviewOrdered
+  interviewCanceled
+  interviewStarted
+  interviewScheduled
+  newFollower
+}
+
+model NotificationView {
+  id                String             @id @default(uuid())
+  notification      Notification       @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  notificationId    String
+  viewer            User?              @relation(fields: [viewerId], references: [id], onDelete: SetNull)
+  viewerId          String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("notification_views")
 }

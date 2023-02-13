@@ -41,6 +41,10 @@ export default class InterviewEntity {
     return this._status;
   }
 
+  public set status(value: InterviewStatus) {
+    this._status = value;
+  }
+
   public get creatorId(): Id {
     return this._creatorId;
   }

@@ -64,12 +64,12 @@ export default class InterviewsController {
   @ApiBearerAuth()
   @UseGuards(AccessGuard, RoleGuard('user'))
   @Patch(':id')
-  public async cancel(
+  public async changeStatus(
     @Param('id') id: Id,
     @Body() dto: PatchInterviewDto,
     @User() executor: UserEntity,
   ): Promise<GetInterviewDto> {
-    return await this.interviewsService.cancelInterview(
+    return await this.interviewsService.changeInterviewStatus(
       { ...dto, id },
       executor,
     );

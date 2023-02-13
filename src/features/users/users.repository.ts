@@ -195,6 +195,50 @@ export default class UsersRepository {
     });
   }
 
+  public async follow(followingId: Id, followerId: Id): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id: followerId,
+      },
+      data: {
+        following: {
+          connect: { id: followingId },
+        },
+      },
+    });
+  }
+
+  public async isFollowing(followingId: Id, followerId: Id): Promise<boolean> {
+    const following = await this.findById(followingId);
+    const follower = await this.findById(followerId);
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: follower.id,
+        following: {
+          some: {
+            id: following.id,
+          },
+        },
+      },
+    });
+
+    return !!user;
+  }
+
+  public async unfollow(followingId: Id, followerId: Id): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id: followerId,
+      },
+      data: {
+        following: {
+          disconnect: { id: followingId },
+        },
+      },
+    });
+  }
+
   public async delete(id: Id): Promise<UserEntity> {
     const existingUser = await this.findById(id);
 

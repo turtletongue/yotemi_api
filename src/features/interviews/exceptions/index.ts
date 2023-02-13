@@ -7,3 +7,5 @@ export { default as InterviewInPastException } from './interview-in-past.excepti
 export { default as InvalidInterviewEndDateException } from './invalid-interview-end-date.exception';
 
 export { default as InterviewsTimeFilterTooWideException } from './interviews-time-filter-too-wide.exception';
+
+export { default as InterviewHasTimeConflictException } from './interview-has-time-conflict.exception';
