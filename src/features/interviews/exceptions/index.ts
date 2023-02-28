@@ -13,3 +13,5 @@ export { default as InterviewNotPaidException } from './interview-not-paid.excep
 export { default as NotPayerException } from './not-payer.exception';
 
 export { default as ContractMalformedException } from './contract-malformed.exception';
+
+export { default as InterviewHasTimeConflictException } from './interview-has-time-conflict.exception';

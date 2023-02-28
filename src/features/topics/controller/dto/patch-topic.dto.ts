@@ -2,6 +2,7 @@ import { ApiHideProperty, PartialType } from '@nestjs/swagger';
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -9,10 +10,10 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Language } from '@prisma/client';
+import { Type } from 'class-transformer';
 
 import { Id } from '@app/app.declarations';
 import TopicDto from './topic.dto';
-import { Type } from 'class-transformer';
 
 class PatchTopicLabelDto {
   /**
@@ -52,4 +53,11 @@ export default class PatchTopicDto extends PartialType(TopicDto) {
   @ArrayMinSize(1)
   @Type(() => PatchTopicLabelDto)
   public labels: PatchTopicLabelDto[];
+
+  /**
+   * If true topic will be shown in the topics select for all users.
+   */
+  @IsBoolean()
+  @IsOptional()
+  public isModerated?: boolean;
 }

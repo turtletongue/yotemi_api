@@ -13,6 +13,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { Id } from '@app/app.declarations';
 import { AccessGuard, RoleGuard } from '@features/authentication/guards';
+import { Executor } from '@features/authentication/decorators';
+import { AdminEntity } from '@features/admins/entities';
+import { UserEntity } from '@features/users/entities';
 import ListTopicsDto, { ListTopicsParams } from './dto/list-topics.dto';
 import PostTopicDto from './dto/post-topic.dto';
 import GetTopicDto from './dto/get-topic.dto';
@@ -44,10 +47,13 @@ export default class TopicsController {
    * Create new topic.
    */
   @ApiBearerAuth()
-  @UseGuards(AccessGuard, RoleGuard('admin'))
+  @UseGuards(AccessGuard)
   @Post()
-  public async create(@Body() dto: PostTopicDto): Promise<GetTopicDto> {
-    return await this.topicsService.addTopic(dto);
+  public async create(
+    @Body() dto: PostTopicDto,
+    @Executor() executor: AdminEntity | UserEntity,
+  ): Promise<GetTopicDto> {
+    return await this.topicsService.addTopic(dto, executor);
   }
 
   /**

@@ -103,6 +103,38 @@ export default class InterviewsRepository {
     );
   }
 
+  public async hasTimeConflict(
+    startAt: Date,
+    endAt: Date,
+    creatorId: Id,
+  ): Promise<boolean> {
+    const interview = await this.prisma.interview.findFirst({
+      where: {
+        creatorId,
+        OR: [
+          {
+            startAt: {
+              lte: startAt,
+            },
+            endAt: {
+              gte: startAt,
+            },
+          },
+          {
+            startAt: {
+              lte: endAt,
+            },
+            endAt: {
+              gte: endAt,
+            },
+          },
+        ],
+      },
+    });
+
+    return !!interview;
+  }
+
   public async create(interview: PlainInterview): Promise<InterviewEntity> {
     const result = await this.prisma.interview.create({
       data: {

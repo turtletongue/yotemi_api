@@ -39,6 +39,7 @@ describe('The FindTopicsCase', () => {
           'id',
           [{ id: 'id', value: 'Computer Science', language: 'en' }],
           '000000',
+          true,
           new Date(),
           new Date(),
         );

@@ -5,6 +5,7 @@ export default interface PlainTopic {
   id: Id;
   labels: TopicLabel[];
   colorHex: string;
+  isModerated: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

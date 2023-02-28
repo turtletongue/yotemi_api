@@ -10,6 +10,7 @@ export default class BuildTopicDto {
     language: Language;
   }[];
   public colorHex: string;
+  public isModerated: boolean;
   public createdAt?: Date;
   public updatedAt?: Date;
 }
