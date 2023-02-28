@@ -42,6 +42,7 @@ describe('The FindReviewsCase', () => {
     beforeEach(() => {
       interview = new InterviewEntity(
         'id',
+        'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
         0.001,
         new Date(),
         new Date(Date.now() + 10000),
@@ -60,6 +61,7 @@ describe('The FindReviewsCase', () => {
           new Date(),
         ),
         'Some long comment',
+        false,
         new Date(),
         new Date(),
       );

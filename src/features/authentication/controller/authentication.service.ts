@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import TonService from '@common/ton/ton.service';
+import WalletAuthenticationService from '@common/ton/wallet-authentication.service';
 import AuthenticateUserDto from '@features/authentication/controller/dto/authenticate-user.dto';
 import CheckAdminPasswordCase from '@features/admins/use-cases/check-admin-password.case';
 import { AdminNotFoundException } from '@features/admins/exceptions';
@@ -18,7 +18,7 @@ export default class AuthenticationService {
     private readonly checkAdminPasswordCase: CheckAdminPasswordCase,
     private readonly checkUserAuthIdCase: CheckUserAuthIdCase,
     private readonly refreshTokens: RefreshTokensService,
-    private readonly ton: TonService,
+    private readonly ton: WalletAuthenticationService,
   ) {}
 
   public async authenticateAdmin(

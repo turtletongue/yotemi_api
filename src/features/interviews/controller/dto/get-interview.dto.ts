@@ -1,8 +1,7 @@
-import { InterviewStatus } from '@prisma/client';
-
 import { Id } from '@app/app.declarations';
-import InterviewDto from './interview.dto';
 import GetUserDto from '@features/users/controller/dto/get-user.dto';
+import InterviewDto from './interview.dto';
+import { InterviewStatus } from '../../interviews.types';
 
 export default class GetInterviewDto extends InterviewDto {
   /**
@@ -33,6 +32,12 @@ export default class GetInterviewDto extends InterviewDto {
    * @example 'Love to talk with you!'
    */
   public payerComment: string | null;
+
+  /**
+   * Is contract deployed.
+   * @example true
+   */
+  public isDeployed: boolean;
 
   /**
    * Date and time of interview creation.

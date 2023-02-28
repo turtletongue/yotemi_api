@@ -42,6 +42,7 @@ describe('The AddInterviewCase', () => {
     beforeEach(() => {
       interview = new InterviewEntity(
         'id',
+        'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
         0.001,
         new Date(),
         new Date(Date.now() + 10000),
@@ -60,6 +61,7 @@ describe('The AddInterviewCase', () => {
           new Date(),
         ),
         'Some long comment',
+        false,
         new Date(),
         new Date(),
       );
@@ -69,6 +71,7 @@ describe('The AddInterviewCase', () => {
 
     it('should return the interview', async () => {
       const result = await addInterviewCase.apply({
+        address: 'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
         price: 0.001,
         startAt: new Date(),
         endAt: new Date(Date.now() + 10000),

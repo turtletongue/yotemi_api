@@ -1,16 +1,10 @@
-import { ApiHideProperty } from '@nestjs/swagger';
-import { IsIn } from 'class-validator';
-
-import { Id } from '@app/app.declarations';
+import { IsString } from 'class-validator';
 
 export default class PatchInterviewDto {
-  @ApiHideProperty()
-  public id: Id;
-
   /**
-   * New status of the interview.
-   * @example 'started'
+   * Comment for payment.
+   * @example 'Love your lessons!'
    */
-  @IsIn(['started', 'canceled'])
-  public status: 'started' | 'canceled';
+  @IsString()
+  public comment: string;
 }

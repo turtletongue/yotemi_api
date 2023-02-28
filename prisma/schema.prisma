@@ -71,30 +71,20 @@ enum Language {
 
 model Interview {
   id             String             @id @default(uuid())
-  address        String
+  address        String             @unique
   price          Decimal            @db.Decimal(30, 18)
   startAt        DateTime
   endAt          DateTime
-  status         InterviewStatus
   creator        User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
   creatorId      String
   participant    User?              @relation(fields: [participantId], references: [id], name: "interviews", onDelete: SetNull)
   participantId  String?
   payerComment   String?
   messages       InterviewMessage[]
-  isDeployed     Boolean            @default(false)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 
   @@map("interviews")
-}
-
-enum InterviewStatus {
-  published
-  paid
-  started
-  finished
-  canceled
 }
 
 model InterviewMessage {

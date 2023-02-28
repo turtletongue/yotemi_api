@@ -11,7 +11,7 @@ import PatchInterviewDto from './dto/patch-interview.dto';
 import FindInterviewsCase from '../use-cases/find-interviews.case';
 import GetInterviewByIdCase from '../use-cases/get-interview-by-id.case';
 import AddInterviewCase from '../use-cases/add-interview.case';
-import ChangeInterviewStatusCase from '../use-cases/change-interview-status.case';
+import ConfirmPaymentCase from '../use-cases/confirm-payment.case';
 
 @Injectable()
 export default class InterviewsService {
@@ -19,7 +19,7 @@ export default class InterviewsService {
     private readonly findInterviewsCase: FindInterviewsCase,
     private readonly getInterviewByIdCase: GetInterviewByIdCase,
     private readonly addInterviewCase: AddInterviewCase,
-    private readonly changeInterviewStatusCase: ChangeInterviewStatusCase,
+    private readonly confirmPaymentCase: ConfirmPaymentCase,
   ) {}
 
   public async getInterviewById(id: Id): Promise<GetInterviewDto> {
@@ -41,10 +41,11 @@ export default class InterviewsService {
     return await this.addInterviewCase.apply({ ...dto, executor });
   }
 
-  public async cancelInterview(
+  public async confirmPayment(
+    id: Id,
     dto: PatchInterviewDto,
     executor: UserEntity,
   ): Promise<GetInterviewDto> {
-    return await this.changeInterviewStatusCase.apply({ ...dto, executor });
+    return await this.confirmPaymentCase.apply({ ...dto, id, executor });
   }
 }

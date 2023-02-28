@@ -49,6 +49,39 @@ export default class InterviewsRepository {
     });
   }
 
+  public async isAddressTaken(address: string): Promise<boolean> {
+    const interview = await this.prisma.interview.findFirst({
+      where: {
+        address,
+      },
+    });
+
+    return !!interview;
+  }
+
+  public async isParticipated(
+    creatorId: Id,
+    participantId: Id,
+  ): Promise<boolean> {
+    const result = await this.prisma.interview.findFirst({
+      where: {
+        creatorId,
+        participantId,
+      },
+    });
+
+    if (!result) {
+      return false;
+    }
+
+    const interview = await this.interviewFactory.build({
+      ...result,
+      price: result.price.toNumber(),
+    });
+
+    return interview.status === 'finished';
+  }
+
   public async findAll(
     options?: Prisma.InterviewFindManyArgs,
   ): Promise<InterviewEntity[]> {
@@ -70,29 +103,14 @@ export default class InterviewsRepository {
     );
   }
 
-  public async isParticipated(
-    creatorId: Id,
-    participantId: Id,
-  ): Promise<boolean> {
-    const interview = await this.prisma.interview.findFirst({
-      where: {
-        creatorId,
-        participantId,
-        status: 'finished',
-      },
-    });
-
-    return !!interview;
-  }
-
   public async create(interview: PlainInterview): Promise<InterviewEntity> {
     const result = await this.prisma.interview.create({
       data: {
         id: interview.id,
+        address: interview.address,
         price: interview.price,
         startAt: interview.startAt,
         endAt: interview.endAt,
-        status: interview.status,
         creatorId: interview.creatorId,
         createdAt: interview.createdAt,
         updatedAt: interview.updatedAt,

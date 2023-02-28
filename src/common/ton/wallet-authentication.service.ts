@@ -31,7 +31,7 @@ const TON_CONNECT_PREFIX = Buffer.from('ton-connect', 'utf-8');
 const MESSAGE_PREFIX = Buffer.from([0xff, 0xff]);
 
 @Injectable()
-export default class TonService {
+export default class WalletAuthenticationService {
   constructor(
     @Inject(tonConfig.KEY)
     private readonly config: ConfigType<typeof tonConfig>,
