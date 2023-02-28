@@ -71,6 +71,7 @@ enum Language {
 
 model Interview {
   id             String             @id @default(uuid())
+  address        String
   price          Decimal            @db.Decimal(30, 18)
   startAt        DateTime
   endAt          DateTime
@@ -81,6 +82,7 @@ model Interview {
   participantId  String?
   payerComment   String?
   messages       InterviewMessage[]
+  isDeployed     Boolean            @default(false)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 
