@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { getHttpEndpoint } from '@orbs-network/ton-access';
 import { Address, beginCell, Cell, contractAddress, TonClient } from 'ton';
-import { readFile } from 'fs/promises';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 import InterviewContract, { InterviewInfo } from '@contract/interview-contract';
 import { PlainInterview } from '@features/interviews/entities';
-import path from 'path';
+
+const code = Cell.fromBoc(
+  readFileSync(
+    path.resolve(__dirname, '..', '..', 'contract', 'interview.cell'),
+  ),
+)[0];
 
 @Injectable()
 export default class InterviewContractService {
@@ -14,12 +20,6 @@ export default class InterviewContractService {
     interview: PlainInterview,
     creatorAddress: string,
   ): Promise<boolean> {
-    const code = Cell.fromBoc(
-      await readFile(
-        path.resolve(__dirname, '..', '..', 'contract', 'interview.cell'),
-      ),
-    )[0];
-
     const creator = Address.parse(creatorAddress);
     const data = beginCell()
       .storeUint(interview.price, 64)
