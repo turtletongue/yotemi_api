@@ -27,8 +27,8 @@ export default class InterviewContract implements Contract {
 
     return {
       price: +fromNano(stack.readBigNumber()),
-      creatorAddress: stack.readAddress().toString(),
-      payerAddress: stack.readAddress().toString(),
+      creatorAddress: stack.readAddress().toRawString(),
+      payerAddress: stack.readAddress().toRawString(),
       startAt: unixToDate(stack.readNumber()),
       endAt: unixToDate(stack.readNumber()),
       status: (

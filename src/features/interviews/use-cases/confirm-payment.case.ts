@@ -4,7 +4,11 @@ import { PlainInterview } from '../entities';
 import InterviewContractService from '@common/ton/interview-contract.service';
 import ConfirmPaymentDto from './dto/confirm-payment.dto';
 import InterviewsRepository from '../interviews.repository';
-import { InterviewNotPaidException, NotPayerException } from '../exceptions';
+import {
+  InterviewNotPaidException,
+  NotPayerException,
+  PaymentAlreadyConfirmedException,
+} from '../exceptions';
 
 @Injectable()
 export default class ConfirmPaymentCase {
@@ -27,11 +31,15 @@ export default class ConfirmPaymentCase {
       throw new NotPayerException();
     }
 
+    if (interview.participant) {
+      throw new PaymentAlreadyConfirmedException();
+    }
+
     interview.participant = dto.executor;
     interview.payerComment = dto.comment;
 
     return await this.interviewsRepository
-      .update(interview)
+      .update(interview.plain)
       .then(({ plain }) => plain);
   }
 }
