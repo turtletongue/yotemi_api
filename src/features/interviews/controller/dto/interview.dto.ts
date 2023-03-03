@@ -1,7 +1,16 @@
 import { IsDate, IsNotEmpty, IsNumber, Min, NotEquals } from 'class-validator';
 import { Transform } from 'class-transformer';
 
+import { IsTonHexAddress } from '@common/validators';
+
 export default class InterviewDto {
+  /**
+   * Interview contract address.
+   * @example 'EQBYd5Ud1NyDH-iutpPtLCvrMBh1TQWVmhjvd-zbziEuaz9g'
+   */
+  @IsTonHexAddress()
+  public address: string;
+
   /**
    * Price of the interview in {@link https://ton.org TON}.
    * @example 15

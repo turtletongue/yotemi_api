@@ -1,11 +1,11 @@
 import AddInterviewCase from './add-interview.case';
-import ChangeInterviewStatusCase from './change-interview-status.case';
+import ConfirmPaymentCase from './confirm-payment.case';
 import FindInterviewsCase from './find-interviews.case';
 import GetInterviewByIdCase from './get-interview-by-id.case';
 
 const interviewUseCases = [
   AddInterviewCase,
-  ChangeInterviewStatusCase,
+  ConfirmPaymentCase,
   FindInterviewsCase,
   GetInterviewByIdCase,
 ];

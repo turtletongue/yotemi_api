@@ -1,13 +1,7 @@
-import {
-  IsDate,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { InterviewStatus } from '@prisma/client';
 
+import { InterviewStatus } from '@features/interviews/interviews.types';
 import { Id } from '@app/app.declarations';
 import GetInterviewDto from './get-interview.dto';
 
@@ -42,7 +36,6 @@ export class ListInterviewsParams {
    * Filter by interview status.
    * @example 'published'
    */
-  @IsEnum(InterviewStatus)
   @IsNotEmpty()
   @IsOptional()
   public status?: InterviewStatus;

@@ -1,15 +1,15 @@
-import { InterviewStatus } from '@prisma/client';
-
 import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
 import { MS_IN_MINUTE } from '@app/app.constants';
 import PlainInterview from './interfaces/plain-interview';
+import { InterviewStatus } from '../interviews.types';
 
 export default class InterviewEntity {
   public readonly remainingMinutesToStart = 15;
 
   constructor(
     private _id: Id,
+    private _address: string,
     private _price: number,
     private _startAt: Date,
     private _endAt: Date,
@@ -17,12 +17,17 @@ export default class InterviewEntity {
     private _creatorId: Id,
     private _participant: UserEntity | null,
     private _payerComment: string | null,
+    private _isDeployed: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
 
   public get id(): Id {
     return this._id;
+  }
+
+  public get address(): string {
+    return this._address;
   }
 
   public get price(): number {
@@ -53,8 +58,20 @@ export default class InterviewEntity {
     return this._participant;
   }
 
+  public set participant(value: UserEntity) {
+    this._participant = value;
+  }
+
   public get payerComment(): string {
     return this._payerComment;
+  }
+
+  public set payerComment(value: string) {
+    this._payerComment = value;
+  }
+
+  public get isDeployed(): boolean {
+    return this._isDeployed;
   }
 
   public get createdAt(): Date {
@@ -75,6 +92,7 @@ export default class InterviewEntity {
   public get plain(): PlainInterview {
     return {
       id: this.id,
+      address: this.address,
       price: this.price,
       startAt: this.startAt,
       endAt: this.endAt,
@@ -82,6 +100,7 @@ export default class InterviewEntity {
       creatorId: this.creatorId,
       participant: this.participant?.plain ?? null,
       payerComment: this.payerComment,
+      isDeployed: this.isDeployed,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

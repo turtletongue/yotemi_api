@@ -24,7 +24,7 @@ export default class AddInterviewMessageCase {
       dto.executor,
     );
 
-    if (interview.status !== 'started') {
+    if (interview.status !== 'paid') {
       throw new InvalidMessagesInterviewStatusException();
     }
 

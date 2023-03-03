@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InterviewStatus } from '@prisma/client';
 
 import { Id } from '@app/app.declarations';
 import { MS_IN_DAY } from '@app/app.constants';
@@ -8,17 +7,6 @@ import InterviewsRepository from '../interviews.repository';
 import { PlainInterview } from '../entities';
 import { InterviewsTimeFilterTooWideException } from '../exceptions';
 import { MAX_DAYS_DIFF_FOR_FIND_INTERVIEWS_FILTER } from '../interviews.constants';
-
-interface FindOptions {
-  where: {
-    creatorId: Id;
-    startAt: {
-      gte: Date;
-      lte: Date;
-    };
-    status?: InterviewStatus;
-  };
-}
 
 @Injectable()
 export default class FindInterviewsCase {
@@ -32,7 +20,7 @@ export default class FindInterviewsCase {
       throw new InterviewsTimeFilterTooWideException();
     }
 
-    const findOptions: FindOptions = {
+    const interviews = await this.interviewsRepository.findAll({
       where: {
         creatorId: dto.creatorId,
         startAt: {
@@ -40,25 +28,31 @@ export default class FindInterviewsCase {
           lte: dto.to,
         },
       },
-    };
+    });
 
-    if (dto.status) {
-      findOptions.where.status = dto.status;
-    }
-
-    const interviews = await this.interviewsRepository.findAll(findOptions);
-
-    return interviews.map(({ plain }) => ({
-      id: plain.id,
-      price: plain.price,
-      startAt: plain.startAt,
-      endAt: plain.endAt,
-      status: plain.status,
-      creatorId: plain.creatorId,
-      participant: plain.participant,
-      payerComment: plain.payerComment,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
-    }));
+    return interviews
+      .filter((interview) => {
+        return dto.status === undefined || interview.status === dto.status;
+      })
+      .filter((interview) => {
+        return (
+          dto.isDeployed !== undefined ||
+          interview.isDeployed === dto.isDeployed
+        );
+      })
+      .map(({ plain }) => ({
+        id: plain.id,
+        address: plain.address,
+        price: plain.price,
+        startAt: plain.startAt,
+        endAt: plain.endAt,
+        status: plain.status,
+        creatorId: plain.creatorId,
+        participant: plain.participant,
+        payerComment: plain.payerComment,
+        isDeployed: plain.isDeployed,
+        createdAt: plain.createdAt,
+        updatedAt: plain.updatedAt,
+      }));
   }
 }

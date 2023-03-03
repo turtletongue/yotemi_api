@@ -1,8 +1,8 @@
 import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
 
-export default class ChangeInterviewStatus {
+export default class ConfirmPaymentDto {
   public id: Id;
-  public status: 'started' | 'canceled';
+  public comment: string;
   public executor: UserEntity;
 }

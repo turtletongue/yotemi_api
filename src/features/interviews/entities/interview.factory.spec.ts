@@ -29,6 +29,7 @@ describe('The InterviewFactory', () => {
   describe('when building an interview', () => {
     it('should return instance of InterviewEntity', async () => {
       const interview = await interviewFactory.build({
+        address: 'EQBYd5Ud1NyDH-iutpPtLCvrMBh1TQWVmhjvd-zbziEuaz9g',
         price: 0.0001,
         startAt: new Date(),
         endAt: new Date(),

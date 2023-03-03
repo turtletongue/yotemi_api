@@ -20,7 +20,7 @@ import ListInterviewsDto, {
 import GetInterviewDto from './dto/get-interview.dto';
 import PostInterviewDto from './dto/post-interview.dto';
 import InterviewsService from './interviews.service';
-import PatchInterviewDto from '@features/interviews/controller/dto/patch-interview.dto';
+import PatchInterviewDto from './dto/patch-interview.dto';
 
 @ApiTags('interviews')
 @Controller('interviews')
@@ -59,19 +59,16 @@ export default class InterviewsController {
   }
 
   /**
-   * Update interview status.
+   * Confirm payment to purchase interview.
    */
   @ApiBearerAuth()
   @UseGuards(AccessGuard, RoleGuard('user'))
   @Patch(':id')
-  public async changeStatus(
+  public async confirmPayment(
     @Param('id') id: Id,
     @Body() dto: PatchInterviewDto,
     @User() executor: UserEntity,
   ): Promise<GetInterviewDto> {
-    return await this.interviewsService.changeInterviewStatus(
-      { ...dto, id },
-      executor,
-    );
+    return await this.interviewsService.confirmPayment(id, dto, executor);
   }
 }

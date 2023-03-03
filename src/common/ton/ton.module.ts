@@ -3,11 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
 import tonConfig from '@config/ton.config';
-import TonService from './ton.service';
+import WalletAuthenticationService from './wallet-authentication.service';
+import InterviewContractService from './interview-contract.service';
 
 @Module({
   imports: [ConfigModule.forFeature(tonConfig), HttpModule],
-  providers: [TonService],
-  exports: [TonService],
+  providers: [WalletAuthenticationService, InterviewContractService],
+  exports: [WalletAuthenticationService, InterviewContractService],
 })
 export default class TonModule {}

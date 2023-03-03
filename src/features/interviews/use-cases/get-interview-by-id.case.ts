@@ -13,6 +13,7 @@ export default class GetInterviewByIdCase {
 
     return {
       id: plain.id,
+      address: plain.address,
       price: plain.price,
       startAt: plain.startAt,
       endAt: plain.endAt,
@@ -20,6 +21,7 @@ export default class GetInterviewByIdCase {
       creatorId: plain.creatorId,
       participant: plain.participant,
       payerComment: plain.payerComment,
+      isDeployed: plain.isDeployed,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };
