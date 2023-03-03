@@ -2,7 +2,6 @@ import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
 import { MS_IN_MINUTE } from '@app/app.constants';
 import PlainInterview from './interfaces/plain-interview';
-import { InterviewStatus } from '../interviews.types';
 
 export default class InterviewEntity {
   public readonly remainingMinutesToStart = 15;
@@ -13,11 +12,9 @@ export default class InterviewEntity {
     private _price: number,
     private _startAt: Date,
     private _endAt: Date,
-    private _status: InterviewStatus,
     private _creatorId: Id,
     private _participant: UserEntity | null,
     private _payerComment: string | null,
-    private _isDeployed: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
@@ -42,14 +39,6 @@ export default class InterviewEntity {
     return this._endAt;
   }
 
-  public get status(): InterviewStatus {
-    return this._status;
-  }
-
-  public set status(value: InterviewStatus) {
-    this._status = value;
-  }
-
   public get creatorId(): Id {
     return this._creatorId;
   }
@@ -68,10 +57,6 @@ export default class InterviewEntity {
 
   public set payerComment(value: string) {
     this._payerComment = value;
-  }
-
-  public get isDeployed(): boolean {
-    return this._isDeployed;
   }
 
   public get createdAt(): Date {
@@ -96,11 +81,9 @@ export default class InterviewEntity {
       price: this.price,
       startAt: this.startAt,
       endAt: this.endAt,
-      status: this.status,
       creatorId: this.creatorId,
       participant: this.participant?.plain ?? null,
       payerComment: this.payerComment,
-      isDeployed: this.isDeployed,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

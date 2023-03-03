@@ -1,7 +1,6 @@
 import { Id } from '@app/app.declarations';
 import GetUserDto from '@features/users/controller/dto/get-user.dto';
 import InterviewDto from './interview.dto';
-import { InterviewStatus } from '../../interviews.types';
 
 export default class GetInterviewDto extends InterviewDto {
   /**
@@ -9,12 +8,6 @@ export default class GetInterviewDto extends InterviewDto {
    * @example '1121bdc9-2115-4d4c-8457-ee9fefc2b093'
    */
   public id: Id;
-
-  /**
-   * Status of the interview.
-   * @example 'published'
-   */
-  public status: InterviewStatus;
 
   /**
    * Identifier of interview's creator.
@@ -32,12 +25,6 @@ export default class GetInterviewDto extends InterviewDto {
    * @example 'Love to talk with you!'
    */
   public payerComment: string | null;
-
-  /**
-   * Is contract deployed.
-   * @example true
-   */
-  public isDeployed: boolean;
 
   /**
    * Date and time of interview creation.

@@ -17,11 +17,9 @@ export default class GetInterviewByIdCase {
       price: plain.price,
       startAt: plain.startAt,
       endAt: plain.endAt,
-      status: plain.status,
       creatorId: plain.creatorId,
       participant: plain.participant,
       payerComment: plain.payerComment,
-      isDeployed: plain.isDeployed,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { getHttpEndpoint } from '@orbs-network/ton-access';
-import { Address, beginCell, Cell, contractAddress, TonClient } from 'ton';
+import {
+  Address,
+  beginCell,
+  Cell,
+  contractAddress,
+  toNano,
+  TonClient,
+} from 'ton';
 import { readFileSync } from 'fs';
 import path from 'path';
 
@@ -22,7 +29,7 @@ export default class InterviewContractService {
   ): Promise<boolean> {
     const creator = Address.parse(creatorAddress);
     const data = beginCell()
-      .storeUint(interview.price, 64)
+      .storeUint(toNano(interview.price.toString()), 64)
       .storeAddress(creator)
       .storeAddress(creator)
       .storeUint(Math.floor(interview.startAt.getTime() / 1000), 32)

@@ -24,7 +24,9 @@ export default class AddInterviewMessageCase {
       dto.executor,
     );
 
-    if (interview.status !== 'paid') {
+    const isPaid = await this.interviewsRepository.isPaid(interview.id);
+
+    if (!isPaid) {
       throw new InvalidMessagesInterviewStatusException();
     }
 
