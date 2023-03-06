@@ -1,6 +1,5 @@
 import BuildUserDto from '@features/users/entities/dto/build-user.dto';
 import { Id } from '@app/app.declarations';
-import { InterviewStatus } from '../../interviews.types';
 
 export default class BuildInterviewDto {
   public id?: Id;

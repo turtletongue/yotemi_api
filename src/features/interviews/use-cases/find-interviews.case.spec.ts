@@ -46,7 +46,6 @@ describe('The FindReviewsCase', () => {
         0.001,
         new Date(),
         new Date(Date.now() + 10000),
-        'published',
         'creatorId',
         new UserEntity(
           'id',
@@ -61,7 +60,6 @@ describe('The FindReviewsCase', () => {
           new Date(),
         ),
         'Some long comment',
-        false,
         new Date(),
         new Date(),
       );

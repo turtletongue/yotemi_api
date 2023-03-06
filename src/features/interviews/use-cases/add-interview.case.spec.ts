@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 
 import { IdentifiersService } from '@common/identifiers';
+import InterviewContractService from '@common/ton/interview-contract.service';
 import { IdentifiersServiceMock } from '@common/mocks';
 import { UserEntity, UserFactory } from '@features/users/entities';
 import { TopicFactory } from '@features/topics/entities';
@@ -18,10 +19,14 @@ import { NotificationType } from '@prisma/client';
 describe('The AddInterviewCase', () => {
   let addInterviewCase: AddInterviewCase;
   let create: jest.Mock;
+  let isCodeMalformed: jest.Mock;
+  let isAddressTaken: jest.Mock;
   let hasTimeConflict: jest.Mock;
 
   beforeEach(async () => {
     create = jest.fn();
+    isCodeMalformed = jest.fn();
+    isAddressTaken = jest.fn();
     hasTimeConflict = jest.fn();
 
     const module = await Test.createTestingModule({
@@ -35,11 +40,13 @@ describe('The AddInterviewCase', () => {
         AddNotificationCase,
         NotificationsRepository,
         NotificationFactory,
+        InterviewContractService,
       ],
     })
       .overrideProvider(InterviewsRepository)
       .useValue({
         create,
+        isAddressTaken,
         hasTimeConflict,
       })
       .overrideProvider(NotificationsRepository)
@@ -57,6 +64,10 @@ describe('The AddInterviewCase', () => {
       })
       .overrideProvider(IdentifiersService)
       .useValue(IdentifiersServiceMock)
+      .overrideProvider(InterviewContractService)
+      .useValue({
+        isCodeMalformed,
+      })
       .compile();
 
     addInterviewCase = await module.get(AddInterviewCase);
@@ -72,7 +83,6 @@ describe('The AddInterviewCase', () => {
         0.001,
         new Date(),
         new Date(Date.now() + 10000),
-        'published',
         'creatorId',
         new UserEntity(
           'id',
@@ -87,12 +97,13 @@ describe('The AddInterviewCase', () => {
           new Date(),
         ),
         'Some long comment',
-        false,
         new Date(),
         new Date(),
       );
 
       create.mockResolvedValue(interview);
+      isCodeMalformed.mockResolvedValue(false);
+      isAddressTaken.mockResolvedValue(false);
       hasTimeConflict.mockResolvedValue(false);
     });
 

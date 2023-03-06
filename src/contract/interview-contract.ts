@@ -1,10 +1,10 @@
-import { Address, Contract, ContractProvider } from 'ton-core';
+import { Address, Contract, ContractProvider, fromNano } from 'ton-core';
 
 import unixToDate from '@common/utils/unix-to-date';
 import { InterviewStatus } from '@features/interviews/interviews.types';
 
 export type InterviewInfo = {
-  price: bigint;
+  price: number;
   creatorAddress: string;
   payerAddress: string;
   startAt: Date;
@@ -26,9 +26,9 @@ export default class InterviewContract implements Contract {
     const { stack } = await provider.get('info', []);
 
     return {
-      price: stack.readBigNumber(),
-      creatorAddress: stack.readAddress().toString(),
-      payerAddress: stack.readAddress().toString(),
+      price: +fromNano(stack.readBigNumber()),
+      creatorAddress: stack.readAddress().toRawString(),
+      payerAddress: stack.readAddress().toRawString(),
       startAt: unixToDate(stack.readNumber()),
       endAt: unixToDate(stack.readNumber()),
       status: (

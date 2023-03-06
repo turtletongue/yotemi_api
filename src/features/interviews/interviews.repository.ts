@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@common/prisma';
+import InterviewContractService from '@common/ton/interview-contract.service';
 import { Id } from '@app/app.declarations';
 import { InterviewEntity, InterviewFactory, PlainInterview } from './entities';
 import { InterviewNotFoundException } from './exceptions';
@@ -27,6 +28,7 @@ export default class InterviewsRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly interviewFactory: InterviewFactory,
+    private readonly interviewContractService: InterviewContractService,
   ) {}
 
   public async findById(id: Id): Promise<InterviewEntity> {
@@ -59,6 +61,36 @@ export default class InterviewsRepository {
     return !!interview;
   }
 
+  public async isPaid(id: Id): Promise<boolean> {
+    const interview = await this.findById(id);
+
+    const { status } = await this.interviewContractService.getInfo(
+      interview.address,
+    );
+
+    return status === 'paid';
+  }
+
+  public async isFinished(id: Id): Promise<boolean> {
+    const interview = await this.findById(id);
+
+    const { status } = await this.interviewContractService.getInfo(
+      interview.address,
+    );
+
+    return status === 'finished';
+  }
+
+  public async isCanceled(id: Id): Promise<boolean> {
+    const interview = await this.findById(id);
+
+    const { status } = await this.interviewContractService.getInfo(
+      interview.address,
+    );
+
+    return status === 'canceled';
+  }
+
   public async isParticipated(
     creatorId: Id,
     participantId: Id,
@@ -74,12 +106,11 @@ export default class InterviewsRepository {
       return false;
     }
 
-    const interview = await this.interviewFactory.build({
-      ...result,
-      price: result.price.toNumber(),
-    });
+    const { status } = await this.interviewContractService.getInfo(
+      result.address,
+    );
 
-    return interview.status === 'finished';
+    return status === 'finished';
   }
 
   public async findAll(

@@ -116,6 +116,7 @@ export default class WalletAuthenticationService {
           },
           headers: {
             Authorization: `Bearer ${this.config.apiJwt}`,
+            'Accept-Encoding': 'gzip,deflate,compress',
           },
         })
         .pipe(

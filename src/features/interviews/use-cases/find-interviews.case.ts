@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { Id } from '@app/app.declarations';
 import { MS_IN_DAY } from '@app/app.constants';
 import FindInterviewsDto from './dto/find-interviews.dto';
 import InterviewsRepository from '../interviews.repository';
@@ -30,29 +29,17 @@ export default class FindInterviewsCase {
       },
     });
 
-    return interviews
-      .filter((interview) => {
-        return dto.status === undefined || interview.status === dto.status;
-      })
-      .filter((interview) => {
-        return (
-          dto.isDeployed !== undefined ||
-          interview.isDeployed === dto.isDeployed
-        );
-      })
-      .map(({ plain }) => ({
-        id: plain.id,
-        address: plain.address,
-        price: plain.price,
-        startAt: plain.startAt,
-        endAt: plain.endAt,
-        status: plain.status,
-        creatorId: plain.creatorId,
-        participant: plain.participant,
-        payerComment: plain.payerComment,
-        isDeployed: plain.isDeployed,
-        createdAt: plain.createdAt,
-        updatedAt: plain.updatedAt,
-      }));
+    return interviews.map(({ plain }) => ({
+      id: plain.id,
+      address: plain.address,
+      price: plain.price,
+      startAt: plain.startAt,
+      endAt: plain.endAt,
+      creatorId: plain.creatorId,
+      participant: plain.participant,
+      payerComment: plain.payerComment,
+      createdAt: plain.createdAt,
+      updatedAt: plain.updatedAt,
+    }));
   }
 }

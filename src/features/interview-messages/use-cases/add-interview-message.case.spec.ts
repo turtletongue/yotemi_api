@@ -14,10 +14,12 @@ import { InvalidMessagesInterviewStatusException } from '../exceptions';
 describe('The AddInterviewMessageCase', () => {
   let addInterviewMessageCase: AddInterviewMessageCase;
   let create: jest.Mock;
+  let isPaid: jest.Mock;
   let findInterviewById: jest.Mock;
 
   beforeEach(async () => {
     create = jest.fn();
+    isPaid = jest.fn();
     findInterviewById = jest.fn();
 
     const module = await Test.createTestingModule({
@@ -36,6 +38,7 @@ describe('The AddInterviewMessageCase', () => {
       .overrideProvider(InterviewsRepository)
       .useValue({
         findById: findInterviewById,
+        isPaid,
       })
       .overrideProvider(IdentifiersService)
       .useValue(IdentifiersServiceMock)
@@ -73,13 +76,14 @@ describe('The AddInterviewMessageCase', () => {
         );
 
         create.mockResolvedValue(interviewMessage);
+        isPaid.mockResolvedValue(true);
         findInterviewById.mockResolvedValue(
           new InterviewEntity(
             'interviewId',
+            'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
             0.001,
             new Date(),
             new Date(),
-            'started',
             'creatorId',
             participant,
             '',
@@ -100,7 +104,7 @@ describe('The AddInterviewMessageCase', () => {
       });
     });
 
-    describe('and the interview is not started', () => {
+    describe('and the interview is not paid', () => {
       let interviewMessage: InterviewMessageEntity;
       let participant: UserEntity;
 
@@ -128,13 +132,14 @@ describe('The AddInterviewMessageCase', () => {
         );
 
         create.mockResolvedValue(interviewMessage);
+        isPaid.mockResolvedValue(false);
         findInterviewById.mockResolvedValue(
           new InterviewEntity(
             'interviewId',
+            'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
             0.001,
             new Date(),
             new Date(),
-            'finished',
             'creatorId',
             participant,
             '',
@@ -183,13 +188,14 @@ describe('The AddInterviewMessageCase', () => {
         );
 
         create.mockResolvedValue(interviewMessage);
+        isPaid.mockResolvedValue(true);
         findInterviewById.mockResolvedValue(
           new InterviewEntity(
             'interviewId',
+            'EQC9wO6nyVru4kxshaLgAGLlX69EdDLqlm5H5pzKcmPIpodW',
             0.001,
             new Date(),
             new Date(),
-            'started',
             'creatorId',
             null,
             '',
