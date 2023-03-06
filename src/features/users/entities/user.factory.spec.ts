@@ -31,7 +31,8 @@ describe('The UserFactory', () => {
       const user = await userFactory.build({
         accountAddress:
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
-        fullName: 'Tom Land',
+        firstName: 'Tom',
+        lastName: 'Land',
       });
 
       expect(user).toBeInstanceOf(UserEntity);

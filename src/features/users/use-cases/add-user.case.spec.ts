@@ -57,7 +57,8 @@ describe('The AddUserCase', () => {
           'id',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           'authId',
-          'Tom Land',
+          'Tom',
+          'Land',
           '',
           false,
           [],
@@ -74,7 +75,8 @@ describe('The AddUserCase', () => {
         const result = await addUserCase.apply({
           accountAddress:
             '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
-          fullName: 'Tom Land',
+          firstName: 'Tom',
+          lastName: 'Land',
         });
 
         expect(result.id).toEqual(user.id);
@@ -91,7 +93,8 @@ describe('The AddUserCase', () => {
           addUserCase.apply({
             accountAddress:
               '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
-            fullName: 'Tom Land',
+            firstName: 'Tom',
+            lastName: 'Land',
           }),
         ).rejects.toThrowError(AddressIsTakenException);
       });

@@ -27,19 +27,8 @@ export default class UpdateUserCase {
       topics: topics.map((topic) => topic.plain),
     });
 
-    const { plain } = await this.usersRepository.update(user.plain);
-
-    return {
-      id: plain.id,
-      accountAddress: plain.accountAddress,
-      authId: plain.authId,
-      fullName: plain.fullName,
-      biography: plain.biography,
-      isVerified: plain.isVerified,
-      topics: plain.topics,
-      followersCount: plain.followersCount,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
-    };
+    return await this.usersRepository
+      .update(user.plain)
+      .then(({ plain }) => plain);
   }
 }

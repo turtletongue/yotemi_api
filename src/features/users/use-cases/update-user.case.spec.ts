@@ -55,7 +55,8 @@ describe('The UpdateUserCase', () => {
         'id',
         '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
         'authId',
-        'Tom Land',
+        'Tom',
+        'Land',
         '',
         false,
         [],
@@ -71,7 +72,8 @@ describe('The UpdateUserCase', () => {
     it('should return the user', async () => {
       const result = await updateUserCase.apply({
         id: 'id',
-        fullName: 'Tom Land',
+        firstName: 'Tom',
+        lastName: 'Land',
         executor: user,
       });
 

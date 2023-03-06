@@ -29,19 +29,8 @@ export default class AddUserCase {
       throw new AddressIsTakenException();
     }
 
-    const { plain } = await this.usersRepository.create(user.plain);
-
-    return {
-      id: plain.id,
-      accountAddress: plain.accountAddress,
-      authId: plain.authId,
-      fullName: plain.fullName,
-      biography: plain.biography,
-      isVerified: plain.isVerified,
-      topics: plain.topics,
-      followersCount: plain.followersCount,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
-    };
+    return await this.usersRepository
+      .create(user.plain)
+      .then(({ plain }) => plain);
   }
 }

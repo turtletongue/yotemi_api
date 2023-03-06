@@ -85,19 +85,6 @@ export default class AddInterviewCase {
       userId: creatorId,
     });
 
-    return {
-      id: plain.id,
-      address: plain.address,
-      price: plain.price,
-      startAt: plain.startAt,
-      endAt: plain.endAt,
-      status: plain.status,
-      creatorId: plain.creatorId,
-      participant: plain.participant,
-      payerComment: plain.payerComment,
-      isDeployed: plain.isDeployed,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
-    };
+    return plain;
   }
 }

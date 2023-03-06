@@ -12,10 +12,18 @@ export default class UserDto {
   public accountAddress: string;
 
   /**
-   * Full name of user to display in profile.
-   * @example 'Tom Land'
+   * First name of user to display in profile.
+   * @example 'Tom'
    */
   @IsString()
   @IsNotEmpty()
-  public fullName: string;
+  public firstName: string;
+
+  /**
+   *  Last name of user to display in profile.
+   * @example 'Land'
+   */
+  @IsString()
+  @IsNotEmpty()
+  public lastName: string;
 }

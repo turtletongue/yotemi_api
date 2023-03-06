@@ -9,7 +9,8 @@ export default class UserEntity {
     private _id: Id,
     private _accountAddress: string,
     private _authId: Id,
-    private _fullName: string,
+    private _firstName: string,
+    private _lastName: string,
     private _biography: string,
     private _isVerified: boolean,
     private _topics: TopicEntity[],
@@ -30,8 +31,16 @@ export default class UserEntity {
     return this._authId;
   }
 
+  public get firstName(): string {
+    return this.firstName;
+  }
+
+  public get lastName(): string {
+    return this.lastName;
+  }
+
   public get fullName(): string {
-    return this._fullName;
+    return `${this._firstName} ${this.lastName}`;
   }
 
   public get biography(): string {
@@ -63,6 +72,8 @@ export default class UserEntity {
       id: this.id,
       accountAddress: this.accountAddress,
       authId: this.authId,
+      firstName: this.firstName,
+      lastName: this.lastName,
       fullName: this.fullName,
       biography: this.biography,
       isVerified: this.isVerified,

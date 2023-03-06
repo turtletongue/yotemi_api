@@ -24,7 +24,8 @@ model User {
   id                String             @id @default(uuid())
   accountAddress    String             @unique
   authId            String
-  fullName          String
+  firstName         String
+  lastName          String
   biography         String             @default("")
   isVerified        Boolean            @default(false)
   topics            Topic[]

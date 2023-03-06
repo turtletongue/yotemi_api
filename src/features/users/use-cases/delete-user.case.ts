@@ -13,19 +13,6 @@ export default class DeleteUserCase {
       throw new UnauthorizedException();
     }
 
-    const { plain } = await this.usersRepository.delete(id);
-
-    return {
-      id: plain.id,
-      accountAddress: plain.accountAddress,
-      authId: plain.authId,
-      fullName: plain.fullName,
-      biography: plain.biography,
-      isVerified: plain.isVerified,
-      topics: plain.topics,
-      followersCount: plain.followersCount,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
-    };
+    return await this.usersRepository.delete(id).then(({ plain }) => plain);
   }
 }

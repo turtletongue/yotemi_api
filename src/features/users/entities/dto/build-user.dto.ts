@@ -5,7 +5,8 @@ export default class BuildUserDto {
   public id?: Id;
   public accountAddress: string;
   public authId?: Id;
-  public fullName: string;
+  public firstName: string;
+  public lastName: string;
   public biography?: string;
   public isVerified?: boolean;
   public topics?: BuildTopicDto[];

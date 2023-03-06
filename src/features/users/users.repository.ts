@@ -135,7 +135,8 @@ export default class UsersRepository {
         id: data.id,
         accountAddress: data.accountAddress,
         authId: data.authId,
-        fullName: data.fullName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         biography: data.biography,
         isVerified: data.isVerified,
         topics: {
@@ -169,7 +170,8 @@ export default class UsersRepository {
         id: data.id,
         accountAddress: data.accountAddress,
         authId: data.authId,
-        fullName: data.fullName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         biography: data.biography,
         isVerified: data.isVerified,
         topics: {
