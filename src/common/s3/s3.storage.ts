@@ -1,9 +1,13 @@
-import { InternalServerErrorException } from '@nestjs/common';
-
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { StorageEngine } from 'multer';
 import EasyYandexS3 from 'easy-yandex-s3';
 import { buffer } from 'stream/consumers';
 import { extname } from 'path';
+
+import { MAX_IMAGE_SIZE } from '@app/app.constants';
 
 type YandexCloudBlobReference = {
   destination: string;
@@ -125,8 +129,23 @@ export default class S3Storage implements StorageEngine {
       return;
     }
 
+    if (!/\.(jpeg|jpg|png|gif|webp)$/.test(blobFile.filename)) {
+      cb(
+        new BadRequestException(
+          'Supported only .jpeg, .jpg, .png, .gif and .webp files.',
+        ),
+        undefined,
+      );
+    }
+
     buffer(file.stream)
       .then(async (fileBuffer) => {
+        const bufferLength = Buffer.byteLength(fileBuffer);
+
+        if (bufferLength > MAX_IMAGE_SIZE) {
+          throw new BadRequestException('File is too large.');
+        }
+
         const isOk = await this.s3.Upload(
           {
             buffer: fileBuffer,
@@ -140,7 +159,7 @@ export default class S3Storage implements StorageEngine {
           throw new InternalServerErrorException('File uploading failed.');
         }
 
-        return Buffer.byteLength(fileBuffer);
+        return bufferLength;
       })
       .then((writtenBytesLength) => {
         cb(null, {

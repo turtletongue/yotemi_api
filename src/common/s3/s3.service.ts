@@ -27,7 +27,7 @@ export default class S3Service {
   public async remove(path: string): Promise<void> {
     const isOk = await this.s3.Remove(path);
 
-    if (isOk) {
+    if (!isOk) {
       throw new InternalServerErrorException('File deleting failed.');
     }
   }

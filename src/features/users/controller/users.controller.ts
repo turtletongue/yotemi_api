@@ -5,14 +5,12 @@ import {
   Delete,
   Get,
   Param,
-  ParseFilePipeBuilder,
   Patch,
   Post,
   Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  UsePipes,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -26,7 +24,6 @@ import PostUserDto from './dto/post-user.dto';
 import PatchUserDto from './dto/patch-user.dto';
 import UsersService from './users.service';
 import { UserEntity } from '../entities';
-import { imagesValidationPipe } from '@app/app.constants';
 
 @ApiTags('users')
 @Controller('users')
@@ -82,7 +79,7 @@ export default class UsersController {
   public async changeAvatar(
     @Param('id') id: Id,
     @User() executor: UserEntity,
-    @UploadedFile('file', imagesValidationPipe) file?: Express.Multer.File,
+    @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<void> {
     if (!file) {
       throw new BadRequestException(
@@ -108,7 +105,7 @@ export default class UsersController {
   public async changeCover(
     @Param('id') id: Id,
     @User() executor: UserEntity,
-    @UploadedFile('file', imagesValidationPipe) file?: Express.Multer.File,
+    @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<void> {
     if (!file) {
       throw new BadRequestException(
