@@ -1,4 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import EasyYandexS3 from 'easy-yandex-s3';
 
@@ -21,7 +25,11 @@ export default class S3Service {
   }
 
   public async remove(path: string): Promise<void> {
-    await this.s3.Remove(path);
+    const isOk = await this.s3.Remove(path);
+
+    if (isOk) {
+      throw new InternalServerErrorException('File deleting failed.');
+    }
   }
 
   public getReadPath(path: string): string {

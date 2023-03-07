@@ -1,3 +1,5 @@
+import { InternalServerErrorException } from '@nestjs/common';
+
 import { StorageEngine } from 'multer';
 import EasyYandexS3 from 'easy-yandex-s3';
 import { buffer } from 'stream/consumers';
@@ -125,7 +127,7 @@ export default class S3Storage implements StorageEngine {
 
     buffer(file.stream)
       .then(async (fileBuffer) => {
-        await this.s3.Upload(
+        const isOk = await this.s3.Upload(
           {
             buffer: fileBuffer,
             name: blobFile.filename,
@@ -133,6 +135,10 @@ export default class S3Storage implements StorageEngine {
           },
           blobFile.destination,
         );
+
+        if (!isOk) {
+          throw new InternalServerErrorException('File uploading failed.');
+        }
 
         return Buffer.byteLength(fileBuffer);
       })
@@ -157,7 +163,13 @@ export default class S3Storage implements StorageEngine {
   ): void {
     this.s3
       .Remove(file.path)
-      .then(() => cb(undefined))
+      .then((isOk) => {
+        if (!isOk) {
+          throw new InternalServerErrorException('File deleting failed.');
+        }
+
+        cb(undefined);
+      })
       .catch((error) => cb(error));
   }
 }
