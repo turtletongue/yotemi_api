@@ -6,6 +6,8 @@ import DeleteUserCase from './delete-user.case';
 import CheckUserAuthIdCase from './check-user-auth-id.case';
 import FollowUserCase from './follow-user.case';
 import UnfollowUserCase from './unfollow-user.case';
+import ChangeAvatarCase from './change-avatar.case';
+import ChangeCoverCase from './change-cover.case';
 
 const userUseCases = [
   FindUsersCase,
@@ -16,6 +18,8 @@ const userUseCases = [
   CheckUserAuthIdCase,
   FollowUserCase,
   UnfollowUserCase,
+  ChangeAvatarCase,
+  ChangeCoverCase,
 ];
 
 export default userUseCases;

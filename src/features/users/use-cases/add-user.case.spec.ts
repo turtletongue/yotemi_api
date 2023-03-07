@@ -60,6 +60,8 @@ describe('The AddUserCase', () => {
           'Tom',
           'Land',
           '',
+          null,
+          null,
           false,
           [],
           0,

@@ -33,6 +33,8 @@ describe('The ReviewFactory', () => {
           'authId',
           'Tom Land',
           '',
+          null,
+          null,
           false,
           [],
           0,

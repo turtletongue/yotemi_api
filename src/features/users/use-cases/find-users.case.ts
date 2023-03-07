@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PaginationResult } from '@common/pagination';
+import { S3Service } from '@common/s3';
 import FindUsersDto from './dto/find-users.dto';
 import UsersRepository from '../users.repository';
 import { PlainUser } from '../entities';
@@ -13,7 +14,10 @@ interface FindOptions {
 
 @Injectable()
 export default class FindUsersCase {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly s3Service: S3Service,
+  ) {}
 
   public async apply(dto: FindUsersDto): Promise<PaginationResult<PlainUser>> {
     const findOptions: FindOptions = { where: {} };
@@ -30,7 +34,13 @@ export default class FindUsersCase {
 
     return {
       ...result,
-      items: result.items.map(({ plain }) => plain),
+      items: result.items.map(({ plain }) => ({
+        ...plain,
+        avatarPath:
+          plain.avatarPath && this.s3Service.getReadPath(plain.avatarPath),
+        coverPath:
+          plain.coverPath && this.s3Service.getReadPath(plain.coverPath),
+      })),
     };
   }
 }

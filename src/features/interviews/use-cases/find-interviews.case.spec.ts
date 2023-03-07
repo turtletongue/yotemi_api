@@ -53,6 +53,8 @@ describe('The FindReviewsCase', () => {
           'authId',
           'Tom Land',
           '',
+          null,
+          null,
           false,
           [],
           0,

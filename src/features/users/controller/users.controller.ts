@@ -1,25 +1,39 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseFilePipeBuilder,
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Id } from '@app/app.declarations';
 import { AccessGuard } from '@features/authentication/guards';
 import { User } from '@features/authentication/decorators';
+import { BYTES_IN_MB } from '@app/app.constants';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import GetUserDto from './dto/get-user.dto';
 import PostUserDto from './dto/post-user.dto';
 import PatchUserDto from './dto/patch-user.dto';
 import UsersService from './users.service';
 import { UserEntity } from '../entities';
+
+const imagesValidationPipe = new ParseFilePipeBuilder()
+  .addMaxSizeValidator({
+    maxSize: 10 * BYTES_IN_MB,
+  })
+  .addFileTypeValidator({ fileType: /\.(jpg|jpeg|png|webp)$/ })
+  .build();
 
 @ApiTags('users')
 @Controller('users')
@@ -62,6 +76,60 @@ export default class UsersController {
     @User() executor: UserEntity,
   ): Promise<GetUserDto> {
     return await this.usersService.updateUser({ ...dto, id }, executor);
+  }
+
+  /**
+   * Change avatar.
+   */
+  @ApiBearerAuth()
+  @ApiConsumes('form-data')
+  @UseGuards(AccessGuard)
+  @UsePipes(imagesValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post(':id')
+  public async changeAvatar(
+    @Param('id') id: Id,
+    @User() executor: UserEntity,
+    @UploadedFile('file') file?: Express.Multer.File,
+  ): Promise<void> {
+    if (!file) {
+      throw new BadRequestException(
+        "Provide upload in 'file' field of form-data.",
+      );
+    }
+
+    return await this.usersService.changeAvatar(
+      id,
+      { path: file.path },
+      executor,
+    );
+  }
+
+  /**
+   * Change cover.
+   */
+  @ApiBearerAuth()
+  @ApiConsumes('form-data')
+  @UseGuards(AccessGuard)
+  @UsePipes(imagesValidationPipe)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post(':id')
+  public async changeCover(
+    @Param('id') id: Id,
+    @User() executor: UserEntity,
+    @UploadedFile('file') file?: Express.Multer.File,
+  ): Promise<void> {
+    if (!file) {
+      throw new BadRequestException(
+        "Provide upload in 'file' field of form-data.",
+      );
+    }
+
+    return await this.usersService.changeCover(
+      id,
+      { path: file.path },
+      executor,
+    );
   }
 
   /**

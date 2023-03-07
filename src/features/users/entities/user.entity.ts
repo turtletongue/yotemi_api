@@ -12,6 +12,8 @@ export default class UserEntity {
     private _firstName: string,
     private _lastName: string,
     private _biography: string,
+    private _avatarPath: string | null,
+    private _coverPath: string | null,
     private _isVerified: boolean,
     private _topics: TopicEntity[],
     private _followersCount: number,
@@ -47,6 +49,22 @@ export default class UserEntity {
     return this._biography;
   }
 
+  public get avatarPath(): string | null {
+    return this._avatarPath;
+  }
+
+  public set avatarPath(value: string | null) {
+    this._avatarPath = value;
+  }
+
+  public get coverPath(): string | null {
+    return this._coverPath;
+  }
+
+  public set coverPath(value: string | null) {
+    this._coverPath = value;
+  }
+
   public get isVerified(): boolean {
     return this._isVerified;
   }
@@ -76,6 +94,8 @@ export default class UserEntity {
       lastName: this.lastName,
       fullName: this.fullName,
       biography: this.biography,
+      avatarPath: this.avatarPath,
+      coverPath: this.coverPath,
       isVerified: this.isVerified,
       topics: this.topics.map((topic) => topic.plain),
       followersCount: this.followersCount,

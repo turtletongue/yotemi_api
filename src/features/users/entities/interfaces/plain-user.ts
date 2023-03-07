@@ -9,6 +9,8 @@ export default interface PlainUser {
   lastName: string;
   fullName: string;
   biography: string;
+  avatarPath: string | null;
+  coverPath: string | null;
   isVerified: boolean;
   topics: PlainTopic[];
   followersCount: number;

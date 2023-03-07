@@ -58,6 +58,8 @@ describe('The UpdateUserCase', () => {
         'Tom',
         'Land',
         '',
+        null,
+        null,
         false,
         [],
         0,

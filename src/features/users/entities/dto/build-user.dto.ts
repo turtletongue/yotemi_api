@@ -8,6 +8,8 @@ export default class BuildUserDto {
   public firstName: string;
   public lastName: string;
   public biography?: string;
+  public avatarPath?: string;
+  public coverPath?: string;
   public isVerified?: boolean;
   public topics?: BuildTopicDto[];
   public followersCount?: number;
