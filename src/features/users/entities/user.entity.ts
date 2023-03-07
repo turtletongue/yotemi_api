@@ -34,15 +34,15 @@ export default class UserEntity {
   }
 
   public get firstName(): string {
-    return this.firstName;
+    return this._firstName;
   }
 
   public get lastName(): string {
-    return this.lastName;
+    return this._lastName;
   }
 
   public get fullName(): string {
-    return `${this._firstName} ${this.lastName}`;
+    return `${this.firstName} ${this.lastName}`;
   }
 
   public get biography(): string {

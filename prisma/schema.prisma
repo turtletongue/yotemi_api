@@ -27,6 +27,8 @@ model User {
   firstName         String
   lastName          String
   biography         String             @default("")
+  avatarPath        String?
+  coverPath         String?
   isVerified        Boolean            @default(false)
   topics            Topic[]
   feedbacks         Review[]           @relation(name: "reviewOfUser")

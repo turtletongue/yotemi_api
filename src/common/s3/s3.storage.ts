@@ -15,6 +15,7 @@ export type FileInfo = {
   mimetype: string;
   bucket: string;
   destination: string;
+  size: number;
   path: string;
 };
 
@@ -123,8 +124,8 @@ export default class S3Storage implements StorageEngine {
     }
 
     buffer(file.stream)
-      .then((fileBuffer) => {
-        return this.s3.Upload(
+      .then(async (fileBuffer) => {
+        await this.s3.Upload(
           {
             buffer: fileBuffer,
             name: blobFile.filename,
@@ -132,13 +133,16 @@ export default class S3Storage implements StorageEngine {
           },
           blobFile.destination,
         );
+
+        return Buffer.byteLength(fileBuffer);
       })
-      .then(() => {
+      .then((writtenBytesLength) => {
         cb(null, {
           filename: blobFile.filename,
           originalname: file.originalname,
           mimetype: blobFile.mimetype,
           destination: blobFile.destination,
+          size: writtenBytesLength,
           bucket: this.options.bucket,
           path: `${blobFile.destination}/${blobFile.filename}`,
         });

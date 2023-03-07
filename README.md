@@ -35,12 +35,19 @@ ACCESS_EXPIRATION_TIME=1800
 REFRESH_SECRET=secret_with_length_of_25_characters
 REFRESH_EXPIRATION_TIME=2678400
 
-# TON configuration
+# TON Configuration
 
 TON_API_URL=https://tonapi.io
 TON_API_JWT=eyJhbGci...
 TON_ALLOWED_AUTH_DOMAIN=localhost:63342
 TON_SIGNATURE_EXPIRES_IN=300
+
+# S3 Configuration
+
+S3_KEY_ID=some_key_id
+S3_SECRET_KEY=some_secret_key
+S3_BUCKET=your-bucket
+S3_READ_URL=https://storage.yandexcloud.net/yotemi-uploads
 ```
 
 Now, you can execute this command:

@@ -20,20 +20,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Id } from '@app/app.declarations';
 import { AccessGuard } from '@features/authentication/guards';
 import { User } from '@features/authentication/decorators';
-import { BYTES_IN_MB } from '@app/app.constants';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import GetUserDto from './dto/get-user.dto';
 import PostUserDto from './dto/post-user.dto';
 import PatchUserDto from './dto/patch-user.dto';
 import UsersService from './users.service';
 import { UserEntity } from '../entities';
-
-const imagesValidationPipe = new ParseFilePipeBuilder()
-  .addMaxSizeValidator({
-    maxSize: 10 * BYTES_IN_MB,
-  })
-  .addFileTypeValidator({ fileType: /\.(jpg|jpeg|png|webp)$/ })
-  .build();
+import { imagesValidationPipe } from '@app/app.constants';
 
 @ApiTags('users')
 @Controller('users')
@@ -84,13 +77,12 @@ export default class UsersController {
   @ApiBearerAuth()
   @ApiConsumes('form-data')
   @UseGuards(AccessGuard)
-  @UsePipes(imagesValidationPipe)
   @UseInterceptors(FileInterceptor('file'))
-  @Post(':id')
+  @Post(':id/avatar')
   public async changeAvatar(
     @Param('id') id: Id,
     @User() executor: UserEntity,
-    @UploadedFile('file') file?: Express.Multer.File,
+    @UploadedFile('file', imagesValidationPipe) file?: Express.Multer.File,
   ): Promise<void> {
     if (!file) {
       throw new BadRequestException(
@@ -111,13 +103,12 @@ export default class UsersController {
   @ApiBearerAuth()
   @ApiConsumes('form-data')
   @UseGuards(AccessGuard)
-  @UsePipes(imagesValidationPipe)
   @UseInterceptors(FileInterceptor('file'))
-  @Post(':id')
+  @Post(':id/cover')
   public async changeCover(
     @Param('id') id: Id,
     @User() executor: UserEntity,
-    @UploadedFile('file') file?: Express.Multer.File,
+    @UploadedFile('file', imagesValidationPipe) file?: Express.Multer.File,
   ): Promise<void> {
     if (!file) {
       throw new BadRequestException(

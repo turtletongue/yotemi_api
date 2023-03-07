@@ -173,6 +173,8 @@ export default class UsersRepository {
         firstName: data.firstName,
         lastName: data.lastName,
         biography: data.biography,
+        avatarPath: data.avatarPath,
+        coverPath: data.coverPath,
         isVerified: data.isVerified,
         topics: {
           set: [],
