@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -14,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { Id } from '@app/app.declarations';
 import {
@@ -29,6 +32,7 @@ import PostUserDto from './dto/post-user.dto';
 import PatchUserDto from './dto/patch-user.dto';
 import UsersService from './users.service';
 import { UserEntity } from '../entities';
+import { AddressIsTakenException, UserNotFoundException } from '../exceptions';
 
 @ApiTags('users')
 @Controller('users')
@@ -50,6 +54,9 @@ export default class UsersController {
   /**
    * Get single user by id.
    */
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user.',
+  })
   @Get(':id')
   public async getById(@Param('id') id: Id): Promise<GetUserDto> {
     return await this.usersService.getUserById(id);
@@ -58,6 +65,9 @@ export default class UsersController {
   /**
    * Create new user.
    */
+  @ApiException(() => AddressIsTakenException, {
+    description: 'Another account address must be used instead.',
+  })
   @Post()
   public async create(@Body() dto: PostUserDto): Promise<GetUserDto> {
     return await this.usersService.addUser(dto);
@@ -67,6 +77,12 @@ export default class UsersController {
    * Update some user's fields.
    */
   @ApiBearerAuth()
+  @ApiException(() => ForbiddenException, {
+    description: 'You cannot edit another user.',
+  })
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to update.',
+  })
   @UseGuards(AccessGuard, RoleGuard('user'))
   @Patch(':id')
   public async update(
@@ -81,6 +97,15 @@ export default class UsersController {
    * Change avatar.
    */
   @ApiBearerAuth()
+  @ApiException(() => ForbiddenException, {
+    description: 'You cannot edit another user.',
+  })
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to update.',
+  })
+  @ApiException(() => InternalServerErrorException, {
+    description: 'File uploading or replacing failed.',
+  })
   @ApiConsumes('form-data')
   @UseGuards(AccessGuard, RoleGuard('user'))
   @UseInterceptors(FileInterceptor('file'))
@@ -107,6 +132,15 @@ export default class UsersController {
    * Change cover.
    */
   @ApiBearerAuth()
+  @ApiException(() => ForbiddenException, {
+    description: 'You cannot edit another user.',
+  })
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to update.',
+  })
+  @ApiException(() => InternalServerErrorException, {
+    description: 'File uploading or replacing failed.',
+  })
   @ApiConsumes('form-data')
   @UseGuards(AccessGuard, RoleGuard('user'))
   @UseInterceptors(FileInterceptor('file'))
@@ -133,6 +167,12 @@ export default class UsersController {
    * Delete user.
    */
   @ApiBearerAuth()
+  @ApiException(() => ForbiddenException, {
+    description: 'You cannot delete another user.',
+  })
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to delete.',
+  })
   @UseGuards(AccessGuard, RoleGuard('user'))
   @Delete(':id')
   public async delete(
