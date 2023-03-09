@@ -15,6 +15,7 @@ import UpdateUserCase from '../use-cases/update-user.case';
 import DeleteUserCase from '../use-cases/delete-user.case';
 import ChangeAvatarCase from '../use-cases/change-avatar.case';
 import ChangeCoverCase from '../use-cases/change-cover.case';
+import { AdminEntity } from '@features/admins/entities';
 
 @Injectable()
 export default class UsersService {
@@ -32,8 +33,11 @@ export default class UsersService {
     return await this.getUserByIdCase.apply(id);
   }
 
-  public async findUsers(params: ListUsersParams): Promise<ListUsersDto> {
-    return await this.findUsersCase.apply(params);
+  public async findUsers(
+    params: ListUsersParams,
+    executor?: UserEntity | AdminEntity,
+  ): Promise<ListUsersDto> {
+    return await this.findUsersCase.apply({ ...params, executor });
   }
 
   public async addUser(dto: PostUserDto): Promise<GetUserDto> {

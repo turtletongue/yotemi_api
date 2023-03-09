@@ -16,8 +16,13 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Id } from '@app/app.declarations';
-import { AccessGuard } from '@features/authentication/guards';
-import { User } from '@features/authentication/decorators';
+import {
+  AccessGuard,
+  OptionalAccessGuard,
+  RoleGuard,
+} from '@features/authentication/guards';
+import { Executor, User } from '@features/authentication/decorators';
+import { AdminEntity } from '@features/admins/entities';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import GetUserDto from './dto/get-user.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -33,9 +38,13 @@ export default class UsersController {
   /**
    * Get paginated list of users.
    */
+  @UseGuards(OptionalAccessGuard)
   @Get()
-  public async find(@Query() params: ListUsersParams): Promise<ListUsersDto> {
-    return await this.usersService.findUsers(params);
+  public async find(
+    @Query() params: ListUsersParams,
+    @Executor() executor?: UserEntity | AdminEntity,
+  ): Promise<ListUsersDto> {
+    return await this.usersService.findUsers(params, executor);
   }
 
   /**
@@ -58,7 +67,7 @@ export default class UsersController {
    * Update some user's fields.
    */
   @ApiBearerAuth()
-  @UseGuards(AccessGuard)
+  @UseGuards(AccessGuard, RoleGuard('user'))
   @Patch(':id')
   public async update(
     @Param('id') id: Id,
@@ -73,7 +82,7 @@ export default class UsersController {
    */
   @ApiBearerAuth()
   @ApiConsumes('form-data')
-  @UseGuards(AccessGuard)
+  @UseGuards(AccessGuard, RoleGuard('user'))
   @UseInterceptors(FileInterceptor('file'))
   @Post(':id/avatar')
   public async changeAvatar(
@@ -99,7 +108,7 @@ export default class UsersController {
    */
   @ApiBearerAuth()
   @ApiConsumes('form-data')
-  @UseGuards(AccessGuard)
+  @UseGuards(AccessGuard, RoleGuard('user'))
   @UseInterceptors(FileInterceptor('file'))
   @Post(':id/cover')
   public async changeCover(
@@ -124,7 +133,7 @@ export default class UsersController {
    * Delete user.
    */
   @ApiBearerAuth()
-  @UseGuards(AccessGuard)
+  @UseGuards(AccessGuard, RoleGuard('user'))
   @Delete(':id')
   public async delete(
     @Param('id') id: Id,

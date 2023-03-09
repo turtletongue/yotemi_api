@@ -40,6 +40,16 @@ export default class GetUserDto extends UserDto {
   public followersCount: number;
 
   /**
+   * Path to avatar image.
+   */
+  public avatarPath: string | null;
+
+  /**
+   * Path to cover image.
+   */
+  public coverPath: string | null;
+
+  /**
    * Date and time of user creation.
    * @example '2022-11-08T00:00:00.000Z'
    */

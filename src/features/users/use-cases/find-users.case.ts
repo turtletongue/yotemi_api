@@ -8,7 +8,7 @@ import { PlainUser } from '../entities';
 
 interface FindOptions {
   where: {
-    accountAddress?: string;
+    accountAddress?: string | { not: string };
   };
 }
 
@@ -24,6 +24,12 @@ export default class FindUsersCase {
 
     if (dto.accountAddress) {
       findOptions.where.accountAddress = dto.accountAddress;
+    }
+
+    if (dto.executor && dto.executor.kind === 'user' && dto.hideSelf) {
+      findOptions.where.accountAddress = {
+        not: dto.executor.accountAddress,
+      };
     }
 
     const result = await this.usersRepository.findPaginated(
