@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
@@ -18,7 +18,7 @@ export default class GetNotificationByIdCase {
     );
 
     if (plain.userId !== executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     return {

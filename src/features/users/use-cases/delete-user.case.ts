@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import DeleteUserDto from './dto/delete-user.dto';
 import UsersRepository from '../users.repository';
@@ -10,7 +10,7 @@ export default class DeleteUserCase {
 
   public async apply({ id, executor }: DeleteUserDto): Promise<PlainUser> {
     if (id !== executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     return await this.usersRepository.delete(id).then(({ plain }) => plain);

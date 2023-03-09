@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import MarkNotificationAsSeenDto from './dto/mark-notification-as-seen.dto';
 import NotificationsRepository from '../notifications.repository';
@@ -20,7 +20,7 @@ export default class MarkNotificationAsSeenCase {
     );
 
     if (notification.userId !== executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     const { plain } = await this.notificationsRepository.markAsSeen(

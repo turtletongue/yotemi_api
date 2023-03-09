@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { S3Service } from '@common/s3';
 import ChangeCoverDto from './dto/change-cover.dto';
@@ -13,7 +13,7 @@ export default class ChangeCoverCase {
 
   public async apply({ id, path, executor }: ChangeCoverDto): Promise<void> {
     if (id !== executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     const user = await this.usersRepository.findById(id);

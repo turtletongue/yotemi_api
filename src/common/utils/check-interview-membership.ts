@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 
 import InterviewsRepository from '@features/interviews/interviews.repository';
 import { UserEntity } from '@features/users/entities';
@@ -18,7 +18,7 @@ const checkInterviewMembership = async (
   }
 
   if (!interviewMemberIds.includes(executor.id)) {
-    throw new UnauthorizedException();
+    throw new ForbiddenException();
   }
 
   return interview;

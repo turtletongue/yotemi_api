@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { S3Service } from '@common/s3';
 import ChangeAvatarDto from './dto/change-avatar.dto';
@@ -13,7 +13,7 @@ export default class ChangeAvatarCase {
 
   public async apply({ id, path, executor }: ChangeAvatarDto): Promise<void> {
     if (id !== executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     const user = await this.usersRepository.findById(id);

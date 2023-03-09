@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import TopicsRepository from '@features/topics/topics.repository';
 import UpdateUserDto from './dto/update-user.dto';
@@ -15,7 +15,7 @@ export default class UpdateUserCase {
 
   public async apply(dto: UpdateUserDto): Promise<PlainUser> {
     if (dto.id !== dto.executor.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     const topics = await this.topicsRepository.findByIds(dto.topics);
