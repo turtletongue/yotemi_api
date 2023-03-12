@@ -63,6 +63,26 @@ export default class UsersController {
   }
 
   /**
+   * Get single user by username.
+   */
+  @Get('by-username/:username')
+  public async getByUsername(
+    @Param('username') username: string,
+  ): Promise<GetUserDto> {
+    return await this.usersService.getUserByUsername(username);
+  }
+
+  /**
+   * Get single user by wallet address.
+   */
+  @Get('by-address/:walletAddress')
+  public async getByAddress(
+    @Param('walletAddress') accountAddress: string,
+  ): Promise<GetUserDto> {
+    return await this.usersService.getUserByAccountAddress(accountAddress);
+  }
+
+  /**
    * Create new user.
    */
   @ApiException(() => AddressIsTakenException, {

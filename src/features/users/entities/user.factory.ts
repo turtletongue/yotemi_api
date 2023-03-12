@@ -14,6 +14,7 @@ export default class UserFactory {
 
   public async build({
     id = this.identifiers.generate(),
+    username,
     accountAddress,
     authId = this.identifiers.generate(),
     topics = [],
@@ -33,6 +34,7 @@ export default class UserFactory {
 
     return new UserEntity(
       id,
+      username,
       accountAddress,
       authId,
       firstName,

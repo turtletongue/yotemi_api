@@ -22,10 +22,6 @@ export default class FindUsersCase {
   public async apply(dto: FindUsersDto): Promise<PaginationResult<PlainUser>> {
     const findOptions: FindOptions = { where: {} };
 
-    if (dto.accountAddress) {
-      findOptions.where.accountAddress = dto.accountAddress;
-    }
-
     if (dto.executor && dto.executor.kind === 'user' && dto.hideSelf) {
       findOptions.where.accountAddress = {
         not: dto.executor.accountAddress,

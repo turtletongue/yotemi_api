@@ -29,6 +29,7 @@ describe('The UserFactory', () => {
   describe('when building a user', () => {
     it('should return instance of UserEntity', async () => {
       const user = await userFactory.build({
+        username 'tom',
         accountAddress:
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
         firstName: 'Tom',

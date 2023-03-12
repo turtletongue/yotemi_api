@@ -3,6 +3,7 @@ import { PlainTopic } from '@features/topics/entities';
 
 export default interface PlainUser {
   id: Id;
+  username: string;
   accountAddress: string;
   authId: Id;
   firstName: string;

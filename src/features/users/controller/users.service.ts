@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Id } from '@app/app.declarations';
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import GetUserDto from './dto/get-user.dto';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -9,18 +10,21 @@ import PatchUserDto from './dto/patch-user.dto';
 import PostAvatarDto from './dto/post-avatar.dto';
 import PostCoverDto from './dto/post-cover.dto';
 import GetUserByIdCase from '../use-cases/get-user-by-id.case';
+import GetUserByUsernameCase from '../use-cases/get-user-by-username.case';
+import GetUserByAccountAddressCase from '../use-cases/get-user-by-account-address.case';
 import FindUsersCase from '../use-cases/find-users.case';
 import AddUserCase from '../use-cases/add-user.case';
 import UpdateUserCase from '../use-cases/update-user.case';
 import DeleteUserCase from '../use-cases/delete-user.case';
 import ChangeAvatarCase from '../use-cases/change-avatar.case';
 import ChangeCoverCase from '../use-cases/change-cover.case';
-import { AdminEntity } from '@features/admins/entities';
 
 @Injectable()
 export default class UsersService {
   constructor(
     private readonly getUserByIdCase: GetUserByIdCase,
+    private readonly getUserByUsernameCase: GetUserByUsernameCase,
+    private readonly getUserByAccountAddressCase: GetUserByAccountAddressCase,
     private readonly findUsersCase: FindUsersCase,
     private readonly addUserCase: AddUserCase,
     private readonly updateUserCase: UpdateUserCase,
@@ -31,6 +35,14 @@ export default class UsersService {
 
   public async getUserById(id: Id): Promise<GetUserDto> {
     return await this.getUserByIdCase.apply(id);
+  }
+
+  public async getUserByUsername(username: string): Promise<GetUserDto> {
+    return await this.getUserByUsernameCase.apply(username);
+  }
+
+  public async getUserByAccountAddress(address: string): Promise<GetUserDto> {
+    return await this.getUserByAccountAddressCase.apply(address);
   }
 
   public async findUsers(

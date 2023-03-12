@@ -3,6 +3,7 @@ import BuildTopicDto from '@features/topics/entities/dto/build-topic.dto';
 
 export default class BuildUserDto {
   public id?: Id;
+  public username: string;
   public accountAddress: string;
   public authId?: Id;
   public firstName: string;

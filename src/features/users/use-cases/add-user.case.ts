@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import TopicsRepository from '@features/topics/topics.repository';
 import AddUserDto from './dto/add-user.dto';
 import UsersRepository from '../users.repository';
-import { AddressIsTakenException } from '../exceptions';
+import {
+  AddressIsTakenException,
+  UsernameIsTakenException,
+} from '../exceptions';
 import { PlainUser, UserFactory } from '../entities';
 
 @Injectable()
@@ -27,6 +30,14 @@ export default class AddUserCase {
 
     if (isAddressTaken) {
       throw new AddressIsTakenException();
+    }
+
+    const isUsernameTaken = await this.usersRepository.isUsernameTaken(
+      dto.username,
+    );
+
+    if (isUsernameTaken) {
+      throw new UsernameIsTakenException();
     }
 
     return await this.usersRepository

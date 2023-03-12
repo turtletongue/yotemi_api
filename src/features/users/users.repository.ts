@@ -84,10 +84,56 @@ export default class UsersRepository {
     });
   }
 
+  public async findByUsername(username: string): Promise<UserEntity> {
+    const {
+      _count: { followers },
+      ...user
+    } = await this.prisma.user
+      .findUniqueOrThrow({
+        where: {
+          username,
+        },
+        include: {
+          topics: includeTopicsOptions,
+          _count: {
+            select: {
+              followers: true,
+            },
+          },
+        },
+      })
+      .catch(() => {
+        throw new UserNotFoundException();
+      });
+
+    return await this.userFactory.build({
+      ...user,
+      followersCount: followers,
+    });
+  }
+
   public async isAccountAddressTaken(address: string): Promise<boolean> {
     const user = await this.prisma.user.findFirst({
       where: {
         accountAddress: address,
+      },
+    });
+
+    return !!user;
+  }
+
+  public async isUsernameTaken(
+    username: string,
+    selfId?: Id,
+  ): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        username,
+        ...(selfId && {
+          id: {
+            not: selfId,
+          },
+        }),
       },
     });
 
@@ -133,6 +179,7 @@ export default class UsersRepository {
     const result = await this.prisma.user.create({
       data: {
         id: data.id,
+        username: data.username,
         accountAddress: data.accountAddress,
         authId: data.authId,
         firstName: data.firstName,

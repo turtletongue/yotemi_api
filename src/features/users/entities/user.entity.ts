@@ -7,6 +7,7 @@ export default class UserEntity {
 
   constructor(
     private _id: Id,
+    private _username: string,
     private _accountAddress: string,
     private _authId: Id,
     private _firstName: string,
@@ -23,6 +24,10 @@ export default class UserEntity {
 
   public get id(): Id {
     return this._id;
+  }
+
+  public get username(): string {
+    return this._username;
   }
 
   public get accountAddress(): string {
@@ -88,6 +93,7 @@ export default class UserEntity {
   public get plain(): PlainUser {
     return {
       id: this.id,
+      username: this.username,
       accountAddress: this.accountAddress,
       authId: this.authId,
       firstName: this.firstName,
