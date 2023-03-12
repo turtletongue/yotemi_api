@@ -191,6 +191,7 @@ export default class UsersRepository {
             id: topic.id,
           })),
         },
+        isBlocked: data.isBlocked,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       },
@@ -215,6 +216,7 @@ export default class UsersRepository {
       },
       data: {
         id: data.id,
+        username: data.username,
         accountAddress: data.accountAddress,
         authId: data.authId,
         firstName: data.firstName,
@@ -227,6 +229,7 @@ export default class UsersRepository {
           set: [],
           connect: topics.map((topic) => ({ id: topic.id })),
         },
+        isBlocked: data.isBlocked,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       },

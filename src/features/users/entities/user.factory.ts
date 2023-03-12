@@ -25,6 +25,7 @@ export default class UserFactory {
     coverPath = null,
     isVerified = false,
     followersCount = 0,
+    isBlocked = false,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildUserDto): Promise<UserEntity> {
@@ -45,6 +46,7 @@ export default class UserFactory {
       isVerified,
       topicEntities,
       followersCount,
+      isBlocked,
       createdAt,
       updatedAt,
     );

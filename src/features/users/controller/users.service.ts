@@ -15,6 +15,8 @@ import GetUserByAccountAddressCase from '../use-cases/get-user-by-account-addres
 import FindUsersCase from '../use-cases/find-users.case';
 import AddUserCase from '../use-cases/add-user.case';
 import UpdateUserCase from '../use-cases/update-user.case';
+import BlockUserCase from '../use-cases/block-user.case';
+import UnblockUserCase from '../use-cases/unblock-user.case';
 import DeleteUserCase from '../use-cases/delete-user.case';
 import ChangeAvatarCase from '../use-cases/change-avatar.case';
 import ChangeCoverCase from '../use-cases/change-cover.case';
@@ -28,6 +30,8 @@ export default class UsersService {
     private readonly findUsersCase: FindUsersCase,
     private readonly addUserCase: AddUserCase,
     private readonly updateUserCase: UpdateUserCase,
+    private readonly blockUserCase: BlockUserCase,
+    private readonly unblockUserCase: UnblockUserCase,
     private readonly changeAvatarCase: ChangeAvatarCase,
     private readonly changeCoverCase: ChangeCoverCase,
     private readonly deleteUserCase: DeleteUserCase,
@@ -61,6 +65,14 @@ export default class UsersService {
     executor: UserEntity,
   ): Promise<GetUserDto> {
     return await this.updateUserCase.apply({ ...dto, executor });
+  }
+
+  public async blockUser(id: Id): Promise<void> {
+    return await this.blockUserCase.apply(id);
+  }
+
+  public async unblockUser(id: Id): Promise<void> {
+    return await this.unblockUserCase.apply(id);
   }
 
   public async changeAvatar(

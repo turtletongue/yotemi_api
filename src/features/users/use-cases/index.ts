@@ -5,6 +5,8 @@ import GetUserByUsernameCase from './get-user-by-username.case';
 import GetUserByAccountAddressCase from './get-user-by-account-address.case';
 import UpdateUserCase from './update-user.case';
 import DeleteUserCase from './delete-user.case';
+import BlockUserCase from './block-user.case';
+import UnblockUserCase from './unblock-user.case';
 import CheckUserAuthIdCase from './check-user-auth-id.case';
 import FollowUserCase from './follow-user.case';
 import UnfollowUserCase from './unfollow-user.case';
@@ -19,6 +21,8 @@ const userUseCases = [
   AddUserCase,
   UpdateUserCase,
   DeleteUserCase,
+  BlockUserCase,
+  UnblockUserCase,
   CheckUserAuthIdCase,
   FollowUserCase,
   UnfollowUserCase,

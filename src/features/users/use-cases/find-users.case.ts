@@ -9,6 +9,7 @@ import { PlainUser } from '../entities';
 interface FindOptions {
   where: {
     accountAddress?: string | { not: string };
+    isBlocked: boolean;
   };
 }
 
@@ -19,8 +20,15 @@ export default class FindUsersCase {
     private readonly s3Service: S3Service,
   ) {}
 
-  public async apply(dto: FindUsersDto): Promise<PaginationResult<PlainUser>> {
-    const findOptions: FindOptions = { where: {} };
+  public async apply(
+    dto: FindUsersDto,
+  ): Promise<PaginationResult<Omit<PlainUser, 'isBlocked'>>> {
+    const findOptions: FindOptions = {
+      where: {
+        isBlocked:
+          !dto.executor || dto.executor.kind === 'user' ? false : undefined,
+      },
+    };
 
     if (dto.executor && dto.executor.kind === 'user' && dto.hideSelf) {
       findOptions.where.accountAddress = {
@@ -37,11 +45,23 @@ export default class FindUsersCase {
     return {
       ...result,
       items: result.items.map(({ plain }) => ({
-        ...plain,
+        id: plain.id,
+        username: plain.username,
+        accountAddress: plain.accountAddress,
+        authId: plain.authId,
+        firstName: plain.firstName,
+        lastName: plain.lastName,
+        fullName: plain.fullName,
+        biography: plain.biography,
         avatarPath:
           plain.avatarPath && this.s3Service.getReadPath(plain.avatarPath),
         coverPath:
           plain.coverPath && this.s3Service.getReadPath(plain.coverPath),
+        isVerified: plain.isVerified,
+        topics: plain.topics,
+        followersCount: plain.followersCount,
+        createdAt: plain.createdAt,
+        updatedAt: plain.updatedAt,
       })),
     };
   }

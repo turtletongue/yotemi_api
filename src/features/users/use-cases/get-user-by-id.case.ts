@@ -12,12 +12,24 @@ export default class GetUserByIdCase {
     private readonly s3Service: S3Service,
   ) {}
 
-  public async apply(id: Id): Promise<PlainUser> {
+  public async apply(id: Id): Promise<Omit<PlainUser, 'isBlocked'>> {
     return await this.usersRepository.findById(id).then(({ plain }) => ({
-      ...plain,
+      id: plain.id,
+      username: plain.username,
+      accountAddress: plain.accountAddress,
+      authId: plain.authId,
+      firstName: plain.firstName,
+      lastName: plain.lastName,
+      fullName: plain.fullName,
+      biography: plain.biography,
       avatarPath:
         plain.avatarPath && this.s3Service.getReadPath(plain.avatarPath),
       coverPath: plain.coverPath && this.s3Service.getReadPath(plain.coverPath),
+      isVerified: plain.isVerified,
+      topics: plain.topics,
+      followersCount: plain.followersCount,
+      createdAt: plain.createdAt,
+      updatedAt: plain.updatedAt,
     }));
   }
 }

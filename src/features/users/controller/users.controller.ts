@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -32,7 +33,12 @@ import PostUserDto from './dto/post-user.dto';
 import PatchUserDto from './dto/patch-user.dto';
 import UsersService from './users.service';
 import { UserEntity } from '../entities';
-import { AddressIsTakenException, UserNotFoundException } from '../exceptions';
+import {
+  AddressIsTakenException,
+  UserAlreadyBlockedException,
+  UserNotBlockedException,
+  UserNotFoundException,
+} from '../exceptions';
 
 @ApiTags('users')
 @Controller('users')
@@ -97,6 +103,9 @@ export default class UsersController {
    * Update some user's fields.
    */
   @ApiBearerAuth()
+  @ApiException(() => UnauthorizedException, {
+    description: 'Not authenticated.',
+  })
   @ApiException(() => ForbiddenException, {
     description: 'You cannot edit another user.',
   })
@@ -114,9 +123,46 @@ export default class UsersController {
   }
 
   /**
+   * Block user.
+   */
+  @ApiBearerAuth()
+  @ApiException(() => UnauthorizedException, {
+    description: 'Not authenticated.',
+  })
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to block.',
+  })
+  @ApiException(() => UserAlreadyBlockedException, {
+    description: 'User is already blocked.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('admin'))
+  @Post(':id/block')
+  public async block(@Param('id') id: Id): Promise<void> {
+    return await this.usersService.blockUser(id);
+  }
+
+  /**
+   * Unblock user.
+   */
+  @ApiBearerAuth()
+  @ApiException(() => UserNotFoundException, {
+    description: 'Cannot find user to unblock.',
+  })
+  @ApiException(() => UserNotBlockedException, {
+    description: 'User is not blocked.',
+  })
+  @Post(':id/unblock')
+  public async unblock(@Param('id') id: Id): Promise<void> {
+    return await this.usersService.unblockUser(id);
+  }
+
+  /**
    * Change avatar.
    */
   @ApiBearerAuth()
+  @ApiException(() => UnauthorizedException, {
+    description: 'Not authenticated.',
+  })
   @ApiException(() => ForbiddenException, {
     description: 'You cannot edit another user.',
   })
@@ -152,6 +198,9 @@ export default class UsersController {
    * Change cover.
    */
   @ApiBearerAuth()
+  @ApiException(() => UnauthorizedException, {
+    description: 'Not authenticated.',
+  })
   @ApiException(() => ForbiddenException, {
     description: 'You cannot edit another user.',
   })
@@ -187,6 +236,9 @@ export default class UsersController {
    * Delete user.
    */
   @ApiBearerAuth()
+  @ApiException(() => UnauthorizedException, {
+    description: 'Not authenticated.',
+  })
   @ApiException(() => ForbiddenException, {
     description: 'You cannot delete another user.',
   })

@@ -14,6 +14,7 @@ export default class BuildUserDto {
   public isVerified?: boolean;
   public topics?: BuildTopicDto[];
   public followersCount?: number;
+  public isBlocked?: boolean;
   public createdAt?: Date;
   public updatedAt?: Date;
 }

@@ -54,6 +54,10 @@ export default class AuthenticationService {
         authId: dto.signature.payload,
       });
 
+      if (user.isBlocked) {
+        throw new UnauthorizedException();
+      }
+
       const isSignatureValid = await this.ton.verifySignature(
         user.accountAddress,
         dto.signature,

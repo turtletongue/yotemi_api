@@ -9,3 +9,7 @@ export { default as UserIsAlreadyFollowingException } from './user-is-already-fo
 export { default as SelfFollowingNotAllowedException } from './self-following-not-allowed.exception';
 
 export { default as UsernameIsTakenException } from './username-is-taken.exception';
+
+export { default as UserAlreadyBlockedException } from './user-already-blocked.exception';
+
+export { default as UserNotBlockedException } from './user-not-blocked.exception';

@@ -18,6 +18,7 @@ export default class UserEntity {
     private _isVerified: boolean,
     private _topics: TopicEntity[],
     private _followersCount: number,
+    private _isBlocked: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
@@ -82,6 +83,22 @@ export default class UserEntity {
     return this._followersCount;
   }
 
+  public get isBlocked(): boolean {
+    return this._isBlocked;
+  }
+
+  public block(): UserEntity {
+    this._isBlocked = true;
+
+    return this;
+  }
+
+  public unblock(): UserEntity {
+    this._isBlocked = false;
+
+    return this;
+  }
+
   public get createdAt(): Date {
     return this._createdAt;
   }
@@ -105,6 +122,7 @@ export default class UserEntity {
       isVerified: this.isVerified,
       topics: this.topics.map((topic) => topic.plain),
       followersCount: this.followersCount,
+      isBlocked: this.isBlocked,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
