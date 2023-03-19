@@ -1,4 +1,4 @@
-import { IsUUID } from 'class-validator';
+import { IsIn, IsOptional, IsUUID } from 'class-validator';
 
 import { PaginatedDto, PaginationParams } from '@common/pagination';
 import { Id } from '@app/app.declarations';
@@ -11,6 +11,14 @@ export class ListReviewsParams extends PaginationParams {
    */
   @IsUUID()
   public userId: Id;
+
+  /**
+   * Reviews sorting direction.
+   * @example 'asc'
+   */
+  @IsIn(['asc', 'desc'])
+  @IsOptional()
+  public sortDirection: 'asc' | 'desc' = 'asc';
 }
 
 export default class ListReviewsDto extends PaginatedDto(GetReviewDto) {}

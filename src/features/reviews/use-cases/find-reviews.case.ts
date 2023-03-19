@@ -19,6 +19,9 @@ export default class FindReviewsCase {
         where: {
           userId: dto.userId,
         },
+        orderBy: {
+          createdAt: dto.sortDirection,
+        },
       },
     );
 
