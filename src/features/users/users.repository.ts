@@ -4,9 +4,9 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '@common/prisma';
 import { PaginationResult, PaginationService } from '@common/pagination';
 import { Id } from '@app/app.declarations';
-import { UserNotFoundException } from './exceptions';
 import BuildUserDto from './entities/dto/build-user.dto';
 import { PlainUser, UserEntity, UserFactory } from './entities';
+import { UserNotFoundException } from './exceptions';
 
 const includeTopicsOptions = {
   include: {
@@ -50,9 +50,12 @@ export default class UsersRepository {
         throw new UserNotFoundException();
       });
 
+    const reviewsAverage = await this.getReviewsAverage(id);
+
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      ...reviewsAverage,
     });
   }
 
@@ -78,9 +81,12 @@ export default class UsersRepository {
         throw new UserNotFoundException();
       });
 
+    const reviewsAverage = await this.getReviewsAverage(user.id);
+
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      ...reviewsAverage,
     });
   }
 
@@ -106,9 +112,12 @@ export default class UsersRepository {
         throw new UserNotFoundException();
       });
 
+    const reviewsAverage = await this.getReviewsAverage(user.id);
+
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      ...reviewsAverage,
     });
   }
 
@@ -317,5 +326,26 @@ export default class UsersRepository {
       ...result,
       followersCount: followers,
     });
+  }
+
+  private async getReviewsAverage(
+    id: Id,
+  ): Promise<{ averagePoints: number; reviewsCount: number }> {
+    const {
+      _avg: { points: averagePoints },
+      _count: { id: reviewsCount },
+    } = await this.prisma.review.aggregate({
+      where: {
+        userId: id,
+      },
+      _avg: {
+        points: true,
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    return { averagePoints, reviewsCount };
   }
 }

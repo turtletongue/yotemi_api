@@ -13,10 +13,12 @@ import { AddressIsTakenException } from '../exceptions';
 describe('The AddUserCase', () => {
   let addUserCase: AddUserCase;
   let isAccountAddressTaken: jest.Mock;
+  let isUsernameTaken: jest.Mock;
   let create: jest.Mock;
 
   beforeEach(async () => {
     isAccountAddressTaken = jest.fn();
+    isUsernameTaken = jest.fn();
     create = jest.fn();
 
     const module = await Test.createTestingModule({
@@ -33,6 +35,7 @@ describe('The AddUserCase', () => {
       .overrideProvider(UsersRepository)
       .useValue({
         isAccountAddressTaken,
+        isUsernameTaken,
         create,
       })
       .overrideProvider(TopicsRepository)
@@ -55,6 +58,7 @@ describe('The AddUserCase', () => {
       beforeEach(() => {
         user = new UserEntity(
           'id',
+          'tom',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           'authId',
           'Tom',
@@ -65,16 +69,21 @@ describe('The AddUserCase', () => {
           false,
           [],
           0,
+          0,
+          0,
+          false,
           new Date(),
           new Date(),
         );
 
         create.mockResolvedValue(user);
         isAccountAddressTaken.mockResolvedValue(false);
+        isUsernameTaken.mockResolvedValue(false);
       });
 
       it('should return the user', async () => {
         const result = await addUserCase.apply({
+          username: 'tom',
           accountAddress:
             '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           firstName: 'Tom',
@@ -93,6 +102,7 @@ describe('The AddUserCase', () => {
       it('should throw the AddressIsTakenException', async () => {
         await expect(
           addUserCase.apply({
+            username: 'tom',
             accountAddress:
               '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
             firstName: 'Tom',

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 
 import { IdentifiersService } from '@common/identifiers';
 import { IdentifiersServiceMock } from '@common/mocks';
@@ -64,15 +64,20 @@ describe('The AddInterviewMessageCase', () => {
 
         participant = new UserEntity(
           'participantId',
+          'tom',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           'authId',
-          'Tom Land',
+          'Tom',
+          'Land',
           '',
           null,
           null,
           false,
           [],
           0,
+          0,
+          0,
+          false,
           new Date(),
           new Date(),
         );
@@ -122,15 +127,20 @@ describe('The AddInterviewMessageCase', () => {
 
         participant = new UserEntity(
           'participantId',
+          'tom',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           'authId',
-          'Tom Land',
+          'Tom',
+          'Land',
           '',
           null,
           null,
           false,
           [],
           0,
+          0,
+          0,
+          false,
           new Date(),
           new Date(),
         );
@@ -180,15 +190,20 @@ describe('The AddInterviewMessageCase', () => {
 
         executor = new UserEntity(
           'participantId',
+          'tom',
           '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
           'authId',
-          'Tom Land',
+          'Tom',
+          'Land',
           '',
           null,
           null,
           false,
           [],
           0,
+          0,
+          0,
+          false,
           new Date(),
           new Date(),
         );
@@ -211,14 +226,14 @@ describe('The AddInterviewMessageCase', () => {
         );
       });
 
-      it('should throw the UnauthorizedException', async () => {
+      it('should throw the ForbiddenException', async () => {
         await expect(
           addInterviewMessageCase.apply({
             content: 'Hello!',
             interviewId: 'interviewId',
             executor,
           }),
-        ).rejects.toThrowError(UnauthorizedException);
+        ).rejects.toThrowError(ForbiddenException);
       });
     });
   });

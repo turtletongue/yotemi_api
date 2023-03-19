@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -8,10 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { AccessGuard, RoleGuard } from '@features/authentication/guards';
 import { User } from '@features/authentication/decorators';
 import { UserEntity } from '@features/users/entities';
+import { InterviewNotFoundException } from '@features/interviews/exceptions';
 import { Id } from '@app/app.declarations';
 import ListInterviewMessagesDto, {
   ListInterviewMessagesParams,
@@ -19,6 +22,10 @@ import ListInterviewMessagesDto, {
 import PostInterviewMessageDto from './dto/post-interview-message.dto';
 import GetInterviewMessageDto from './dto/get-interview-message.dto';
 import InterviewMessagesService from './interview-messages.service';
+import {
+  InterviewMessageNotFoundException,
+  InvalidMessagesInterviewStatusException,
+} from '../exceptions';
 
 @ApiTags('interview-messages')
 @ApiBearerAuth()
@@ -33,6 +40,9 @@ export default class InterviewMessagesController {
    * Get list of messages.
    */
   @Get()
+  @ApiException(() => ForbiddenException, {
+    description: 'Viewing messages of this interview is not allowed.',
+  })
   public async find(
     @Query() params: ListInterviewMessagesParams,
     @User() executor: UserEntity,
@@ -44,6 +54,12 @@ export default class InterviewMessagesController {
    * Get single message by id.
    */
   @Get(':id')
+  @ApiException(() => InterviewMessageNotFoundException, {
+    description: 'Cannot find interview message.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Viewing messages of this interview is not allowed.',
+  })
   public async getById(
     @Param('id') id: Id,
     @User() executor: UserEntity,
@@ -55,6 +71,15 @@ export default class InterviewMessagesController {
    * Create new message.
    */
   @Post()
+  @ApiException(() => ForbiddenException, {
+    description: 'Sending messages to this interview is not allowed.',
+  })
+  @ApiException(() => InterviewNotFoundException, {
+    description: 'Cannot find interview.',
+  })
+  @ApiException(() => InvalidMessagesInterviewStatusException, {
+    description: 'Cannot send message because interview has incorrect status.',
+  })
   public async create(
     @Body() dto: PostInterviewMessageDto,
     @User() executor: UserEntity,

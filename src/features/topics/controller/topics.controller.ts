@@ -10,6 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { Id } from '@app/app.declarations';
 import { AccessGuard, RoleGuard } from '@features/authentication/guards';
@@ -21,6 +22,10 @@ import PostTopicDto from './dto/post-topic.dto';
 import GetTopicDto from './dto/get-topic.dto';
 import PatchTopicDto from './dto/patch-topic.dto';
 import TopicsService from './topics.service';
+import {
+  NotUniqueLabelLanguageException,
+  TopicNotFoundException,
+} from '../exceptions';
 
 @ApiTags('topics')
 @Controller('topics')
@@ -39,6 +44,9 @@ export default class TopicsController {
    * Get single topic by id.
    */
   @Get(':id')
+  @ApiException(() => TopicNotFoundException, {
+    description: 'Cannot find topic.',
+  })
   public async getById(@Param('id') id: Id): Promise<GetTopicDto> {
     return await this.topicsService.getTopicById(id);
   }
@@ -46,9 +54,13 @@ export default class TopicsController {
   /**
    * Create new topic.
    */
-  @ApiBearerAuth()
-  @UseGuards(AccessGuard)
   @Post()
+  @ApiBearerAuth()
+  @ApiException(() => NotUniqueLabelLanguageException, {
+    description:
+      'There is must be only one translation of topic for some language.',
+  })
+  @UseGuards(AccessGuard)
   public async create(
     @Body() dto: PostTopicDto,
     @Executor() executor: AdminEntity | UserEntity,
@@ -59,9 +71,16 @@ export default class TopicsController {
   /**
    * Update some topic's fields.
    */
-  @ApiBearerAuth()
-  @UseGuards(AccessGuard, RoleGuard('admin'))
   @Patch(':id')
+  @ApiBearerAuth()
+  @ApiException(() => TopicNotFoundException, {
+    description: 'Cannot find topic to update.',
+  })
+  @ApiException(() => NotUniqueLabelLanguageException, {
+    description:
+      'There is must be only one translation of topic for some language.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('admin'))
   public async update(
     @Param('id') id: Id,
     @Body() dto: PatchTopicDto,
@@ -72,9 +91,12 @@ export default class TopicsController {
   /**
    * Delete topic.
    */
-  @ApiBearerAuth()
-  @UseGuards(AccessGuard, RoleGuard('admin'))
   @Delete(':id')
+  @ApiBearerAuth()
+  @ApiException(() => TopicNotFoundException, {
+    description: 'Cannot find topic to delete.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('admin'))
   public async delete(@Param('id') id: Id): Promise<GetTopicDto> {
     return await this.topicsService.deleteTopic(id);
   }

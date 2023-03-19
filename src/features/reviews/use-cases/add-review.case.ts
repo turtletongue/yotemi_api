@@ -4,7 +4,10 @@ import InterviewsRepository from '@features/interviews/interviews.repository';
 import AddReviewDto from './dto/add-review.dto';
 import ReviewsRepository from '../reviews.repository';
 import { PlainReview, ReviewFactory } from '../entities';
-import { NotParticipatedToReviewException } from '../exceptions';
+import {
+  NotParticipatedToReviewException,
+  ReviewAlreadyExistsException,
+} from '../exceptions';
 
 @Injectable()
 export default class AddReviewCase {
@@ -23,6 +26,15 @@ export default class AddReviewCase {
 
     if (!isParticipatedInInterview) {
       throw new NotParticipatedToReviewException();
+    }
+
+    const isExist = await this.reviewsRepository.isExist(
+      dto.userId,
+      dto.reviewer.id,
+    );
+
+    if (isExist) {
+      throw new ReviewAlreadyExistsException();
     }
 
     const review = await this.reviewFactory.build({

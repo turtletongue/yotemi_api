@@ -15,6 +15,8 @@ export default interface PlainUser {
   isVerified: boolean;
   topics: PlainTopic[];
   followersCount: number;
+  averagePoints: number;
+  reviewsCount: number;
   isBlocked: boolean;
   createdAt: Date;
   updatedAt: Date;

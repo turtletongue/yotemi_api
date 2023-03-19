@@ -53,6 +53,7 @@ describe('The UpdateUserCase', () => {
     beforeEach(() => {
       user = new UserEntity(
         'id',
+        'tom',
         '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
         'authId',
         'Tom',
@@ -63,6 +64,9 @@ describe('The UpdateUserCase', () => {
         false,
         [],
         0,
+        0,
+        0,
+        false,
         new Date(),
         new Date(),
       );

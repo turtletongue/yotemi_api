@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { AccessGuard, RoleGuard } from '@features/authentication/guards';
 import { User } from '@features/authentication/decorators';
@@ -17,6 +18,11 @@ import ListReviewsDto, { ListReviewsParams } from './dto/list-reviews.dto';
 import GetReviewDto from './dto/get-review.dto';
 import PostReviewDto from './dto/post-review.dto';
 import ReviewsService from './reviews.service';
+import {
+  NotParticipatedToReviewException,
+  ReviewAlreadyExistsException,
+  ReviewNotFoundException,
+} from '../exceptions';
 
 @ApiTags('reviews')
 @Controller('reviews')
@@ -37,13 +43,22 @@ export default class ReviewsController {
    * Get single review by id.
    */
   @Get(':id')
+  @ApiException(() => ReviewNotFoundException, {
+    description: 'Cannot find review.',
+  })
   public async getById(@Param('id') id: Id): Promise<GetReviewDto> {
     return await this.reviewsService.getReviewById(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AccessGuard, RoleGuard('user'))
   @Post()
+  @ApiBearerAuth()
+  @ApiException(() => NotParticipatedToReviewException, {
+    description: 'Only participants of user interviews can review his profile.',
+  })
+  @ApiException(() => ReviewAlreadyExistsException, {
+    description: 'Only one review can be created for one profile.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('user'))
   public async create(
     @Body() dto: PostReviewDto,
     @User() executor: UserEntity,

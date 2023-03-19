@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { NotificationType } from '@prisma/client';
 
@@ -62,16 +62,20 @@ describe('The MarkNotificationAsSeenCase', () => {
           id: 'id',
           executor: new UserEntity(
             'userId',
-            'address',
+            'tom',
+            '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
             'authId',
             'Tom',
             'Land',
-            'biography',
+            '',
             null,
             null,
             false,
             [],
             0,
+            0,
+            0,
+            false,
             new Date(),
             new Date(),
           ),
@@ -99,27 +103,31 @@ describe('The MarkNotificationAsSeenCase', () => {
         findById.mockResolvedValue(notification);
       });
 
-      it('should throw the UnauthorizedException', async () => {
+      it('should throw the ForbiddenException', async () => {
         await expect(
           markNotificationAsSeenCase.apply({
             id: 'id',
             executor: new UserEntity(
               'userId',
-              'address',
+              'tom',
+              '0:910ccf61e24dd425d39e3cfbb25f8d260a0038bf181ee43739be3051f1d8db10',
               'authId',
               'Tom',
               'Land',
-              'biography',
+              '',
               null,
               null,
               false,
               [],
               0,
+              0,
+              0,
+              false,
               new Date(),
               new Date(),
             ),
           }),
-        ).rejects.toThrowError(UnauthorizedException);
+        ).rejects.toThrowError(ForbiddenException);
       });
     });
   });

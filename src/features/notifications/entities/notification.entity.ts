@@ -5,42 +5,14 @@ import PlainNotification from './interfaces/plain-notification';
 
 export default class NotificationEntity {
   constructor(
-    private _id: Id,
-    private _type: NotificationType,
-    private _content: Record<string, unknown> | null,
-    private _isSeen: boolean,
-    private _userId: Id,
-    private _createdAt: Date,
-    private _updatedAt: Date,
+    public id: Id,
+    public type: NotificationType,
+    public content: Record<string, unknown> | null,
+    public isSeen: boolean,
+    public userId: Id,
+    public createdAt: Date,
+    public updatedAt: Date,
   ) {}
-
-  public get id(): Id {
-    return this._id;
-  }
-
-  public get type(): NotificationType {
-    return this._type;
-  }
-
-  public get content(): Record<string, unknown> | null {
-    return this._content;
-  }
-
-  public get isSeen(): boolean {
-    return this._isSeen;
-  }
-
-  public get userId(): Id {
-    return this._userId;
-  }
-
-  public get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  public get updatedAt(): Date {
-    return this._updatedAt;
-  }
 
   public get plain(): PlainNotification {
     return {

@@ -40,6 +40,18 @@ export default class GetUserDto extends UserDto {
   public followersCount: number;
 
   /**
+   * Average review points.
+   * @example 5
+   */
+  public averagePoints: number;
+
+  /**
+   * Count of reviews submitted to this user.
+   * @example 10
+   */
+  public reviewsCount: number;
+
+  /**
    * Path to avatar image.
    */
   public avatarPath: string | null;

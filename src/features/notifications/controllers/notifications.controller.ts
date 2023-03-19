@@ -1,5 +1,6 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
   Param,
   Patch,
@@ -7,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { UserEntity } from '@features/users/entities';
 import { User } from '@features/authentication/decorators';
@@ -17,6 +19,7 @@ import ListNotificationsDto, {
 } from './dto/list-notifications.dto';
 import GetNotificationDto from './dto/get-notification.dto';
 import NotificationsService from '../controllers/notifications.service';
+import { NotificationNotFoundException } from '../exceptions';
 
 @ApiTags('notifications')
 @ApiBearerAuth()
@@ -40,6 +43,12 @@ export default class NotificationsController {
    * Get single notification by id.
    */
   @Get(':id')
+  @ApiException(() => NotificationNotFoundException, {
+    description: 'Cannot find notification.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Viewing other users notifications is not allowed.',
+  })
   public async getById(
     @Param('id') id: Id,
     @User() executor: UserEntity,
@@ -61,6 +70,12 @@ export default class NotificationsController {
    * Mark single notification as seen.
    */
   @Patch(':id')
+  @ApiException(() => NotificationNotFoundException, {
+    description: 'Cannot find notification to mark as seen.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Marking other users notifications as seen is not allowed.',
+  })
   public async markAsSeen(
     @Param('id') id: Id,
     @User() executor: UserEntity,

@@ -45,23 +45,11 @@ export default class FindUsersCase {
     return {
       ...result,
       items: result.items.map(({ plain }) => ({
-        id: plain.id,
-        username: plain.username,
-        accountAddress: plain.accountAddress,
-        authId: plain.authId,
-        firstName: plain.firstName,
-        lastName: plain.lastName,
-        fullName: plain.fullName,
-        biography: plain.biography,
+        ...plain,
         avatarPath:
           plain.avatarPath && this.s3Service.getReadPath(plain.avatarPath),
         coverPath:
           plain.coverPath && this.s3Service.getReadPath(plain.coverPath),
-        isVerified: plain.isVerified,
-        topics: plain.topics,
-        followersCount: plain.followersCount,
-        createdAt: plain.createdAt,
-        updatedAt: plain.updatedAt,
       })),
     };
   }

@@ -49,6 +49,17 @@ export default class ReviewsRepository {
     return await this.reviewFactory.build(review);
   }
 
+  public async isExist(userId: Id, reviewerId: Id): Promise<boolean> {
+    const review = await this.prisma.review.findFirst({
+      where: {
+        userId,
+        reviewerId,
+      },
+    });
+
+    return !!review;
+  }
+
   public async findPaginated(
     page: number,
     limit: number,
