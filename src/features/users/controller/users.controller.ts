@@ -158,6 +158,7 @@ export default class UsersController {
   @ApiException(() => UserNotBlockedException, {
     description: 'User is not blocked.',
   })
+  @UseGuards(AccessGuard, RoleGuard('admin'))
   @Post(':id/unblock')
   public async unblock(@Param('id') id: Id): Promise<void> {
     return await this.usersService.unblockUser(id);
