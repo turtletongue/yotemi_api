@@ -13,3 +13,5 @@ export { default as UsernameIsTakenException } from './username-is-taken.excepti
 export { default as UserAlreadyBlockedException } from './user-already-blocked.exception';
 
 export { default as UserNotBlockedException } from './user-not-blocked.exception';
+
+export { default as TooManyTopicsException } from './too-many-topics.exception';

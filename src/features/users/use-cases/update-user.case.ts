@@ -4,7 +4,10 @@ import TopicsRepository from '@features/topics/topics.repository';
 import UpdateUserDto from './dto/update-user.dto';
 import UsersRepository from '../users.repository';
 import { PlainUser, UserFactory } from '../entities';
-import { UsernameIsTakenException } from '../exceptions';
+import {
+  TooManyTopicsException,
+  UsernameIsTakenException,
+} from '../exceptions';
 
 @Injectable()
 export default class UpdateUserCase {
@@ -38,6 +41,10 @@ export default class UpdateUserCase {
       ...dto,
       topics: topics.map((topic) => topic.plain),
     });
+
+    if (user.hasTooManyTopics) {
+      throw new TooManyTopicsException();
+    }
 
     return await this.usersRepository
       .update(user.plain)

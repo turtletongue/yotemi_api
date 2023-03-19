@@ -79,6 +79,10 @@ export default class UserEntity {
     return this._topics;
   }
 
+  public get hasTooManyTopics(): boolean {
+    return this.topics.length > 8;
+  }
+
   public get followersCount(): number {
     return this._followersCount;
   }

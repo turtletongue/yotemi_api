@@ -5,6 +5,7 @@ import AddUserDto from './dto/add-user.dto';
 import UsersRepository from '../users.repository';
 import {
   AddressIsTakenException,
+  TooManyTopicsException,
   UsernameIsTakenException,
 } from '../exceptions';
 import { PlainUser, UserFactory } from '../entities';
@@ -38,6 +39,10 @@ export default class AddUserCase {
 
     if (isUsernameTaken) {
       throw new UsernameIsTakenException();
+    }
+
+    if (user.hasTooManyTopics) {
+      throw new TooManyTopicsException();
     }
 
     return await this.usersRepository

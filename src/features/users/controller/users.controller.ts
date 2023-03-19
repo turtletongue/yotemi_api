@@ -35,6 +35,7 @@ import UsersService from './users.service';
 import { UserEntity } from '../entities';
 import {
   AddressIsTakenException,
+  TooManyTopicsException,
   UserAlreadyBlockedException,
   UserNotBlockedException,
   UserNotFoundException,
@@ -94,6 +95,9 @@ export default class UsersController {
   @ApiException(() => AddressIsTakenException, {
     description: 'Another account address must be used instead.',
   })
+  @ApiException(() => TooManyTopicsException, {
+    description: 'Provided too many topics for user. Max is 8',
+  })
   @Post()
   public async create(@Body() dto: PostUserDto): Promise<GetUserDto> {
     return await this.usersService.addUser(dto);
@@ -111,6 +115,9 @@ export default class UsersController {
   })
   @ApiException(() => UserNotFoundException, {
     description: 'Cannot find user to update.',
+  })
+  @ApiException(() => TooManyTopicsException, {
+    description: 'Provided too many topics for user. Max is 8',
   })
   @UseGuards(AccessGuard, RoleGuard('user'))
   @Patch(':id')
