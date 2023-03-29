@@ -25,8 +25,7 @@ import {
   OptionalAccessGuard,
   RoleGuard,
 } from '@features/authentication/guards';
-import { Executor, User } from '@features/authentication/decorators';
-import { AdminEntity } from '@features/admins/entities';
+import { User } from '@features/authentication/decorators';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import GetUserDto from './dto/get-user.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -49,11 +48,11 @@ export default class UsersController {
   /**
    * Get paginated list of users.
    */
-  @UseGuards(OptionalAccessGuard)
+  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
   @Get()
   public async find(
     @Query() params: ListUsersParams,
-    @Executor() executor?: UserEntity | AdminEntity,
+    @User() executor?: UserEntity,
   ): Promise<ListUsersDto> {
     return await this.usersService.findUsers(params, executor);
   }
@@ -64,29 +63,40 @@ export default class UsersController {
   @ApiException(() => UserNotFoundException, {
     description: 'Cannot find user.',
   })
+  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
   @Get(':id')
-  public async getById(@Param('id') id: Id): Promise<GetUserDto> {
-    return await this.usersService.getUserById(id);
+  public async getById(
+    @Param('id') id: Id,
+    @User() executor?: UserEntity,
+  ): Promise<GetUserDto> {
+    return await this.usersService.getUserById(id, executor);
   }
 
   /**
    * Get single user by username.
    */
+  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
   @Get('by-username/:username')
   public async getByUsername(
     @Param('username') username: string,
+    @User() executor?: UserEntity,
   ): Promise<GetUserDto> {
-    return await this.usersService.getUserByUsername(username);
+    return await this.usersService.getUserByUsername(username, executor);
   }
 
   /**
    * Get single user by wallet address.
    */
+  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
   @Get('by-address/:walletAddress')
   public async getByAddress(
     @Param('walletAddress') accountAddress: string,
+    @User() executor?: UserEntity,
   ): Promise<GetUserDto> {
-    return await this.usersService.getUserByAccountAddress(accountAddress);
+    return await this.usersService.getUserByAccountAddress(
+      accountAddress,
+      executor,
+    );
   }
 
   /**

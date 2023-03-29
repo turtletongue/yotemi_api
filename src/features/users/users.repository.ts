@@ -28,7 +28,7 @@ export default class UsersRepository {
     private readonly userFactory: UserFactory,
   ) {}
 
-  public async findById(id: Id): Promise<UserEntity> {
+  public async findById(id: Id, followerId?: Id): Promise<UserEntity> {
     const {
       _count: { followers },
       ...user
@@ -51,15 +51,22 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(id);
+    const isFollowing = followerId
+      ? await this.isFollowing(id, followerId)
+      : null;
 
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
       ...reviewsAverage,
+      isFollowing,
     });
   }
 
-  public async findByAccountAddress(address: string): Promise<UserEntity> {
+  public async findByAccountAddress(
+    address: string,
+    followerId?: Id,
+  ): Promise<UserEntity> {
     const {
       _count: { followers },
       ...user
@@ -82,15 +89,22 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(user.id);
+    const isFollowing = followerId
+      ? await this.isFollowing(user.id, followerId)
+      : null;
 
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
       ...reviewsAverage,
+      isFollowing,
     });
   }
 
-  public async findByUsername(username: string): Promise<UserEntity> {
+  public async findByUsername(
+    username: string,
+    followerId?: Id,
+  ): Promise<UserEntity> {
     const {
       _count: { followers },
       ...user
@@ -113,11 +127,15 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(user.id);
+    const isFollowing = followerId
+      ? await this.isFollowing(user.id, followerId)
+      : null;
 
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
       ...reviewsAverage,
+      isFollowing,
     });
   }
 
@@ -153,6 +171,7 @@ export default class UsersRepository {
     page: number,
     limit: number,
     options?: Prisma.UserFindManyArgs,
+    followerId?: Id,
   ): Promise<PaginationResult<UserEntity>> {
     const paginated = await this.pagination.paginate<
       BuildUserDto & { _count: { followers: number } }
@@ -171,13 +190,17 @@ export default class UsersRepository {
     return {
       ...paginated,
       items: await Promise.all(
-        paginated.items.map(
-          async ({ _count: { followers }, ...user }) =>
-            await this.userFactory.build({
-              ...user,
-              followersCount: followers,
-            }),
-        ),
+        paginated.items.map(async ({ _count: { followers }, ...user }) => {
+          const isFollowing = followerId
+            ? await this.isFollowing(user.id, followerId)
+            : null;
+
+          return await this.userFactory.build({
+            ...user,
+            followersCount: followers,
+            isFollowing,
+          });
+        }),
       ),
     };
   }

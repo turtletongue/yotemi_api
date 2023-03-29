@@ -21,6 +21,7 @@ export default class UserEntity {
     public averagePoints: number,
     public reviewsCount: number,
     public isBlocked: boolean,
+    public isFollowing: boolean | null,
     public createdAt: Date,
     public updatedAt: Date,
   ) {}
@@ -63,6 +64,7 @@ export default class UserEntity {
       averagePoints: this.averagePoints,
       reviewsCount: this.reviewsCount,
       isBlocked: this.isBlocked,
+      isFollowing: this.isFollowing,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

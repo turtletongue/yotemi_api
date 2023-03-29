@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { S3Service } from '@common/s3';
 import UsersRepository from '../users.repository';
-import { PlainUser } from '../entities';
+import { PlainUser, UserEntity } from '../entities';
 
 @Injectable()
 export default class GetUserByUsernameCase {
@@ -11,9 +11,12 @@ export default class GetUserByUsernameCase {
     private readonly s3Service: S3Service,
   ) {}
 
-  public async apply(username: string): Promise<PlainUser> {
+  public async apply(
+    username: string,
+    executor?: UserEntity,
+  ): Promise<PlainUser> {
     return await this.usersRepository
-      .findByUsername(username)
+      .findByUsername(username, executor?.id)
       .then(({ plain }) => ({
         ...plain,
         avatarPath:

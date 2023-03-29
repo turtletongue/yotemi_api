@@ -40,6 +40,7 @@ export default class FindUsersCase {
       dto.page,
       dto.pageSize,
       findOptions,
+      dto.executor?.id,
     );
 
     return {

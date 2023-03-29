@@ -18,6 +18,7 @@ export default interface PlainUser {
   averagePoints: number;
   reviewsCount: number;
   isBlocked: boolean;
+  isFollowing: boolean | null;
   createdAt: Date;
   updatedAt: Date;
 }

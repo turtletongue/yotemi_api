@@ -17,6 +17,7 @@ export default class BuildUserDto {
   public averagePoints?: number;
   public reviewsCount?: number;
   public isBlocked?: boolean;
+  public isFollowing?: boolean;
   public createdAt?: Date;
   public updatedAt?: Date;
 }

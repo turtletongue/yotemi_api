@@ -28,6 +28,7 @@ export default class UserFactory {
     averagePoints = 0,
     reviewsCount = 0,
     isBlocked = false,
+    isFollowing = null,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildUserDto): Promise<UserEntity> {
@@ -51,6 +52,7 @@ export default class UserFactory {
       averagePoints,
       reviewsCount,
       isBlocked,
+      isFollowing,
       createdAt,
       updatedAt,
     );

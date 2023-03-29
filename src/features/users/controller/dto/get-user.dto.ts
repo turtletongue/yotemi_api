@@ -40,6 +40,12 @@ export default class GetUserDto extends UserDto {
   public followersCount: number;
 
   /**
+   * Is authenticated user follows this user.
+   * @example false
+   */
+  public isFollowing: boolean | null;
+
+  /**
    * Average review points.
    * @example 5
    */

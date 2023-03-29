@@ -1,7 +1,6 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, , IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-import { InterviewStatus } from '@features/interviews/interviews.types';
 import { Id } from '@app/app.declarations';
 import GetInterviewDto from './get-interview.dto';
 
@@ -31,14 +30,6 @@ export class ListInterviewsParams {
   @Transform(({ value }) => new Date(value))
   @IsNotEmpty()
   public to: Date;
-
-  /**
-   * Filter by interview status.
-   * @example 'published'
-   */
-  @IsNotEmpty()
-  @IsOptional()
-  public status?: InterviewStatus;
 }
 
 export default class ListInterviewsDto {

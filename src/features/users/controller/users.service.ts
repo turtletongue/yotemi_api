@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { Id } from '@app/app.declarations';
 import { UserEntity } from '@features/users/entities';
-import { AdminEntity } from '@features/admins/entities';
 import GetUserDto from './dto/get-user.dto';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -37,21 +36,27 @@ export default class UsersService {
     private readonly deleteUserCase: DeleteUserCase,
   ) {}
 
-  public async getUserById(id: Id): Promise<GetUserDto> {
-    return await this.getUserByIdCase.apply(id);
+  public async getUserById(id: Id, executor?: UserEntity): Promise<GetUserDto> {
+    return await this.getUserByIdCase.apply(id, executor);
   }
 
-  public async getUserByUsername(username: string): Promise<GetUserDto> {
-    return await this.getUserByUsernameCase.apply(username);
+  public async getUserByUsername(
+    username: string,
+    executor?: UserEntity,
+  ): Promise<GetUserDto> {
+    return await this.getUserByUsernameCase.apply(username, executor);
   }
 
-  public async getUserByAccountAddress(address: string): Promise<GetUserDto> {
-    return await this.getUserByAccountAddressCase.apply(address);
+  public async getUserByAccountAddress(
+    address: string,
+    executor?: UserEntity,
+  ): Promise<GetUserDto> {
+    return await this.getUserByAccountAddressCase.apply(address, executor);
   }
 
   public async findUsers(
     params: ListUsersParams,
-    executor?: UserEntity | AdminEntity,
+    executor?: UserEntity,
   ): Promise<ListUsersDto> {
     return await this.findUsersCase.apply({ ...params, executor });
   }
