@@ -72,6 +72,7 @@ describe('The AddUserCase', () => {
           0,
           0,
           false,
+          false,
           new Date(),
           new Date(),
         );

@@ -10,6 +10,10 @@ const RoleGuard = (role: ExecutorKind): Type<CanActivate> => {
       const request = context.switchToHttp().getRequest<WithUser<Request>>();
       const user = request.user;
 
+      if (!user) {
+        return true;
+      }
+
       return (
         (role === 'admin' && user instanceof AdminEntity) ||
         (role === 'user' && user instanceof UserEntity)

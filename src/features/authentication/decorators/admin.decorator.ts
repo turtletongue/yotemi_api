@@ -10,6 +10,10 @@ const Admin = createParamDecorator((_data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
   const user = request.user;
 
+  if (!user) {
+    return;
+  }
+
   if (!(user instanceof AdminEntity)) {
     throw new InternalServerErrorException('Admin cannot be retrieved');
   }
