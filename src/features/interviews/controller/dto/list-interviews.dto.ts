@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, , IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 import { Id } from '@app/app.declarations';
