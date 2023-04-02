@@ -8,10 +8,12 @@ import ListInterviewsDto, {
 } from './dto/list-interviews.dto';
 import PostInterviewDto from './dto/post-interview.dto';
 import PatchInterviewDto from './dto/patch-interview.dto';
+import PostInterviewTimeCheckDto from './dto/post-interview-time-check.dto';
 import FindInterviewsCase from '../use-cases/find-interviews.case';
 import GetInterviewByIdCase from '../use-cases/get-interview-by-id.case';
 import AddInterviewCase from '../use-cases/add-interview.case';
 import ConfirmPaymentCase from '../use-cases/confirm-payment.case';
+import CheckInterviewTimeConflictCase from '../use-cases/check-interview-time-conflict.case';
 
 @Injectable()
 export default class InterviewsService {
@@ -19,6 +21,7 @@ export default class InterviewsService {
     private readonly findInterviewsCase: FindInterviewsCase,
     private readonly getInterviewByIdCase: GetInterviewByIdCase,
     private readonly addInterviewCase: AddInterviewCase,
+    private readonly checkInterviewTimeConflictCase: CheckInterviewTimeConflictCase,
     private readonly confirmPaymentCase: ConfirmPaymentCase,
   ) {}
 
@@ -39,6 +42,16 @@ export default class InterviewsService {
     executor: UserEntity,
   ): Promise<GetInterviewDto> {
     return await this.addInterviewCase.apply({ ...dto, executor });
+  }
+
+  public async checkInterviewTimeConflict(
+    dto: PostInterviewTimeCheckDto,
+    executor: UserEntity,
+  ): Promise<void> {
+    return await this.checkInterviewTimeConflictCase.apply({
+      ...dto,
+      executor,
+    });
   }
 
   public async confirmPayment(

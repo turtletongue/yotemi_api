@@ -2,13 +2,14 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { Id } from '@app/app.declarations';
@@ -20,8 +21,9 @@ import ListInterviewsDto, {
 } from './dto/list-interviews.dto';
 import GetInterviewDto from './dto/get-interview.dto';
 import PostInterviewDto from './dto/post-interview.dto';
-import InterviewsService from './interviews.service';
 import PatchInterviewDto from './dto/patch-interview.dto';
+import PostInterviewTimeCheckDto from './dto/post-interview-time-check.dto';
+import InterviewsService from './interviews.service';
 import {
   AddressNotUniqueException,
   ContractMalformedException,
@@ -90,6 +92,33 @@ export default class InterviewsController {
     @User() executor: UserEntity,
   ): Promise<GetInterviewDto> {
     return await this.interviewsService.addInterview(dto, executor);
+  }
+
+  /**
+   * Check interview time conflict.
+   */
+  @Post('check-conflicts')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Conflicts are not found.' })
+  @ApiException(() => InterviewInPastException, {
+    description: 'Cannot create interview in past.',
+  })
+  @ApiException(() => InvalidInterviewEndDateException, {
+    description: 'End date of interview cannot be before start date.',
+  })
+  @ApiException(() => InterviewHasTimeConflictException, {
+    description: 'Two interviews have conflict in time.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('user'))
+  public async checkTimeConflict(
+    @Body() dto: PostInterviewTimeCheckDto,
+    @User() executor: UserEntity,
+  ): Promise<void> {
+    return await this.interviewsService.checkInterviewTimeConflict(
+      dto,
+      executor,
+    );
   }
 
   /**

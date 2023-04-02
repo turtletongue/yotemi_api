@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import apiConfig from '@config/api.config';
 import AdminsModule from '@features/admins';
@@ -15,6 +16,7 @@ import NotificationsModule from '@features/notifications';
 @Module({
   imports: [
     ConfigModule.forFeature(apiConfig),
+    ScheduleModule.forRoot(),
     AdminsModule,
     PasswordChangingModule,
     UsersModule,

@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { NotificationType } from '@prisma/client';
 
 import { IdentifiersService } from '@common/identifiers';
 import InterviewContractService from '@common/ton/interview-contract.service';
@@ -13,8 +14,8 @@ import AddNotificationCase from '@features/notifications/use-cases/add-notificat
 import NotificationsRepository from '@features/notifications/notifications.repository';
 import AddInterviewCase from './add-interview.case';
 import InterviewsRepository from '../interviews.repository';
+import CheckInterviewTimeConflictCase from './check-interview-time-conflict.case';
 import { InterviewFactory, InterviewEntity } from '../entities';
-import { NotificationType } from '@prisma/client';
 
 describe('The AddInterviewCase', () => {
   let addInterviewCase: AddInterviewCase;
@@ -38,6 +39,7 @@ describe('The AddInterviewCase', () => {
         UserFactory,
         TopicFactory,
         AddNotificationCase,
+        CheckInterviewTimeConflictCase,
         NotificationsRepository,
         NotificationFactory,
         InterviewContractService,

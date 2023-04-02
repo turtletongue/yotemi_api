@@ -4,14 +4,12 @@ import { NotificationType } from '@prisma/client';
 import InterviewContractService from '@common/ton/interview-contract.service';
 import AddNotificationCase from '@features/notifications/use-cases/add-notification.case';
 import AddInterviewDto from './dto/add-interview.dto';
+import CheckInterviewTimeConflictCase from './check-interview-time-conflict.case';
 import InterviewsRepository from '../interviews.repository';
 import { InterviewFactory, PlainInterview } from '../entities';
 import {
   AddressNotUniqueException,
   ContractMalformedException,
-  InterviewHasTimeConflictException,
-  InterviewInPastException,
-  InvalidInterviewEndDateException,
 } from '../exceptions';
 
 @Injectable()
@@ -21,17 +19,10 @@ export default class AddInterviewCase {
     private readonly interviewFactory: InterviewFactory,
     private readonly interviewContractService: InterviewContractService,
     private readonly addNotificationCase: AddNotificationCase,
+    private readonly checkInterviewTimeConflictCase: CheckInterviewTimeConflictCase,
   ) {}
 
   public async apply(dto: AddInterviewDto): Promise<PlainInterview> {
-    if (dto.startAt < new Date()) {
-      throw new InterviewInPastException();
-    }
-
-    if (dto.endAt <= dto.startAt) {
-      throw new InvalidInterviewEndDateException();
-    }
-
     const isAddressTaken = await this.interviewsRepository.isAddressTaken(
       dto.address,
     );
@@ -40,21 +31,11 @@ export default class AddInterviewCase {
       throw new AddressNotUniqueException();
     }
 
-    const creatorId = dto.executor.id;
-
-    const hasConflict = await this.interviewsRepository.hasTimeConflict(
-      dto.startAt,
-      dto.endAt,
-      creatorId,
-    );
-
-    if (hasConflict) {
-      throw new InterviewHasTimeConflictException();
-    }
+    await this.checkInterviewTimeConflictCase.apply(dto);
 
     const interview = await this.interviewFactory.build({
       ...dto,
-      creatorId,
+      creatorId: dto.executor.id,
     });
 
     const isMalformed = await this.interviewContractService.isCodeMalformed(
@@ -82,7 +63,7 @@ export default class AddInterviewCase {
           accountAddress: dto.executor.accountAddress,
         },
       },
-      userId: creatorId,
+      userId: dto.executor.id,
     });
 
     return plain;
