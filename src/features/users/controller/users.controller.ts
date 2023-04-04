@@ -1,6 +1,4 @@
 import {
-  BadRequestException,
-  Body,
   Controller,
   Delete,
   ForbiddenException,
@@ -199,15 +197,9 @@ export default class UsersController {
     @User() executor: UserEntity,
     @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<void> {
-    if (!file) {
-      throw new BadRequestException(
-        "Provide upload in 'file' field of form-data.",
-      );
-    }
-
     return await this.usersService.changeAvatar(
       id,
-      { path: file.path },
+      { path: file?.path ?? null },
       executor,
     );
   }
@@ -237,15 +229,9 @@ export default class UsersController {
     @User() executor: UserEntity,
     @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<void> {
-    if (!file) {
-      throw new BadRequestException(
-        "Provide upload in 'file' field of form-data.",
-      );
-    }
-
     return await this.usersService.changeCover(
       id,
-      { path: file.path },
+      { path: file?.path ?? null },
       executor,
     );
   }

@@ -3,6 +3,6 @@ import { Id } from '@app/app.declarations';
 
 export default class ChangeCoverDto {
   public id: Id;
-  public path: string;
+  public path: string | null;
   public executor: UserEntity;
 }
