@@ -13,8 +13,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { Id } from '@app/app.declarations';
-import { AccessGuard, RoleGuard } from '@features/authentication/guards';
-import { Executor } from '@features/authentication/decorators';
+import {
+  AccessGuard,
+  OptionalAccessGuard,
+  RoleGuard,
+} from '@features/authentication/guards';
+import { Executor, User } from '@features/authentication/decorators';
 import { AdminEntity } from '@features/admins/entities';
 import { UserEntity } from '@features/users/entities';
 import ListTopicsDto, { ListTopicsParams } from './dto/list-topics.dto';
@@ -36,8 +40,12 @@ export default class TopicsController {
    * Get paginated list of topics.
    */
   @Get()
-  public async find(@Query() params: ListTopicsParams): Promise<ListTopicsDto> {
-    return await this.topicsService.findTopics(params);
+  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
+  public async find(
+    @Query() params: ListTopicsParams,
+    @User() executor?: UserEntity,
+  ): Promise<ListTopicsDto> {
+    return await this.topicsService.findTopics(params, executor);
   }
 
   /**

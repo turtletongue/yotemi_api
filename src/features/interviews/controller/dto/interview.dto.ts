@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsNumber, Min, NotEquals } from 'class-validator';
-import { Transform } from 'class-transformer';
 
+import { StringToDate } from '@common/decorators';
 import { IsTonHexAddress } from '@common/validators';
 
 export default class InterviewDto {
@@ -26,7 +26,7 @@ export default class InterviewDto {
    * @example '2022-01-17T00:00:00.000Z'
    */
   @IsDate()
-  @Transform(({ value }) => new Date(value))
+  @StringToDate()
   @IsNotEmpty()
   public startAt: Date;
 
@@ -35,7 +35,7 @@ export default class InterviewDto {
    * @example '2022-01-17T00:30:00.000Z'
    */
   @IsDate()
-  @Transform(({ value }) => new Date(value))
+  @StringToDate()
   @IsNotEmpty()
   public endAt: Date;
 }

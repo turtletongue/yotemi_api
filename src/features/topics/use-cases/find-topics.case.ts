@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PaginationResult } from '@common/pagination';
+import { Id } from '@app/app.declarations';
 import FindTopicsDto from './dto/find-topics.dto';
 import TopicsRepository from '../topics.repository';
 import { PlainTopic } from '../entities';
@@ -15,6 +16,9 @@ interface FindOptions {
         };
       };
     };
+    isModerated?: boolean;
+    id?: Id | { not: Id };
+    OR?: FindOptions['where'][];
   };
 }
 
@@ -36,6 +40,17 @@ export default class FindTopicsCase {
           },
         },
       };
+    }
+
+    if (dto.isModerated !== undefined) {
+      if (dto.executor) {
+        findOptions.where.OR = [
+          { isModerated: dto.isModerated },
+          { id: { not: dto.executor.id } },
+        ];
+      } else {
+        findOptions.where.isModerated = dto.isModerated;
+      }
     }
 
     const result = await this.topicsRepository.findPaginated(

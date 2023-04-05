@@ -1,5 +1,6 @@
 import { IsInt, IsOptional, Min } from 'class-validator';
-import { Transform } from 'class-transformer';
+
+import { StringToNumber } from '@common/decorators';
 
 export default class PaginationParams {
   /**
@@ -8,7 +9,7 @@ export default class PaginationParams {
    */
   @IsInt()
   @Min(1)
-  @Transform(({ value }) => +value)
+  @StringToNumber()
   @IsOptional()
   public page?: number;
 
@@ -18,7 +19,7 @@ export default class PaginationParams {
    */
   @IsInt()
   @Min(1)
-  @Transform(({ value }) => +value)
+  @StringToNumber()
   @IsOptional()
   public pageSize?: number;
 }

@@ -5,6 +5,7 @@ import {
 import { StorageEngine } from 'multer';
 import EasyYandexS3 from 'easy-yandex-s3';
 import { buffer } from 'stream/consumers';
+import sharp from 'sharp';
 import { extname } from 'path';
 
 import { MAX_IMAGE_SIZE } from '@app/app.constants';
@@ -138,18 +139,27 @@ export default class S3Storage implements StorageEngine {
       );
     }
 
+    const fileName = blobFile.filename + '.webp';
+    const mimetype = 'image/webp';
+
     buffer(file.stream)
       .then(async (fileBuffer) => {
         const bufferLength = Buffer.byteLength(fileBuffer);
 
         if (bufferLength > MAX_IMAGE_SIZE) {
-          throw new BadRequestException('File is too large.');
+          throw new BadRequestException('File is too large.', {
+            description: 'FILE_TOO_LARGE',
+          });
         }
+
+        const optimizedBuffer = await sharp(fileBuffer)
+          .webp({ quality: 95 })
+          .toBuffer();
 
         const isOk = await this.s3.Upload(
           {
-            buffer: fileBuffer,
-            name: blobFile.filename,
+            buffer: optimizedBuffer,
+            name: fileName,
             save_name: true,
           },
           blobFile.destination,
@@ -162,14 +172,16 @@ export default class S3Storage implements StorageEngine {
         return bufferLength;
       })
       .then((writtenBytesLength) => {
+        const fileName = blobFile.filename + '.webp';
+
         cb(null, {
-          filename: blobFile.filename,
+          filename: fileName,
           originalname: file.originalname,
-          mimetype: blobFile.mimetype,
+          mimetype,
           destination: blobFile.destination,
           size: writtenBytesLength,
           bucket: this.options.bucket,
-          path: `${blobFile.destination}/${blobFile.filename}`,
+          path: `${blobFile.destination}/${fileName}`,
         });
       })
       .catch((error) => cb(error, undefined));

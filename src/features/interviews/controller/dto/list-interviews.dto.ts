@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
 
+import { StringToDate } from '@common/decorators';
 import { Id } from '@app/app.declarations';
 import GetInterviewDto from './get-interview.dto';
 
@@ -18,7 +18,7 @@ export class ListInterviewsParams {
    * @example '2022-06-03T00:00:00.000Z'
    */
   @IsDate()
-  @Transform(({ value }) => new Date(value))
+  @StringToDate()
   @IsNotEmpty()
   public from: Date;
 
@@ -27,7 +27,7 @@ export class ListInterviewsParams {
    * @example '2022-06-04T00:00:00.000Z'
    */
   @IsDate()
-  @Transform(({ value }) => new Date(value))
+  @StringToDate()
   @IsNotEmpty()
   public to: Date;
 }

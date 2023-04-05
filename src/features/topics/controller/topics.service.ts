@@ -27,8 +27,11 @@ export default class TopicsService {
     return await this.getTopicByIdCase.apply(id);
   }
 
-  public async findTopics(params: ListTopicsParams): Promise<ListTopicsDto> {
-    return await this.findTopicsCase.apply(params);
+  public async findTopics(
+    params: ListTopicsParams,
+    executor?: UserEntity,
+  ): Promise<ListTopicsDto> {
+    return await this.findTopicsCase.apply({ ...params, executor });
   }
 
   public async addTopic(

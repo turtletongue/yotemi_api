@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Body,
   UnauthorizedException,
   UploadedFile,
   UseGuards,

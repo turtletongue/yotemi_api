@@ -1,9 +1,8 @@
 import { IsBoolean, IsOptional } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 import { PaginatedDto, PaginationParams } from '@common/pagination';
+import { StringToBoolean } from '@common/decorators';
 import { IsTonHexAddress } from '@common/validators';
-import { booleanStringToBoolean } from '@common/utils';
 import GetUserDto from './get-user.dto';
 
 export class ListUsersParams extends PaginationParams {
@@ -20,7 +19,7 @@ export class ListUsersParams extends PaginationParams {
    * @example false
    */
   @IsBoolean()
-  @Transform(({ value }) => booleanStringToBoolean(value))
+  @StringToBoolean()
   @IsOptional()
   public hideSelf?: boolean;
 }
