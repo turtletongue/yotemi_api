@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 import { Language } from '@prisma/client';
@@ -30,6 +31,7 @@ class PatchTopicLabelDto {
    * @example 'Computer Science'
    */
   @IsString()
+  @MaxLength(30)
   @IsNotEmpty()
   public value: string;
 

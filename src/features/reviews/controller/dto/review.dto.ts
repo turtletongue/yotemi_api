@@ -1,4 +1,4 @@
-import { IsInt, IsString, IsUUID, Max, Min } from 'class-validator';
+import { IsInt, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
 
 import { Id } from '@app/app.declarations';
 
@@ -17,6 +17,7 @@ export default class ReviewDto {
    * @example 'You are a nice teacher!'
    */
   @IsString()
+  @MaxLength(250)
   public comment: string;
 
   /**

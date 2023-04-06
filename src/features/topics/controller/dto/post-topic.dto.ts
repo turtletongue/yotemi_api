@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsString,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -17,6 +18,7 @@ class PostTopicLabelDto {
    * @example 'Computer Science'
    */
   @IsString()
+  @MaxLength(30)
   @IsNotEmpty()
   public value: string;
 

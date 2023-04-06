@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { PASSWORD_MIN_LENGTH } from '@app/app.constants';
 
@@ -8,6 +8,7 @@ export default class AdminDto {
    * @example 'admin'
    */
   @IsString()
+  @MaxLength(15)
   @IsNotEmpty()
   public username: string;
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { IsTonHexAddress } from '@common/validators';
 
@@ -25,6 +25,7 @@ export default class UserDto {
    * @example 'Tom'
    */
   @IsString()
+  @MaxLength(35)
   @IsNotEmpty()
   public firstName: string;
 
@@ -33,6 +34,7 @@ export default class UserDto {
    * @example 'Land'
    */
   @IsString()
+  @MaxLength(35)
   @IsNotEmpty()
   public lastName: string;
 }
