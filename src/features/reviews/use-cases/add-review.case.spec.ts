@@ -14,10 +14,12 @@ describe('The AddReviewCase', () => {
   let addReviewCase: AddReviewCase;
   let create: jest.Mock;
   let isParticipated: jest.Mock;
+  let isExist: jest.Mock;
 
   beforeEach(async () => {
     create = jest.fn();
     isParticipated = jest.fn();
+    isExist = jest.fn();
 
     const module = await Test.createTestingModule({
       providers: [
@@ -33,6 +35,7 @@ describe('The AddReviewCase', () => {
       .overrideProvider(ReviewsRepository)
       .useValue({
         create,
+        isExist,
       })
       .overrideProvider(InterviewsRepository)
       .useValue({
@@ -80,6 +83,7 @@ describe('The AddReviewCase', () => {
         );
 
         create.mockResolvedValue(review);
+        isExist.mockResolvedValue(false);
         isParticipated.mockResolvedValue(true);
       });
 
@@ -148,6 +152,7 @@ describe('The AddReviewCase', () => {
         );
 
         create.mockResolvedValue(review);
+        isExist.mockResolvedValue(false);
         isParticipated.mockResolvedValue(false);
       });
 

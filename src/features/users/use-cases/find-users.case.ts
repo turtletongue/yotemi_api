@@ -6,13 +6,6 @@ import FindUsersDto from './dto/find-users.dto';
 import UsersRepository from '../users.repository';
 import { PlainUser } from '../entities';
 
-interface FindOptions {
-  where: {
-    accountAddress?: string | { not: string };
-    isBlocked: boolean;
-  };
-}
-
 @Injectable()
 export default class FindUsersCase {
   constructor(
@@ -23,23 +16,70 @@ export default class FindUsersCase {
   public async apply(
     dto: FindUsersDto,
   ): Promise<PaginationResult<Omit<PlainUser, 'isBlocked'>>> {
-    const findOptions: FindOptions = {
-      where: {
-        isBlocked:
-          !dto.executor || dto.executor.kind === 'user' ? false : undefined,
-      },
-    };
-
-    if (dto.executor && dto.executor.kind === 'user' && dto.hideSelf) {
-      findOptions.where.accountAddress = {
-        not: dto.executor.accountAddress,
-      };
-    }
+    const showBlocked =
+      !dto.executor || dto.executor.kind === 'user' ? false : undefined;
 
     const result = await this.usersRepository.findPaginated(
       dto.page,
       dto.pageSize,
-      findOptions,
+      {
+        where: {
+          isBlocked: showBlocked,
+          ...(dto.isOnlyFull && {
+            biography: {
+              not: '',
+            },
+            topics: {
+              some: {},
+            },
+          }),
+          ...(dto.topicIds &&
+            dto.topicIds.length > 0 && {
+              topics: {
+                some: {
+                  id: {
+                    in: dto.topicIds,
+                  },
+                },
+              },
+            }),
+          ...(dto.search && {
+            OR: [
+              {
+                username: {
+                  contains: dto.search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                biography: {
+                  contains: dto.search,
+                  mode: 'insensitive',
+                },
+              },
+            ],
+          }),
+          ...(dto.executor &&
+            dto.executor.kind === 'user' &&
+            dto.hideSelf && {
+              accountAddress: {
+                not: dto.executor.accountAddress,
+              },
+            }),
+        },
+        orderBy: {
+          ...(dto.orderBy === 'rating' && {
+            reviews: {
+              _count: 'desc',
+            },
+          }),
+          ...(dto.orderBy === 'activity' && {
+            interviews: {
+              _count: 'desc',
+            },
+          }),
+        },
+      },
       dto.executor?.id,
     );
 
