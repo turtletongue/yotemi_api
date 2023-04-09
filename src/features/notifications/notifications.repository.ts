@@ -58,7 +58,7 @@ export default class NotificationsRepository {
     limit: number,
     viewerId: Id,
     options?: Prisma.NotificationFindManyArgs,
-  ): Promise<PaginationResult<NotificationEntity>> {
+  ): Promise<PaginationResult<NotificationEntity> & { notSeenCount: number }> {
     const paginated = await this.paginate.paginate<
       Notification & { views: NotificationView[] }
     >(this.prisma.notification, page, limit, {
@@ -72,8 +72,20 @@ export default class NotificationsRepository {
       },
     });
 
+    const notSeenCount = await this.prisma.notification.count({
+      where: {
+        ...options.where,
+        views: {
+          none: {
+            viewerId,
+          },
+        },
+      },
+    });
+
     return {
       ...paginated,
+      notSeenCount,
       items: await Promise.all(
         paginated.items.map(
           async (notification) =>
@@ -88,7 +100,7 @@ export default class NotificationsRepository {
   public async findAll(
     viewerId: Id,
     options?: Prisma.NotificationFindManyArgs,
-  ): Promise<NotificationEntity[]> {
+  ): Promise<{ items: NotificationEntity[]; notSeenCount: number }> {
     const notifications = await this.prisma.notification.findMany({
       ...(options ?? {}),
       include: {
@@ -100,14 +112,28 @@ export default class NotificationsRepository {
       },
     });
 
-    return await Promise.all(
-      notifications.map(
-        async (notification) =>
-          await this.notificationFactory.build(
-            this.mapToBuildDto(notification),
-          ),
+    const notSeenCount = await this.prisma.notification.count({
+      where: {
+        ...options.where,
+        views: {
+          none: {
+            viewerId,
+          },
+        },
+      },
+    });
+
+    return {
+      notSeenCount,
+      items: await Promise.all(
+        notifications.map(
+          async (notification) =>
+            await this.notificationFactory.build(
+              this.mapToBuildDto(notification),
+            ),
+        ),
       ),
-    );
+    };
   }
 
   public async create(

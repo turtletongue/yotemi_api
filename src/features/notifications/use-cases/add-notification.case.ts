@@ -4,12 +4,14 @@ import { NotificationType } from '@prisma/client';
 import AddNotificationDto from './dto/add-notification.dto';
 import NotificationsRepository from '../notifications.repository';
 import { NotificationFactory, PlainNotification } from '../entities';
+import NotificationsGateway from '../notifications.gateway';
 
 @Injectable()
 export default class AddNotificationCase {
   constructor(
     private readonly notificationsRepository: NotificationsRepository,
     private readonly notificationFactory: NotificationFactory,
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   public async apply(dto: AddNotificationDto): Promise<PlainNotification> {
@@ -33,6 +35,8 @@ export default class AddNotificationCase {
     const { plain } = await this.notificationsRepository.create(
       notification.plain,
     );
+
+    this.notificationsGateway.sendNotification(plain.userId, plain);
 
     return {
       id: plain.id,

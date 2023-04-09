@@ -11,3 +11,5 @@ export const MS_IN_DAY = MS_IN_HOUR * 24;
 export const BYTES_IN_MB = 1024 * 1024;
 
 export const MAX_IMAGE_SIZE = 10 * BYTES_IN_MB;
+
+export const ANONYMOUS_SOCKET_ROOM = 'anonymous';

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationResult } from '@common/pagination';
 import FindNotificationsDto from './dto/find-notifications.dto';
 import NotificationsRepository from '../notifications.repository';
 import { FOLLOWING_NOTIFICATIONS } from '../notifications.constants';
@@ -14,39 +13,39 @@ export default class FindNotificationsCase {
 
   public async apply(
     dto: FindNotificationsDto,
-  ): Promise<PaginationResult<PlainNotification>> {
-    const result = await this.notificationsRepository.findPaginated(
-      dto.page,
-      dto.pageSize,
-      dto.executor.id,
-      {
-        where: {
-          OR: [
-            {
-              type: {
-                notIn: FOLLOWING_NOTIFICATIONS,
-              },
-              userId: dto.executor.id,
+  ): Promise<{ items: PlainNotification[]; notSeenCount: number }> {
+    const result = await this.notificationsRepository.findAll(dto.executor.id, {
+      where: {
+        views: {
+          none: {
+            viewerId: dto.executor.id,
+          },
+        },
+        OR: [
+          {
+            type: {
+              notIn: FOLLOWING_NOTIFICATIONS,
             },
-            {
-              type: {
-                in: FOLLOWING_NOTIFICATIONS,
-              },
-              user: {
-                followers: {
-                  some: {
-                    id: dto.executor.id,
-                  },
+            userId: dto.executor.id,
+          },
+          {
+            type: {
+              in: FOLLOWING_NOTIFICATIONS,
+            },
+            user: {
+              followers: {
+                some: {
+                  id: dto.executor.id,
                 },
               },
             },
-          ],
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
+          },
+        ],
       },
-    );
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
     return {
       ...result,

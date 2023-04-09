@@ -136,8 +136,6 @@ model Notification {
 }
 
 enum NotificationType {
-  interviewOrdered
-  interviewCanceled
   interviewStarted
   interviewScheduled
   newFollower

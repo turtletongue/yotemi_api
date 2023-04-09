@@ -1,8 +1,16 @@
-import { PaginatedDto, PaginationParams } from '@common/pagination';
 import GetNotificationDto from './get-notification.dto';
 
-export class ListNotificationsParams extends PaginationParams {}
+export class ListNotificationsParams {}
 
-export default class ListNotificationsDto extends PaginatedDto(
-  GetNotificationDto,
-) {}
+export default class ListNotificationsDto {
+  /**
+   * List of notifications.
+   */
+  public items: GetNotificationDto[];
+
+  /**
+   * Count of not seen notifications.
+   * @example 10
+   */
+  public notSeenCount: number;
+}
