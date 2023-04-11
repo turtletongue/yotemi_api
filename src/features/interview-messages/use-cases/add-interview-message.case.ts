@@ -4,8 +4,8 @@ import { checkInterviewMembership } from '@common/utils';
 import InterviewsRepository from '@features/interviews/interviews.repository';
 import AddInterviewMessageDto from './dto/add-interview-message.dto';
 import InterviewMessagesRepository from '../interview-messages.repository';
+import InterviewMessagesGateway from '../interview-messages.gateway';
 import { InterviewMessageFactory, PlainInterviewMessage } from '../entities';
-import { InvalidMessagesInterviewStatusException } from '../exceptions';
 
 @Injectable()
 export default class AddInterviewMessageCase {
@@ -13,6 +13,7 @@ export default class AddInterviewMessageCase {
     private readonly interviewMessagesRepository: InterviewMessagesRepository,
     private readonly interviewsRepository: InterviewsRepository,
     private readonly interviewMessageFactory: InterviewMessageFactory,
+    private readonly interviewMessagesGateway: InterviewMessagesGateway,
   ) {}
 
   public async apply(
@@ -24,12 +25,6 @@ export default class AddInterviewMessageCase {
       dto.executor,
     );
 
-    const isPaid = await this.interviewsRepository.isPaid(interview.id);
-
-    if (!isPaid) {
-      throw new InvalidMessagesInterviewStatusException();
-    }
-
     const interviewMessage = await this.interviewMessageFactory.build({
       ...dto,
       authorId: dto.executor.id,
@@ -37,6 +32,16 @@ export default class AddInterviewMessageCase {
 
     const { plain } = await this.interviewMessagesRepository.create(
       interviewMessage.plain,
+    );
+
+    this.interviewMessagesGateway.sendInterviewMessage(
+      interview.participant.id,
+      plain,
+    );
+
+    this.interviewMessagesGateway.sendInterviewMessage(
+      interview.creatorId,
+      plain,
     );
 
     return {
