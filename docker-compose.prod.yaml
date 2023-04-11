@@ -60,6 +60,8 @@ services:
     volumes:
       - redis_data:/data
       - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - yotemi
 
 volumes:
   data:
