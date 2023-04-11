@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import FindTopicsCase from './find-topics.case';
 import TopicsRepository from '../topics.repository';
 import { TopicFactory, TopicEntity } from '../entities';

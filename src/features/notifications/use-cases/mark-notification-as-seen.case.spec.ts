@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { NotificationType } from '@prisma/client';
 
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import { UserEntity } from '@features/users/entities';
 import MarkNotificationAsSeenCase from './mark-notification-as-seen.case';
 import { NotificationEntity, NotificationFactory } from '../entities';

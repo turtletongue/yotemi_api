@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock, PasswordsServiceMock } from '@test/mocks';
 import AdminFactory from './admin.factory';
 import AdminEntity from './admin.entity';
 

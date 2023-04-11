@@ -3,7 +3,7 @@ import { NotificationType } from '@prisma/client';
 
 import { IdentifiersService } from '@common/identifiers';
 import InterviewContractService from '@common/ton/interview-contract.service';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import { UserEntity, UserFactory } from '@features/users/entities';
 import { TopicFactory } from '@features/topics/entities';
 import {

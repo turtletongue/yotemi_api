@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import InterviewMessageFactory from './interview-message.factory';
 import InterviewMessageEntity from './interview-message.entity';
 

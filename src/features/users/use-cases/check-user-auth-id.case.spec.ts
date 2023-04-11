@@ -3,7 +3,7 @@ import { UnauthorizedException } from '@nestjs/common';
 
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock, PasswordsServiceMock } from '@test/mocks';
 import { TopicFactory } from '@features/topics/entities';
 import CheckUserAuthIdCase from './check-user-auth-id.case';
 import UsersRepository from '../users.repository';

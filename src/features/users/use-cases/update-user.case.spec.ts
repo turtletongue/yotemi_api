@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock, PasswordsServiceMock } from '@test/mocks';
 import { TopicFactory } from '@features/topics/entities';
 import TopicsRepository from '@features/topics/topics.repository';
 import UpdateUserCase from './update-user.case';

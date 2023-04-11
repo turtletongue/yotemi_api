@@ -23,6 +23,7 @@
       "@config/*": ["src/config/*"],
       "@features/*": ["src/features/*"],
       "@contract/*": ["src/contract/*"],
+      "@test/*": ["test/*"],
       "@app/*": ["src/*"]
     }
   }

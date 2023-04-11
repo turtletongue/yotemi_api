@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { NotificationType } from '@prisma/client';
 
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import NotificationFactory from './notification.factory';
 import NotificationEntity from './notification.entity';
 

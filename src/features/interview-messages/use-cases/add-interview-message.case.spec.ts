@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { ForbiddenException } from '@nestjs/common';
 
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock } from '@test/mocks';
 import InterviewsRepository from '@features/interviews/interviews.repository';
 import { InterviewEntity } from '@features/interviews/entities';
 import { UserEntity } from '@features/users/entities';

@@ -3,7 +3,7 @@ import { UnauthorizedException } from '@nestjs/common';
 
 import { PasswordsService } from '@common/passwords';
 import { IdentifiersService } from '@common/identifiers';
-import { IdentifiersServiceMock, PasswordsServiceMock } from '@common/mocks';
+import { IdentifiersServiceMock, PasswordsServiceMock } from '@test/mocks';
 import CheckAdminPasswordCase from './check-admin-password.case';
 import AdminsRepository from '../admins.repository';
 import { AdminFactory, AdminEntity } from '../entities';
