@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN yarn global add @nestjs/cli@^9.0.0
+RUN yarn global add typescript @nestjs/cli
 
 COPY package.json yarn.lock .
 
