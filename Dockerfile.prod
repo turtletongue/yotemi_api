@@ -4,15 +4,13 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN yarn global add typescript @nestjs/cli
-
 COPY package.json yarn.lock .
 
 RUN yarn
 
 COPY . .
 
-RUN yarn build
+RUN npx prisma generate client && yarn build
 
 RUN mkdir /run/secrets && touch /run/secrets/postgres_password && \
   chown -R node:node /app /run/secrets/postgres_password
