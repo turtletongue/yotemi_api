@@ -1,0 +1,63 @@
+version: '3.9'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: yotemi_nginx
+    restart: always
+    tty: true
+    depends_on:
+      - node
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/yotemi.com/fullchain.pem:/etc/letsencrypt/live/yotemi.com/fullchain.pem
+      - /etc/letsencrypt/live/yotemi.com/privkey.pem:/etc/letsencrypt/live/yotemi.com/privkey.pem
+      - /etc/letsencrypt/live/admin.yotemi.com/fullchain.pem:/etc/letsencrypt/live/admin.yotemi.com/fullchain.pem
+      - /etc/letsencrypt/live/admin.yotemi.com/privkey.pem:/etc/letsencrypt/live/admin.yotemi.com/privkey.pem
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - yotemi
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: yotemi_api
+    restart: always
+    tty: true
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - yotemi
+
+  db:
+    image: postgres:15.1-alpine3.17
+    container_name: yotemi_db
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'yotemi'
+    volumes:
+      - data:/var/lib/postgresql/data
+    secrets:
+      - postgres_password
+    networks:
+      - yotemi
+
+volumes:
+  data:
+    name: yotemi_data
+
+networks:
+  yotemi:
+    external: true
+
+secrets:
+  postgres_password:
+    file: ./docker_postgres_password
