@@ -13,8 +13,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.setGlobalPrefix('api');
-
   const config = app.get(ConfigService).get<ApiConfig>('api');
 
   app.enableCors({
@@ -26,7 +24,7 @@ async function bootstrap() {
     app.use(helmet());
   }
 
-  app.useStaticAssets(join(process.cwd(), 'public'), { prefix: '/api' });
+  app.useStaticAssets(join(process.cwd(), 'public'));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -37,15 +35,17 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Yotemi API')
-    .setDescription('Yotemi API documentation')
-    .setVersion('1.0.0')
-    .addBearerAuth()
-    .build();
+  if (config.environment === 'development') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Yotemi API')
+      .setDescription('Yotemi API documentation')
+      .setVersion('1.0.0')
+      .addBearerAuth()
+      .build();
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api/swagger', app, document);
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('swagger', app, document);
+  }
 
   await app.listen(config.port);
 }
