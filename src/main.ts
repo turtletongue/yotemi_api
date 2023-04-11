@@ -16,7 +16,7 @@ async function bootstrap() {
   const config = app.get(ConfigService).get<ApiConfig>('api');
 
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'https://yotemi.com'],
     credentials: true,
   });
 
