@@ -13,6 +13,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.setGlobalPrefix('api');
+
   const config = app.get(ConfigService).get<ApiConfig>('api');
 
   app.enableCors({
@@ -24,7 +26,7 @@ async function bootstrap() {
     app.use(helmet());
   }
 
-  app.useStaticAssets(join(process.cwd(), 'public'));
+  app.useStaticAssets(join(process.cwd(), 'public'), { prefix: '/api' });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -43,7 +45,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup('api/swagger', app, document);
 
   await app.listen(config.port);
 }
