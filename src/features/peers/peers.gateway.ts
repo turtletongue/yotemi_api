@@ -7,7 +7,9 @@ import { Id } from '@app/app.declarations';
 export default class PeersGateway {
   constructor(private readonly baseGateway: BaseGateway) {}
 
-  public sendPeerId(userId: Id, peerId: string): void {
-    this.baseGateway.server.to(`user-${userId}`).emit('peer.created', peerId);
+  public sendPeerId(userId: Id, type: 'own' | 'other', peerId: string): void {
+    this.baseGateway.server
+      .to(`user-${userId}`)
+      .emit('peer.created', { type, peerId });
   }
 }

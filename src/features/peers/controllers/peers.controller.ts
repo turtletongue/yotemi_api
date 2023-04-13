@@ -20,7 +20,8 @@ export default class PeersController {
   ): Promise<{ peerId: string }> {
     const peerId = this.peers.getId();
 
-    this.peersGateway.sendPeerId(otherUserId, peerId);
+    this.peersGateway.sendPeerId(otherUserId, 'own', this.peers.getId());
+    this.peersGateway.sendPeerId(otherUserId, 'other', peerId);
 
     return { peerId };
   }
