@@ -17,12 +17,13 @@ export default class PeersController {
   @Post(':otherUserId')
   public async generate(
     @Param('otherUserId') otherUserId: string,
-  ): Promise<{ peerId: string }> {
+  ): Promise<{ peerId: string; otherPeerId: string }> {
     const peerId = this.peers.getId();
+    const otherPeerId = this.peers.getId();
 
-    this.peersGateway.sendPeerId(otherUserId, 'own', this.peers.getId());
+    this.peersGateway.sendPeerId(otherUserId, 'own', otherPeerId);
     this.peersGateway.sendPeerId(otherUserId, 'other', peerId);
 
-    return { peerId };
+    return { peerId, otherPeerId };
   }
 }
