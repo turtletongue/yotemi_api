@@ -8,6 +8,6 @@ export default class PeersGateway {
   constructor(private readonly baseGateway: BaseGateway) {}
 
   public sendPeerId(userId: Id, peerId: string): void {
-    this.baseGateway.server.to(`users-${userId}`).emit('peer.created', peerId);
+    this.baseGateway.server.to(`user-${userId}`).emit('peer.created', peerId);
   }
 }
