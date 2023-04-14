@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -142,5 +143,43 @@ export default class InterviewsController {
     @User() executor: UserEntity,
   ): Promise<GetInterviewDto> {
     return await this.interviewsService.confirmPayment(id, dto, executor);
+  }
+
+  /**
+   * Take interview creator peer id.
+   */
+  @Post(':id/take-creator-peer')
+  @ApiBearerAuth()
+  @ApiException(() => InterviewNotFoundException, {
+    description: 'Cannot find interview to take peer id.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Must be interview creator to take his peer id',
+  })
+  @UseGuards(AccessGuard, RoleGuard('user'))
+  public async takeCreatorPeerId(
+    @Param('id') id: Id,
+    @User() executor: UserEntity,
+  ): Promise<{ peerId: string }> {
+    return await this.interviewsService.takeCreatorPeerId(id, executor);
+  }
+
+  /**
+   * Take interview participant peer id.
+   */
+  @Post(':id/take-participant-peer')
+  @ApiBearerAuth()
+  @ApiException(() => InterviewNotFoundException, {
+    description: 'Cannot find interview to take peer id.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Must be interview participant to take his peer id',
+  })
+  @UseGuards(AccessGuard, RoleGuard('user'))
+  public async takeParticipantPeerId(
+    @Param('id') id: Id,
+    @User() executor: UserEntity,
+  ): Promise<{ peerId: string }> {
+    return await this.interviewsService.takeParticipantPeerId(id, executor);
   }
 }

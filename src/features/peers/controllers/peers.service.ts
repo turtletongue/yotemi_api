@@ -1,28 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { IdentifiersService } from '@common/identifiers';
 import InterviewsRepository from '@features/interviews/interviews.repository';
 import { UserEntity } from '@features/users/entities';
 import { Id } from '@app/app.declarations';
 
-type GeneratePeerResponse = {
-  peerId: string;
-  otherPeerId: string;
-};
-
 @Injectable()
 export default class PeersService {
-  constructor(
-    private readonly identifiers: IdentifiersService,
-    private readonly interviewsRepository: InterviewsRepository,
-  ) {}
-
-  public async getIds(): Promise<GeneratePeerResponse> {
-    return {
-      peerId: this.identifiers.generate(),
-      otherPeerId: this.identifiers.generate(),
-    };
-  }
+  constructor(private readonly interviewsRepository: InterviewsRepository) {}
 
   public async getOtherUserId(
     interviewId: Id,

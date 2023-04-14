@@ -24,7 +24,7 @@ export default class PeersController {
   ) {}
 
   @Post(':interviewId')
-  public async generate(
+  public async register(
     @Param('interviewId') interviewId: string,
     @User() executor: UserEntity,
   ): Promise<GeneratePeerResponse> {
@@ -34,16 +34,8 @@ export default class PeersController {
       throw new ForbiddenException();
     }
 
-    const { peerId, otherPeerId } = await this.peers.getIds();
-    const otherUserId = await this.peers.getOtherUserId(interviewId, executor);
-
-    this.peersGateway.sendPeerId(otherUserId, interviewId, 'own', otherPeerId);
-    this.peersGateway.sendPeerId(otherUserId, interviewId, 'other', peerId);
-
     return {
       interviewId,
-      peerId,
-      otherPeerId,
       otherHasVideo: false,
       otherHasAudio: false,
     };
