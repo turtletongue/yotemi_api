@@ -24,6 +24,7 @@ import GetInterviewDto from './dto/get-interview.dto';
 import PostInterviewDto from './dto/post-interview.dto';
 import PatchInterviewDto from './dto/patch-interview.dto';
 import PostInterviewTimeCheckDto from './dto/post-interview-time-check.dto';
+import PostPeerIdsDto from './dto/post-peer-ids.dto';
 import InterviewsService from './interviews.service';
 import {
   AddressNotUniqueException,
@@ -146,40 +147,21 @@ export default class InterviewsController {
   }
 
   /**
-   * Take interview creator peer id.
+   * Take interview peer id.
    */
-  @Post(':id/take-creator-peer')
+  @Post(':id/take-peer')
   @ApiBearerAuth()
   @ApiException(() => InterviewNotFoundException, {
     description: 'Cannot find interview to take peer id.',
   })
   @ApiException(() => ForbiddenException, {
-    description: 'Must be interview creator to take his peer id',
+    description: 'Must be interview participant or creator to take his peer id',
   })
   @UseGuards(AccessGuard, RoleGuard('user'))
-  public async takeCreatorPeerId(
+  public async takePeerIds(
     @Param('id') id: Id,
     @User() executor: UserEntity,
-  ): Promise<{ peerId: string }> {
-    return await this.interviewsService.takeCreatorPeerId(id, executor);
-  }
-
-  /**
-   * Take interview participant peer id.
-   */
-  @Post(':id/take-participant-peer')
-  @ApiBearerAuth()
-  @ApiException(() => InterviewNotFoundException, {
-    description: 'Cannot find interview to take peer id.',
-  })
-  @ApiException(() => ForbiddenException, {
-    description: 'Must be interview participant to take his peer id',
-  })
-  @UseGuards(AccessGuard, RoleGuard('user'))
-  public async takeParticipantPeerId(
-    @Param('id') id: Id,
-    @User() executor: UserEntity,
-  ): Promise<{ peerId: string }> {
-    return await this.interviewsService.takeParticipantPeerId(id, executor);
+  ): Promise<PostPeerIdsDto> {
+    return await this.interviewsService.takePeerIds(id, executor);
   }
 }

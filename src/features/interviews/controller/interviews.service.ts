@@ -9,13 +9,13 @@ import ListInterviewsDto, {
 import PostInterviewDto from './dto/post-interview.dto';
 import PatchInterviewDto from './dto/patch-interview.dto';
 import PostInterviewTimeCheckDto from './dto/post-interview-time-check.dto';
+import PostPeerIdsDto from './dto/post-peer-ids.dto';
 import FindInterviewsCase from '../use-cases/find-interviews.case';
 import GetInterviewByIdCase from '../use-cases/get-interview-by-id.case';
 import AddInterviewCase from '../use-cases/add-interview.case';
 import ConfirmPaymentCase from '../use-cases/confirm-payment.case';
 import CheckInterviewTimeConflictCase from '../use-cases/check-interview-time-conflict.case';
-import TakeCreatorPeerIdCase from '../use-cases/take-creator-peer-id.case';
-import TakeParticipantPeerIdCase from '../use-cases/take-participant-peer-id.case';
+import TakePeerIdsCase from '../use-cases/take-peer-ids.case';
 
 @Injectable()
 export default class InterviewsService {
@@ -25,8 +25,7 @@ export default class InterviewsService {
     private readonly addInterviewCase: AddInterviewCase,
     private readonly checkInterviewTimeConflictCase: CheckInterviewTimeConflictCase,
     private readonly confirmPaymentCase: ConfirmPaymentCase,
-    private readonly takeCreatorPeerIdCase: TakeCreatorPeerIdCase,
-    private readonly takeParticipantPeerIdCase: TakeParticipantPeerIdCase,
+    private readonly takePeerIdsCase: TakePeerIdsCase,
   ) {}
 
   public async getInterviewById(id: Id): Promise<GetInterviewDto> {
@@ -66,21 +65,10 @@ export default class InterviewsService {
     return await this.confirmPaymentCase.apply({ ...dto, id, executor });
   }
 
-  public async takeCreatorPeerId(
+  public async takePeerIds(
     id: Id,
     executor: UserEntity,
-  ): Promise<{ peerId: string }> {
-    const peerId = await this.takeCreatorPeerIdCase.apply({ id, executor });
-
-    return { peerId };
-  }
-
-  public async takeParticipantPeerId(
-    id: Id,
-    executor: UserEntity,
-  ): Promise<{ peerId: string }> {
-    const peerId = await this.takeParticipantPeerIdCase.apply({ id, executor });
-
-    return { peerId };
+  ): Promise<PostPeerIdsDto> {
+    return await this.takePeerIdsCase.apply({ id, executor });
   }
 }
