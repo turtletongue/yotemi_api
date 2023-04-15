@@ -95,22 +95,14 @@ export default class InterviewsRepository {
     creatorId: Id,
     participantId: Id,
   ): Promise<boolean> {
-    const result = await this.prisma.interview.findFirst({
+    const interview = await this.prisma.interview.findFirst({
       where: {
         creatorId,
         participantId,
       },
     });
 
-    if (!result) {
-      return false;
-    }
-
-    const { status } = await this.interviewContractService.getInfo(
-      result.address,
-    );
-
-    return status === 'finished';
+    return !!interview;
   }
 
   public async findAll(
