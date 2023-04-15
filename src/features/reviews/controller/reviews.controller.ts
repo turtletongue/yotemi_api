@@ -17,6 +17,9 @@ import { Id } from '@app/app.declarations';
 import ListReviewsDto, { ListReviewsParams } from './dto/list-reviews.dto';
 import GetReviewDto from './dto/get-review.dto';
 import PostReviewDto from './dto/post-review.dto';
+import GetReviewExistenceDto, {
+  GetReviewExistenceParams,
+} from './dto/get-review-existence.dto';
 import ReviewsService from './reviews.service';
 import {
   NotParticipatedToReviewException,
@@ -40,6 +43,19 @@ export default class ReviewsController {
   }
 
   /**
+   * Get is your review exist for specified user.
+   */
+  @Get('existence')
+  @ApiBearerAuth()
+  @UseGuards(AccessGuard, RoleGuard('user'))
+  public async getExistence(
+    @Query() params: GetReviewExistenceParams,
+    @User() executor: UserEntity,
+  ): Promise<GetReviewExistenceDto> {
+    return await this.reviewsService.getReviewExistence(params, executor);
+  }
+
+  /**
    * Get single review by id.
    */
   @Get(':id')
@@ -50,6 +66,9 @@ export default class ReviewsController {
     return await this.reviewsService.getReviewById(id);
   }
 
+  /**
+   * Create review.
+   */
   @Post()
   @ApiBearerAuth()
   @ApiException(() => NotParticipatedToReviewException, {
