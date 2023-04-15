@@ -10,9 +10,14 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
-import { AccessGuard, RoleGuard } from '@features/authentication/guards';
-import { User } from '@features/authentication/decorators';
+import {
+  AccessGuard,
+  OptionalAccessGuard,
+  RoleGuard,
+} from '@features/authentication/guards';
+import { Executor, User } from '@features/authentication/decorators';
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import { Id } from '@app/app.declarations';
 import ListReviewsDto, { ListReviewsParams } from './dto/list-reviews.dto';
 import GetReviewDto from './dto/get-review.dto';
@@ -36,10 +41,12 @@ export default class ReviewsController {
    * Get paginated list of reviews.
    */
   @Get()
+  @UseGuards(OptionalAccessGuard)
   public async find(
     @Query() params: ListReviewsParams,
+    @Executor() executor?: AdminEntity | UserEntity,
   ): Promise<ListReviewsDto> {
-    return await this.reviewsService.findReviews(params);
+    return await this.reviewsService.findReviews(params, executor);
   }
 
   /**

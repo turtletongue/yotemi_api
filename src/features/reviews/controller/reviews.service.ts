@@ -12,6 +12,7 @@ import AddReviewCase from '../use-cases/add-review.case';
 import GetReviewByIdCase from '../use-cases/get-review-by-id.case';
 import CheckReviewExistenceCase from '../use-cases/check-review-existence.case';
 import FindReviewsCase from '../use-cases/find-reviews.case';
+import { AdminEntity } from '@features/admins/entities';
 
 @Injectable()
 export default class ReviewsService {
@@ -26,8 +27,11 @@ export default class ReviewsService {
     return await this.getReviewByIdCase.apply(id);
   }
 
-  public async findReviews(params: ListReviewsParams): Promise<ListReviewsDto> {
-    return await this.findReviewsCase.apply(params);
+  public async findReviews(
+    params: ListReviewsParams,
+    executor?: AdminEntity | UserEntity,
+  ): Promise<ListReviewsDto> {
+    return await this.findReviewsCase.apply({ ...params, executor });
   }
 
   public async getReviewExistence(
