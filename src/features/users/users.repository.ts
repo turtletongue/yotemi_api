@@ -360,6 +360,7 @@ export default class UsersRepository {
     } = await this.prisma.review.aggregate({
       where: {
         userId: id,
+        isModerated: true,
       },
       _avg: {
         points: true,
