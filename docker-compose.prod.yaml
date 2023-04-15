@@ -60,6 +60,10 @@ services:
     volumes:
       - redis_data:/data
       - ./redis.conf:/usr/local/etc/redis/redis.conf
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       - yotemi
 
