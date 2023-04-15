@@ -7,6 +7,7 @@ export default interface PlainReview {
   comment: string;
   userId: Id;
   reviewer: PlainUser;
+  isModerated: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -7,6 +7,7 @@ export default class BuildReviewDto {
   public comment: string;
   public userId: Id;
   public reviewer: BuildUserDto;
+  public isModerated?: boolean;
   public createdAt?: Date;
   public updatedAt?: Date;
 }

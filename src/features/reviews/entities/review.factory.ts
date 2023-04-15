@@ -18,6 +18,7 @@ export default class ReviewFactory {
     comment,
     userId,
     reviewer,
+    isModerated = false,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildReviewDto): Promise<ReviewEntity> {
@@ -29,6 +30,7 @@ export default class ReviewFactory {
       comment,
       userId,
       reviewerEntity,
+      isModerated,
       createdAt,
       updatedAt,
     );

@@ -9,6 +9,7 @@ export default class ReviewEntity {
     public comment: string,
     public userId: Id,
     public reviewer: UserEntity,
+    public isModerated: boolean,
     public createdAt: Date,
     public updatedAt: Date,
   ) {}
@@ -20,6 +21,7 @@ export default class ReviewEntity {
       comment: this.comment,
       userId: this.userId,
       reviewer: this.reviewer.plain,
+      isModerated: this.isModerated,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

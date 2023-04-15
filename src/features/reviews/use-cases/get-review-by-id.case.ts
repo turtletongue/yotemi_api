@@ -17,6 +17,7 @@ export default class GetReviewByIdCase {
       comment: plain.comment,
       userId: plain.userId,
       reviewer: plain.reviewer,
+      isModerated: plain.isModerated,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
     };

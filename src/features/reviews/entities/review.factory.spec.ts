@@ -47,6 +47,7 @@ describe('The ReviewFactory', () => {
           new Date(),
           new Date(),
         ),
+        isModerated: false,
       });
 
       expect(review).toBeInstanceOf(ReviewEntity);

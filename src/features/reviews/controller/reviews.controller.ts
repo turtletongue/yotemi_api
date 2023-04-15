@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -25,6 +26,7 @@ import PostReviewDto from './dto/post-review.dto';
 import GetReviewExistenceDto, {
   GetReviewExistenceParams,
 } from './dto/get-review-existence.dto';
+import PatchReviewDto from './dto/patch-review.dto';
 import ReviewsService from './reviews.service';
 import {
   NotParticipatedToReviewException,
@@ -90,5 +92,21 @@ export default class ReviewsController {
     @User() executor: UserEntity,
   ): Promise<GetReviewDto> {
     return await this.reviewsService.addReview(dto, executor);
+  }
+
+  /**
+   * Moderate review.
+   */
+  @Patch(':id')
+  @ApiBearerAuth()
+  @ApiException(() => ReviewNotFoundException, {
+    description: 'Cannot find review to moderate.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('admin'))
+  public async moderate(
+    @Param('id') id: Id,
+    @Body() dto: PatchReviewDto,
+  ): Promise<GetReviewDto> {
+    return await this.reviewsService.moderateReview(id, dto);
   }
 }
