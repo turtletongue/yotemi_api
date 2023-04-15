@@ -27,6 +27,9 @@ export default class FindInterviewsCase {
           lte: dto.to,
         },
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
 
     return interviews.map(({ plain }) => ({
