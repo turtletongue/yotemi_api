@@ -18,10 +18,9 @@ export default class FindReviewsCase {
       {
         where: {
           userId: dto.userId,
-          ...(dto.executor &&
-            dto.executor.kind === 'user' && {
-              isModerated: true,
-            }),
+          ...((!dto.executor || dto.executor.kind === 'user') && {
+            isModerated: true,
+          }),
         },
         orderBy: {
           createdAt: dto.sortDirection,
