@@ -18,7 +18,7 @@ export class ListReviewsParams extends PaginationParams {
    */
   @IsIn(['asc', 'desc'])
   @IsOptional()
-  public sortDirection: 'asc' | 'desc' = 'asc';
+  public sortDirection: 'asc' | 'desc' = 'desc';
 }
 
 export default class ListReviewsDto extends PaginatedDto(GetReviewDto) {}
