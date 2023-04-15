@@ -38,7 +38,7 @@ export default class ReviewsService {
     params: GetReviewExistenceParams,
     executor: UserEntity,
   ): Promise<GetReviewExistenceDto> {
-    return await this.getReviewExistence.apply({ ...params, executor });
+    return await this.checkReviewExistenceCase.apply({ ...params, executor });
   }
 
   public async addReview(
