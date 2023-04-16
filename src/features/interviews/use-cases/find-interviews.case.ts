@@ -45,12 +45,12 @@ export default class FindInterviewsCase {
       creatorId: plain.creatorId,
       participant: {
         ...plain.participant,
-        avatarPath:
-          plain.participant.avatarPath &&
-          this.s3.getReadPath(plain.participant.avatarPath),
-        coverPath:
-          plain.participant.coverPath &&
-          this.s3.getReadPath(plain.participant.coverPath),
+        avatarPath: plain.participant?.avatarPath
+          ? this.s3.getReadPath(plain.participant.avatarPath)
+          : null,
+        coverPath: plain.participant?.coverPath
+          ? this.s3.getReadPath(plain.participant.coverPath)
+          : null,
       },
       payerComment: plain.payerComment,
       createdAt: plain.createdAt,
