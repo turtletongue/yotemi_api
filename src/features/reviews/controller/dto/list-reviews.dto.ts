@@ -10,7 +10,8 @@ export class ListReviewsParams extends PaginationParams {
    * @example '0312248b-65e7-48ed-8bc1-b44a69547d3e'
    */
   @IsUUID()
-  public userId: Id;
+  @IsOptional()
+  public userId?: Id;
 
   /**
    * Reviews sorting direction.

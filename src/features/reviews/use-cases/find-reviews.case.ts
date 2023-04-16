@@ -12,13 +12,15 @@ export default class FindReviewsCase {
   public async apply(
     dto: FindReviewsDto,
   ): Promise<PaginationResult<PlainReview>> {
+    const isUser = !dto.executor || dto.executor.kind === 'user';
+
     const result = await this.reviewsRepository.findPaginated(
       dto.page,
       dto.pageSize,
       {
         where: {
           userId: dto.userId,
-          ...((!dto.executor || dto.executor.kind === 'user') && {
+          ...(isUser && {
             isModerated: true,
           }),
         },
