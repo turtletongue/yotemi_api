@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Id } from '@app/app.declarations';
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import GetUserDto from './dto/get-user.dto';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -36,7 +37,10 @@ export default class UsersService {
     private readonly deleteUserCase: DeleteUserCase,
   ) {}
 
-  public async getUserById(id: Id, executor?: UserEntity): Promise<GetUserDto> {
+  public async getUserById(
+    id: Id,
+    executor?: AdminEntity | UserEntity,
+  ): Promise<GetUserDto> {
     return await this.getUserByIdCase.apply(id, executor);
   }
 
@@ -56,7 +60,7 @@ export default class UsersService {
 
   public async findUsers(
     params: ListUsersParams,
-    executor?: UserEntity,
+    executor?: AdminEntity | UserEntity,
   ): Promise<ListUsersDto> {
     return await this.findUsersCase.apply({ ...params, executor });
   }

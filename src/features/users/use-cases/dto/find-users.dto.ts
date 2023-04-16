@@ -1,5 +1,6 @@
 import { PaginationParams } from '@common/pagination';
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import { Id } from '@app/app.declarations';
 
 export default class FindUsersDto extends PaginationParams {
@@ -8,5 +9,5 @@ export default class FindUsersDto extends PaginationParams {
   public search?: string;
   public isOnlyFull?: boolean;
   public orderBy?: 'rating' | 'activity';
-  public executor?: UserEntity;
+  public executor?: AdminEntity | UserEntity;
 }

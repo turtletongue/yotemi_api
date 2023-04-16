@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { S3Service } from '@common/s3';
+import { AdminEntity } from '@features/admins/entities';
 import { Id } from '@app/app.declarations';
 import UsersRepository from '../users.repository';
 import { UserEntity, PlainUser } from '../entities';
@@ -14,10 +15,13 @@ export default class GetUserByIdCase {
 
   public async apply(
     id: Id,
-    executor?: UserEntity,
+    executor?: AdminEntity | UserEntity,
   ): Promise<Omit<PlainUser, 'isBlocked'>> {
     return await this.usersRepository
-      .findById(id, executor?.id)
+      .findById(
+        id,
+        executor && executor.kind === 'user' ? executor.id : undefined,
+      )
       .then(({ plain }) => ({
         ...plain,
         avatarPath:

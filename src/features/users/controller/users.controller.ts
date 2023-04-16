@@ -24,7 +24,8 @@ import {
   OptionalAccessGuard,
   RoleGuard,
 } from '@features/authentication/guards';
-import { User } from '@features/authentication/decorators';
+import { Executor, User } from '@features/authentication/decorators';
+import { AdminEntity } from '@features/admins/entities';
 import ListUsersDto, { ListUsersParams } from './dto/list-users.dto';
 import GetUserDto from './dto/get-user.dto';
 import PostUserDto from './dto/post-user.dto';
@@ -51,7 +52,7 @@ export default class UsersController {
   @UseGuards(OptionalAccessGuard)
   public async find(
     @Query() params: ListUsersParams,
-    @User() executor?: UserEntity,
+    @Executor() executor?: AdminEntity | UserEntity,
   ): Promise<ListUsersDto> {
     return await this.usersService.findUsers(params, executor);
   }
@@ -66,7 +67,7 @@ export default class UsersController {
   @Get(':id')
   public async getById(
     @Param('id') id: Id,
-    @User() executor?: UserEntity,
+    @Executor() executor?: AdminEntity | UserEntity,
   ): Promise<GetUserDto> {
     return await this.usersService.getUserById(id, executor);
   }
