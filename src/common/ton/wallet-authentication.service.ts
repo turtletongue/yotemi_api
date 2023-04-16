@@ -1,9 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Point, verify } from '@noble/ed25519';
-import { firstValueFrom } from 'rxjs';
 import { Buffer } from 'buffer';
 
 import tonConfig from '@config/ton.config';
@@ -35,7 +33,6 @@ export default class WalletAuthenticationService {
   constructor(
     @Inject(tonConfig.KEY)
     private readonly config: ConfigType<typeof tonConfig>,
-    private readonly http: HttpService,
   ) {}
 
   public async verifySignature(
@@ -109,8 +106,9 @@ export default class WalletAuthenticationService {
 
   private async getPublicKey(address: string): Promise<Point> {
     try {
-      const { data } = await firstValueFrom(
-        this.http.get(`${this.config.url}/v1/wallet/getWalletPublicKey`, {
+      const { data } = await axios.get(
+        `${this.config.url}/v1/wallet/getWalletPublicKey`,
+        {
           params: {
             account: address,
           },
@@ -118,7 +116,7 @@ export default class WalletAuthenticationService {
             Authorization: `Bearer ${this.config.apiJwt}`,
             'Accept-Encoding': 'gzip,deflate,compress',
           },
-        }),
+        },
       );
 
       return Point.fromHex(data.publicKey);
