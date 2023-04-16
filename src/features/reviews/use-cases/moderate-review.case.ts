@@ -11,6 +11,7 @@ export default class ModerateReviewCase {
   public async apply(dto: ModerateReviewDto): Promise<PlainReview> {
     const review = await this.reviewsRepository.findById(dto.id);
     review.comment = dto.comment;
+    review.isModerated = true;
 
     return this.reviewsRepository.update(review).then(({ plain }) => plain);
   }

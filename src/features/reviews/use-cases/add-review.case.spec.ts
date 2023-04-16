@@ -78,6 +78,7 @@ describe('The AddReviewCase', () => {
             new Date(),
             new Date(),
           ),
+          false,
           new Date(),
           new Date(),
         );
@@ -147,6 +148,7 @@ describe('The AddReviewCase', () => {
             new Date(),
             new Date(),
           ),
+          false,
           new Date(),
           new Date(),
         );
