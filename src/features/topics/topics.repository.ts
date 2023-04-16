@@ -111,6 +111,14 @@ export default class TopicsRepository {
     const { labels, ...data } = topic;
 
     const result = await this.prisma.$transaction(async (prisma) => {
+      await prisma.topicLabel.deleteMany({
+        where: {
+          id: {
+            notIn: labels.filter(({ id }) => !!id).map(({ id }) => id),
+          },
+        },
+      });
+
       await Promise.all(
         labels.map(async (label) => {
           await prisma.topicLabel.upsert({
