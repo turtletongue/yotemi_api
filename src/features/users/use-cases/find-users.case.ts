@@ -16,8 +16,6 @@ export default class FindUsersCase {
   public async apply(
     dto: FindUsersDto,
   ): Promise<PaginationResult<Omit<PlainUser, 'isBlocked'>>> {
-    console.log(dto);
-
     let showBlocked: boolean | undefined = undefined;
 
     if (dto.executor) {
