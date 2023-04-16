@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosError } from 'axios';
 import { Point, verify } from '@noble/ed25519';
-import { catchError, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { Buffer } from 'buffer';
 
 import tonConfig from '@config/ton.config';
@@ -108,9 +108,9 @@ export default class WalletAuthenticationService {
   }
 
   private async getPublicKey(address: string): Promise<Point> {
-    const { data } = await firstValueFrom(
-      this.http
-        .get(`${this.config.url}/v1/wallet/getWalletPublicKey`, {
+    try {
+      const { data } = await firstValueFrom(
+        this.http.get(`${this.config.url}/v1/wallet/getWalletPublicKey`, {
           params: {
             account: address,
           },
@@ -118,18 +118,20 @@ export default class WalletAuthenticationService {
             Authorization: `Bearer ${this.config.apiJwt}`,
             'Accept-Encoding': 'gzip,deflate,compress',
           },
-        })
-        .pipe(
-          catchError((error: AxiosError) => {
-            if (error.code === '400' || error.code === '500') {
-              throw new AccountIsNotInitializedException();
-            }
+        }),
+      );
 
-            throw error;
-          }),
-        ),
-    );
+      return Point.fromHex(data.publicKey);
+    } catch (error: unknown) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
 
-    return Point.fromHex(data.publicKey);
+      if (error.code === '400' || error.code === '500') {
+        throw new AccountIsNotInitializedException();
+      }
+
+      throw error;
+    }
   }
 }
