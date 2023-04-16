@@ -1,6 +1,7 @@
-import { IsIn, IsOptional, IsUUID } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsUUID } from 'class-validator';
 
 import { PaginatedDto, PaginationParams } from '@common/pagination';
+import { StringToBoolean } from '@common/decorators';
 import { Id } from '@app/app.declarations';
 import GetReviewDto from './get-review.dto';
 
@@ -12,6 +13,16 @@ export class ListReviewsParams extends PaginationParams {
   @IsUUID()
   @IsOptional()
   public userId?: Id;
+
+  /**
+   * Filter by moderation status.
+   * Only for admins.
+   * @example true
+   */
+  @IsBoolean()
+  @StringToBoolean()
+  @IsOptional()
+  public isModerated?: boolean;
 
   /**
    * Reviews sorting direction.

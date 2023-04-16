@@ -20,9 +20,7 @@ export default class FindReviewsCase {
       {
         where: {
           userId: dto.userId,
-          ...(isUser && {
-            isModerated: true,
-          }),
+          isModerated: isUser || dto.isModerated,
         },
         orderBy: {
           createdAt: dto.sortDirection,
