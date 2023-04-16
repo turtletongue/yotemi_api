@@ -18,7 +18,7 @@ import {
   OptionalAccessGuard,
   RoleGuard,
 } from '@features/authentication/guards';
-import { Executor, User } from '@features/authentication/decorators';
+import { Executor } from '@features/authentication/decorators';
 import { AdminEntity } from '@features/admins/entities';
 import { UserEntity } from '@features/users/entities';
 import ListTopicsDto, { ListTopicsParams } from './dto/list-topics.dto';
@@ -40,10 +40,10 @@ export default class TopicsController {
    * Get paginated list of topics.
    */
   @Get()
-  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
+  @UseGuards(OptionalAccessGuard)
   public async find(
     @Query() params: ListTopicsParams,
-    @User() executor?: UserEntity,
+    @Executor() executor?: AdminEntity | UserEntity,
   ): Promise<ListTopicsDto> {
     return await this.topicsService.findTopics(params, executor);
   }

@@ -43,7 +43,7 @@ export default class FindTopicsCase {
     }
 
     if (dto.isModerated !== undefined) {
-      if (dto.executor) {
+      if (dto.executor && dto.executor.kind === 'user') {
         findOptions.where.OR = [
           { isModerated: dto.isModerated },
           { id: { not: dto.executor.id } },

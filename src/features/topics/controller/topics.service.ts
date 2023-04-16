@@ -29,7 +29,7 @@ export default class TopicsService {
 
   public async findTopics(
     params: ListTopicsParams,
-    executor?: UserEntity,
+    executor?: AdminEntity | UserEntity,
   ): Promise<ListTopicsDto> {
     return await this.findTopicsCase.apply({ ...params, executor });
   }
