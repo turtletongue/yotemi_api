@@ -59,6 +59,16 @@ export class ListUsersParams extends PaginationParams {
   public isOnlyFull = true;
 
   /**
+   * Filter blocked users.
+   * Only for admin.
+   * @example false
+   */
+  @IsBoolean()
+  @StringToBoolean()
+  @IsOptional()
+  public isBlocked?: boolean;
+
+  /**
    * Order users by rating or activity.
    * @example 'rating'
    */

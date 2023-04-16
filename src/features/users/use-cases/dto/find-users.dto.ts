@@ -8,6 +8,7 @@ export default class FindUsersDto extends PaginationParams {
   public topicIds?: Id[];
   public search?: string;
   public isOnlyFull?: boolean;
+  public isBlocked?: boolean;
   public orderBy?: 'rating' | 'activity';
   public executor?: AdminEntity | UserEntity;
 }
