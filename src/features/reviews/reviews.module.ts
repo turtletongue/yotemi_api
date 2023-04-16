@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import IdentifiersModule from '@common/identifiers';
 import PaginationModule from '@common/pagination';
 import PrismaModule from '@common/prisma';
+import S3Module from '@common/s3';
 import InterviewsModule from '@features/interviews';
 import UsersModule from '@features/users';
 import ReviewsRepository from './reviews.repository';
@@ -17,6 +18,7 @@ import ReviewsController, { reviewServices } from './controller';
     PrismaModule,
     InterviewsModule,
     UsersModule,
+    S3Module,
   ],
   controllers: [ReviewsController],
   providers: [

@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import IdentifiersModule from '@common/identifiers';
 import PrismaModule from '@common/prisma';
 import TonModule from '@common/ton';
+import S3Module from '@common/s3';
 import UsersModule from '@features/users';
 import NotificationsModule from '@features/notifications';
 import InterviewsRepository from './interviews.repository';
@@ -20,6 +21,7 @@ import InterviewsController, { interviewServices } from './controller';
     NotificationsModule,
     TonModule,
     ScheduleModule,
+    S3Module,
   ],
   controllers: [InterviewsController],
   providers: [

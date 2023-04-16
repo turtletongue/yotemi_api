@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { S3Service } from '@common/s3';
 import { MS_IN_DAY } from '@app/app.constants';
 import FindInterviewsDto from './dto/find-interviews.dto';
 import InterviewsRepository from '../interviews.repository';
@@ -9,7 +10,10 @@ import { MAX_DAYS_DIFF_FOR_FIND_INTERVIEWS_FILTER } from '../interviews.constant
 
 @Injectable()
 export default class FindInterviewsCase {
-  constructor(private readonly interviewsRepository: InterviewsRepository) {}
+  constructor(
+    private readonly interviewsRepository: InterviewsRepository,
+    private readonly s3: S3Service,
+  ) {}
 
   public async apply(dto: FindInterviewsDto): Promise<PlainInterview[]> {
     if (
@@ -39,7 +43,15 @@ export default class FindInterviewsCase {
       startAt: plain.startAt,
       endAt: plain.endAt,
       creatorId: plain.creatorId,
-      participant: plain.participant,
+      participant: {
+        ...plain.participant,
+        avatarPath:
+          plain.participant.avatarPath &&
+          this.s3.getReadPath(plain.participant.avatarPath),
+        coverPath:
+          plain.participant.coverPath &&
+          this.s3.getReadPath(plain.participant.coverPath),
+      },
       payerComment: plain.payerComment,
       createdAt: plain.createdAt,
       updatedAt: plain.updatedAt,
