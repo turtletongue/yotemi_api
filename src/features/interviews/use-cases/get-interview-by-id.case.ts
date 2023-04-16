@@ -22,7 +22,7 @@ export default class GetInterviewByIdCase {
       startAt: plain.startAt,
       endAt: plain.endAt,
       creatorId: plain.creatorId,
-      participant: {
+      participant: plain.participant && {
         ...plain.participant,
         avatarPath: plain.participant?.avatarPath
           ? this.s3.getReadPath(plain.participant.avatarPath)
