@@ -15,6 +15,12 @@ export default class GetReviewDto extends ReviewDto {
   public reviewer: GetUserDto;
 
   /**
+   * Is review moderated by admin.
+   * @example true
+   */
+  public isModerated: boolean;
+
+  /**
    * Date and time of review creation.
    * @example '2022-07-27T00:00:00.000Z'
    */
