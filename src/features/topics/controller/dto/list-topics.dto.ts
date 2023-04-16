@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { PaginatedDto, PaginationParams } from '@common/pagination';
 import { StringToBoolean } from '@common/decorators';
@@ -10,7 +10,6 @@ export class ListTopicsParams extends PaginationParams {
    * @example 'Computer Science'
    */
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   public label?: string;
 
