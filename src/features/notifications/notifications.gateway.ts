@@ -10,26 +10,30 @@ export default class NotificationsGateway {
   constructor(private readonly baseGateway: BaseGateway) {}
 
   public sendNotification(userId: Id, notification: PlainNotification): void {
-    this.baseGateway.server
-      .to(`user-${userId}`)
-      .emit('notification.created', notification);
-
     if (FOLLOWING_NOTIFICATIONS.includes(notification.type)) {
       this.baseGateway.server
         .to(`followers-of-${userId}`)
         .emit('notification.created', notification);
+
+      return;
     }
+
+    this.baseGateway.server
+      .to(`user-${userId}`)
+      .emit('notification.created', notification);
   }
 
   public updateNotification(userId: Id, notification: PlainNotification): void {
-    this.baseGateway.server
-      .to(`user-${userId}`)
-      .emit('notification.updated', notification);
-
     if (FOLLOWING_NOTIFICATIONS.includes(notification.type)) {
       this.baseGateway.server
         .to(`followers-of-${userId}`)
         .emit('notification.updated', notification);
+
+      return;
     }
+
+    this.baseGateway.server
+      .to(`user-${userId}`)
+      .emit('notification.updated', notification);
   }
 }
