@@ -16,8 +16,12 @@ export default class FindUsersCase {
   public async apply(
     dto: FindUsersDto,
   ): Promise<PaginationResult<Omit<PlainUser, 'isBlocked'>>> {
-    const showBlocked =
-      !dto.executor || dto.executor.kind === 'user' ? false : dto.isBlocked;
+    let showBlocked: boolean | undefined = undefined;
+
+    if (dto.executor) {
+      console.log(dto.isBlocked);
+      showBlocked = dto.executor.kind === 'user' ? false : dto.isBlocked;
+    }
 
     const result = await this.usersRepository.findPaginated(
       dto.page,
