@@ -80,7 +80,9 @@ export default class FindUsersCase {
           }),
         },
       },
-      dto.executor?.id,
+      dto.executor && dto.executor.kind === 'user'
+        ? dto.executor.id
+        : undefined,
     );
 
     return {

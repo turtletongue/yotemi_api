@@ -47,8 +47,8 @@ export default class UsersController {
   /**
    * Get paginated list of users.
    */
-  @UseGuards(OptionalAccessGuard, RoleGuard('user'))
   @Get()
+  @UseGuards(OptionalAccessGuard)
   public async find(
     @Query() params: ListUsersParams,
     @User() executor?: UserEntity,
