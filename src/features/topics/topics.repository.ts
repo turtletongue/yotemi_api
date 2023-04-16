@@ -116,6 +116,7 @@ export default class TopicsRepository {
           id: {
             notIn: labels.filter(({ id }) => !!id).map(({ id }) => id),
           },
+          topicId: topic.id,
         },
       });
 
