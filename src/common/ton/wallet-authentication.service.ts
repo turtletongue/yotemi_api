@@ -121,6 +121,7 @@ export default class WalletAuthenticationService {
 
       return Point.fromHex(data.publicKey);
     } catch (error: unknown) {
+      console.log(error);
       if (!(error instanceof AxiosError)) {
         throw error;
       }
