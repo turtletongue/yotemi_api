@@ -2,14 +2,10 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import TakePeerIdsDto from './dto/take-peer-ids.dto';
 import InterviewsRepository from '../interviews.repository';
-import { InterviewFactory } from '../entities';
 
 @Injectable()
 export default class TakePeerIdsCase {
-  constructor(
-    private readonly interviewsRepository: InterviewsRepository,
-    private readonly interviewFactory: InterviewFactory,
-  ) {}
+  constructor(private readonly interviewsRepository: InterviewsRepository) {}
 
   public async apply({
     id,
@@ -32,25 +28,6 @@ export default class TakePeerIdsCase {
       interview.creatorPeerId === peerId
         ? interview.participantPeerId
         : interview.creatorPeerId;
-
-    if (executor.id === interview.creatorId) {
-      interview.isCreatorPeerFresh = false;
-    } else {
-      interview.isParticipantPeerFresh = false;
-    }
-
-    await this.interviewsRepository.update(
-      await this.interviewFactory.build({
-        ...interview,
-        ...(!interview.isParticipantPeerFresh &&
-          !interview.isCreatorPeerFresh && {
-            creatorPeerId: undefined,
-            isCreatorPeerFresh: true,
-            participantPeerId: undefined,
-            isParticipantPeerFresh: true,
-          }),
-      }),
-    );
 
     return { peerId, otherPeerId };
   }
