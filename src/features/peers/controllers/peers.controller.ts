@@ -82,4 +82,20 @@ export default class PeersController {
       this.peersGateway.sendAudioUnmuted(otherUserId, interviewId);
     }
   }
+
+  @Post(':interviewId/disconnect')
+  public async disconnect(
+    @Param('interviewId') interviewId: string,
+    @User() executor: UserEntity,
+  ): Promise<void> {
+    const hasPeerAccess = await this.peers.hasPeerAccess(interviewId, executor);
+
+    if (!hasPeerAccess) {
+      throw new ForbiddenException();
+    }
+
+    const otherUserId = await this.peers.getOtherUserId(interviewId, executor);
+
+    this.peersGateway.sendDisconnected(otherUserId, interviewId);
+  }
 }

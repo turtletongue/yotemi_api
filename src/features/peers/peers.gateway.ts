@@ -41,4 +41,10 @@ export default class PeersGateway {
       .to(`user-${userId}`)
       .emit('peer.video-unmuted', interviewId);
   }
+
+  public sendDisconnected(userId: Id, interviewId: Id): void {
+    this.baseGateway.server
+      .to(`user-${userId}`)
+      .emit('peer.disconnected', interviewId);
+  }
 }
