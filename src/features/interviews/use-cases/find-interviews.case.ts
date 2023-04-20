@@ -30,6 +30,14 @@ export default class FindInterviewsCase {
           gte: dto.from,
           lte: dto.to,
         },
+        ...(dto.executor &&
+          dto.executor.kind === 'user' && {
+            OR: [
+              { participantId: null },
+              { participantId: dto.executor.id },
+              { creatorId: dto.executor.id },
+            ],
+          }),
       },
       orderBy: {
         createdAt: 'asc',

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import { Id } from '@app/app.declarations';
 import GetInterviewDto from './dto/get-interview.dto';
 import ListInterviewsDto, {
@@ -34,8 +35,9 @@ export default class InterviewsService {
 
   public async findInterviews(
     params: ListInterviewsParams,
+    executor?: AdminEntity | UserEntity,
   ): Promise<ListInterviewsDto> {
-    const items = await this.findInterviewsCase.apply(params);
+    const items = await this.findInterviewsCase.apply({ ...params, executor });
 
     return { items };
   }

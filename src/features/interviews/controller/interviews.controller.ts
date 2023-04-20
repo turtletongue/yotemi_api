@@ -14,9 +14,14 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 
 import { Id } from '@app/app.declarations';
-import { User } from '@features/authentication/decorators';
-import { AccessGuard, RoleGuard } from '@features/authentication/guards';
+import { Executor, User } from '@features/authentication/decorators';
+import {
+  AccessGuard,
+  OptionalAccessGuard,
+  RoleGuard,
+} from '@features/authentication/guards';
 import { UserEntity } from '@features/users/entities';
+import { AdminEntity } from '@features/admins/entities';
 import ListInterviewsDto, {
   ListInterviewsParams,
 } from './dto/list-interviews.dto';
@@ -51,10 +56,12 @@ export default class InterviewsController {
   @ApiException(() => InterviewsTimeFilterTooWideException, {
     description: 'Too wide time interval filter.',
   })
+  @UseGuards(OptionalAccessGuard)
   public async find(
     @Query() params: ListInterviewsParams,
+    @Executor() executor?: AdminEntity | UserEntity,
   ): Promise<ListInterviewsDto> {
-    return await this.interviewsService.findInterviews(params);
+    return await this.interviewsService.findInterviews(params, executor);
   }
 
   /**
