@@ -35,9 +35,9 @@ export default class GetUserDto extends UserDto {
 
   /**
    * Count of user's followers.
-   * @example 115
+   * @example '115'
    */
-  public followersCount: number;
+  public followersCount: string;
 
   /**
    * Is authenticated user follows this user.
@@ -53,9 +53,9 @@ export default class GetUserDto extends UserDto {
 
   /**
    * Count of reviews submitted to this user.
-   * @example 10
+   * @example '10'
    */
-  public reviewsCount: number;
+  public reviewsCount: string;
 
   /**
    * Path to avatar image.
