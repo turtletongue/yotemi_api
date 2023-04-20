@@ -14,9 +14,9 @@ export default interface PlainUser {
   coverPath: string | null;
   isVerified: boolean;
   topics: PlainTopic[];
-  followersCount: number;
+  followersCount: string;
   averagePoints: number;
-  reviewsCount: number;
+  reviewsCount: string;
   isBlocked: boolean;
   isFollowing: boolean | null;
   createdAt: Date;

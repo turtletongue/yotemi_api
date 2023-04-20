@@ -13,9 +13,9 @@ export default class BuildUserDto {
   public coverPath?: string;
   public isVerified?: boolean;
   public topics?: BuildTopicDto[];
-  public followersCount?: number;
+  public followersCount?: number | bigint | string;
   public averagePoints?: number;
-  public reviewsCount?: number;
+  public reviewsCount?: number | bigint | string;
   public isBlocked?: boolean;
   public isFollowing?: boolean;
   public createdAt?: Date;
