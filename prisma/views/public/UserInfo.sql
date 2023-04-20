@@ -13,13 +13,13 @@ SELECT
   base."createdAt",
   base."updatedAt",
   base."reviewsCount",
-  base.rating,
+  base."averagePoints",
   base."interviewsCount",
   base."topicsIds",
   base."confidenceNumber",
   (
     (
-      ((base.rating * (base."reviewsCount") :: numeric)) :: double precision + (
+      ((base."averagePoints" * (base."reviewsCount") :: numeric)) :: double precision + (
         GREATEST(base."confidenceNumber", (1) :: double precision) * (
           COALESCE(
             (
@@ -55,7 +55,7 @@ FROM
       "grandBase"."createdAt",
       "grandBase"."updatedAt",
       "grandBase"."reviewsCount",
-      "grandBase".rating,
+      "grandBase"."averagePoints",
       "grandBase"."interviewsCount",
       "grandBase"."topicsIds",
       (
@@ -141,7 +141,7 @@ FROM
                 )
             ),
             (0) :: numeric
-          ) AS rating,
+          ) AS "averagePoints",
           COALESCE(
             (
               SELECT
