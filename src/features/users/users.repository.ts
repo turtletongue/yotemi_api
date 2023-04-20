@@ -30,7 +30,7 @@ export default class UsersRepository {
 
   public async findById(id: Id, followerId?: Id): Promise<UserEntity> {
     const {
-      _count: { followers },
+      _count: { followers, reviews },
       ...user
     } = await this.prisma.user
       .findUniqueOrThrow({
@@ -42,6 +42,7 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
+              reviews: true,
             },
           },
         },
@@ -58,6 +59,7 @@ export default class UsersRepository {
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      reviewsCount: reviews,
       ...reviewsAverage,
       isFollowing,
     });
@@ -68,7 +70,7 @@ export default class UsersRepository {
     followerId?: Id,
   ): Promise<UserEntity> {
     const {
-      _count: { followers },
+      _count: { followers, reviews },
       ...user
     } = await this.prisma.user
       .findUniqueOrThrow({
@@ -80,6 +82,7 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
+              reviews: true,
             },
           },
         },
@@ -96,6 +99,7 @@ export default class UsersRepository {
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      reviewsCount: reviews,
       ...reviewsAverage,
       isFollowing,
     });
@@ -106,7 +110,7 @@ export default class UsersRepository {
     followerId?: Id,
   ): Promise<UserEntity> {
     const {
-      _count: { followers },
+      _count: { followers, reviews },
       ...user
     } = await this.prisma.user
       .findUniqueOrThrow({
@@ -118,6 +122,7 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
+              reviews: true,
             },
           },
         },
@@ -134,6 +139,7 @@ export default class UsersRepository {
     return await this.userFactory.build({
       ...user,
       followersCount: followers,
+      reviewsCount: reviews,
       ...reviewsAverage,
       isFollowing,
     });
@@ -174,7 +180,7 @@ export default class UsersRepository {
     followerId?: Id,
   ): Promise<PaginationResult<UserEntity>> {
     const paginated = await this.pagination.paginate<
-      BuildUserDto & { _count: { followers: number } }
+      BuildUserDto & { _count: { followers: number; reviews: number } }
     >(this.prisma.user, page, limit, {
       ...options,
       include: {
@@ -182,6 +188,7 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
+            reviews: true,
           },
         },
       },
@@ -190,17 +197,20 @@ export default class UsersRepository {
     return {
       ...paginated,
       items: await Promise.all(
-        paginated.items.map(async ({ _count: { followers }, ...user }) => {
-          const isFollowing = followerId
-            ? await this.isFollowing(user.id, followerId)
-            : null;
+        paginated.items.map(
+          async ({ _count: { followers, reviews }, ...user }) => {
+            const isFollowing = followerId
+              ? await this.isFollowing(user.id, followerId)
+              : null;
 
-          return await this.userFactory.build({
-            ...user,
-            followersCount: followers,
-            isFollowing,
-          });
-        }),
+            return await this.userFactory.build({
+              ...user,
+              followersCount: followers,
+              reviewsCount: reviews,
+              isFollowing,
+            });
+          },
+        ),
       ),
     };
   }
@@ -240,7 +250,7 @@ export default class UsersRepository {
     const { topics, ...data } = user;
 
     const {
-      _count: { followers },
+      _count: { followers, reviews },
       ...result
     } = await this.prisma.user.update({
       where: {
@@ -270,6 +280,7 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
+            reviews: true,
           },
         },
       },
@@ -278,6 +289,7 @@ export default class UsersRepository {
     return await this.userFactory.build({
       ...result,
       followersCount: followers,
+      reviewsCount: reviews,
     });
   }
 
@@ -329,7 +341,7 @@ export default class UsersRepository {
     const existingUser = await this.findById(id);
 
     const {
-      _count: { followers },
+      _count: { followers, reviews },
       ...result
     } = await this.prisma.user.delete({
       where: {
@@ -340,6 +352,7 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
+            reviews: true,
           },
         },
       },
@@ -348,6 +361,7 @@ export default class UsersRepository {
     return await this.userFactory.build({
       ...result,
       followersCount: followers,
+      reviewsCount: reviews,
     });
   }
 
