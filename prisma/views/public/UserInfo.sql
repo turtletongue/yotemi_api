@@ -92,7 +92,7 @@ FROM
                       AND (reviews."userId" = users.id)
                     )
                 ),
-                (0) :: bigint
+                (0) :: numeric
               ) AS "reviewsCount"
             FROM
               users
@@ -126,7 +126,7 @@ FROM
                   AND (reviews."userId" = users.id)
                 )
             ),
-            (0) :: bigint
+            (0) :: numeric
           ) AS "reviewsCount",
           COALESCE(
             (
@@ -151,7 +151,7 @@ FROM
               WHERE
                 (interviews."creatorId" = users.id)
             ),
-            (0) :: bigint
+            (0) :: numeric
           ) AS "interviewsCount",
           ARRAY(
             SELECT
