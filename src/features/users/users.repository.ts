@@ -392,6 +392,9 @@ export default class UsersRepository {
       },
     });
 
-    return { averagePoints, reviewsCount };
+    return {
+      averagePoints: averagePoints ?? 0,
+      reviewsCount: reviewsCount ?? 0,
+    };
   }
 }
