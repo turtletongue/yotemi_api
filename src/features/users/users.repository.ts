@@ -42,7 +42,11 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
-              reviews: true,
+              reviews: {
+                where: {
+                  isModerated: true,
+                },
+              },
             },
           },
         },
@@ -82,7 +86,11 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
-              reviews: true,
+              reviews: {
+                where: {
+                  isModerated: true,
+                },
+              },
             },
           },
         },
@@ -122,7 +130,11 @@ export default class UsersRepository {
           _count: {
             select: {
               followers: true,
-              reviews: true,
+              reviews: {
+                where: {
+                  isModerated: true,
+                },
+              },
             },
           },
         },
@@ -188,7 +200,11 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
-            reviews: true,
+            reviews: {
+              where: {
+                isModerated: true,
+              },
+            },
           },
         },
       },
@@ -280,7 +296,11 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
-            reviews: true,
+            reviews: {
+              where: {
+                isModerated: true,
+              },
+            },
           },
         },
       },
@@ -352,7 +372,11 @@ export default class UsersRepository {
         _count: {
           select: {
             followers: true,
-            reviews: true,
+            reviews: {
+              where: {
+                isModerated: true,
+              },
+            },
           },
         },
       },

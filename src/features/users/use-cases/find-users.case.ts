@@ -73,11 +73,19 @@ export default class FindUsersCase {
         orderBy: {
           ...(dto.orderBy === 'rating' && {
             reviews: {
+              where: {
+                isModerated: true,
+              },
               _count: 'desc',
             },
           }),
           ...(dto.orderBy === 'activity' && {
             interviews: {
+              where: {
+                participantId: {
+                  not: null,
+                },
+              },
               _count: 'desc',
             },
           }),
