@@ -20,7 +20,7 @@ SELECT
   (
     (
       ((base.rating * (base."reviewsCount") :: numeric)) :: double precision + (
-        base."confidenceNumber" * (
+        GREATEST(base."confidenceNumber", (1) :: double precision) * (
           COALESCE(
             (
               SELECT
@@ -35,7 +35,7 @@ SELECT
         ) :: double precision
       )
     ) / (
-      (base."reviewsCount") :: double precision + base."confidenceNumber"
+      (base."reviewsCount") :: double precision + GREATEST(base."confidenceNumber", (1) :: double precision)
     )
   ) AS "contentWeight"
 FROM
@@ -92,7 +92,7 @@ FROM
                       AND (reviews."userId" = users.id)
                     )
                 ),
-                (1) :: bigint
+                (0) :: bigint
               ) AS "reviewsCount"
             FROM
               users
