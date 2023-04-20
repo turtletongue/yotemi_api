@@ -92,7 +92,7 @@ FROM
                       AND (reviews."userId" = users.id)
                     )
                 ),
-                (0) :: bigint
+                (1) :: bigint
               ) AS "reviewsCount"
             FROM
               users
