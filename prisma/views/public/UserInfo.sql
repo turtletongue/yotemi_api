@@ -138,20 +138,13 @@ FROM
             WHERE
               (interviews."creatorId" = users.id)
           ) AS "interviewsCount",
-          (
+          ARRAY(
             SELECT
-              ARRAY(
-                SELECT
-                  "_TopicToUser"."A"
-                FROM
-                  "_TopicToUser"
-                WHERE
-                  ("_TopicToUser"."B" = users_1.id)
-              ) AS "array"
+              "_TopicToUser"."A"
             FROM
-              users users_1
+              "_TopicToUser"
             WHERE
-              (users_1.id = users_1.id)
+              ("_TopicToUser"."B" = users.id)
           ) AS "topicsIds"
         FROM
           users

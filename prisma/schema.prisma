@@ -178,4 +178,5 @@ view UserInfo {
   interviewsCount        BigInt
   topicsIds              String[]
   confidenceNumber       Float
+  contentWeight          Float
 }
