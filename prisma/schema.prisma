@@ -174,7 +174,7 @@ view UserInfo {
   createdAt              DateTime
   updatedAt              DateTime
   reviewsCount           BigInt
-  rating                 Decimal @db.Decimal
+  averagePoints          Decimal @db.Decimal
   interviewsCount        BigInt
   topicsIds              String[]
   confidenceNumber       Float
