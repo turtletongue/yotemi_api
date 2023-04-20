@@ -140,16 +140,14 @@ FROM
           ) AS "interviewsCount",
           (
             SELECT
-              array_agg(
-                (
-                  SELECT
-                    "_TopicToUser"."A"
-                  FROM
-                    "_TopicToUser"
-                  WHERE
-                    ("_TopicToUser"."B" = users_1.id)
-                )
-              ) AS array_agg
+              ARRAY(
+                SELECT
+                  "_TopicToUser"."A"
+                FROM
+                  "_TopicToUser"
+                WHERE
+                  ("_TopicToUser"."B" = users_1.id)
+              ) AS "array"
             FROM
               users users_1
             WHERE
