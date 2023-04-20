@@ -21,13 +21,16 @@ SELECT
     (
       ((base.rating * (base."reviewsCount") :: numeric)) :: double precision + (
         base."confidenceNumber" * (
-          (
-            SELECT
-              avg(reviews.points) AS avg
-            FROM
-              reviews
-            WHERE
-              (reviews."isModerated" = TRUE)
+          COALESCE(
+            (
+              SELECT
+                avg(reviews.points) AS avg
+              FROM
+                reviews
+              WHERE
+                (reviews."isModerated" = TRUE)
+            ),
+            (0) :: numeric
           )
         ) :: double precision
       )
@@ -77,16 +80,19 @@ FROM
               users."isBlocked",
               users."createdAt",
               users."updatedAt",
-              (
-                SELECT
-                  count(*) AS count
-                FROM
-                  reviews
-                WHERE
-                  (
-                    (reviews."isModerated" = TRUE)
-                    AND (reviews."userId" = users.id)
-                  )
+              COALESCE(
+                (
+                  SELECT
+                    count(*) AS count
+                  FROM
+                    reviews
+                  WHERE
+                    (
+                      (reviews."isModerated" = TRUE)
+                      AND (reviews."userId" = users.id)
+                    )
+                ),
+                (0) :: bigint
               ) AS "reviewsCount"
             FROM
               users
@@ -108,35 +114,44 @@ FROM
           users."isBlocked",
           users."createdAt",
           users."updatedAt",
-          (
-            SELECT
-              count(*) AS count
-            FROM
-              reviews
-            WHERE
-              (
-                (reviews."isModerated" = TRUE)
-                AND (reviews."userId" = users.id)
-              )
+          COALESCE(
+            (
+              SELECT
+                count(*) AS count
+              FROM
+                reviews
+              WHERE
+                (
+                  (reviews."isModerated" = TRUE)
+                  AND (reviews."userId" = users.id)
+                )
+            ),
+            (0) :: bigint
           ) AS "reviewsCount",
-          (
-            SELECT
-              avg(reviews.points) AS avg
-            FROM
-              reviews
-            WHERE
-              (
-                (reviews."isModerated" = TRUE)
-                AND (reviews."userId" = users.id)
-              )
+          COALESCE(
+            (
+              SELECT
+                avg(reviews.points) AS avg
+              FROM
+                reviews
+              WHERE
+                (
+                  (reviews."isModerated" = TRUE)
+                  AND (reviews."userId" = users.id)
+                )
+            ),
+            (0) :: numeric
           ) AS rating,
-          (
-            SELECT
-              count(*) AS count
-            FROM
-              interviews
-            WHERE
-              (interviews."creatorId" = users.id)
+          COALESCE(
+            (
+              SELECT
+                count(*) AS count
+              FROM
+                interviews
+              WHERE
+                (interviews."creatorId" = users.id)
+            ),
+            (0) :: bigint
           ) AS "interviewsCount",
           ARRAY(
             SELECT
