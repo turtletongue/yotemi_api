@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["filteredRelationCount"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["filteredRelationCount", "views"]
 }
 
 datasource db {
@@ -157,4 +157,25 @@ model NotificationView {
   updatedAt              DateTime           @updatedAt
 
   @@map("notification_views")
+}
+
+view UserInfo {
+  id                     String             @unique
+  username               String
+  accountAddress         String
+  authId                 String
+  firstName              String
+  lastName               String
+  biography              String
+  avatarPath             String?
+  coverPath              String?
+  isVerified             Boolean
+  isBlocked              Boolean
+  createdAt              DateTime
+  updatedAt              DateTime
+  reviewsCount           BigInt
+  rating                 Decimal @db.Decimal
+  interviewsCount        BigInt
+  topicsIds              String[]
+  confidenceNumber       Float
 }

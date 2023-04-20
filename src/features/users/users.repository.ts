@@ -188,45 +188,29 @@ export default class UsersRepository {
   public async findPaginated(
     page: number,
     limit: number,
-    options?: Prisma.UserFindManyArgs,
+    options?: Prisma.UserInfoFindManyArgs,
     followerId?: Id,
   ): Promise<PaginationResult<UserEntity>> {
-    const paginated = await this.pagination.paginate<
-      BuildUserDto & { _count: { followers: number; reviews: number } }
-    >(this.prisma.user, page, limit, {
-      ...options,
-      include: {
-        topics: includeTopicsOptions,
-        _count: {
-          select: {
-            followers: true,
-            reviews: {
-              where: {
-                isModerated: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const paginated = await this.pagination.paginate<BuildUserDto>(
+      this.prisma.userInfo,
+      page,
+      limit,
+      options,
+    );
 
     return {
       ...paginated,
       items: await Promise.all(
-        paginated.items.map(
-          async ({ _count: { followers, reviews }, ...user }) => {
-            const isFollowing = followerId
-              ? await this.isFollowing(user.id, followerId)
-              : null;
+        paginated.items.map(async (user) => {
+          const isFollowing = followerId
+            ? await this.isFollowing(user.id, followerId)
+            : null;
 
-            return await this.userFactory.build({
-              ...user,
-              followersCount: followers,
-              reviewsCount: reviews,
-              isFollowing,
-            });
-          },
-        ),
+          return await this.userFactory.build({
+            ...user,
+            isFollowing,
+          });
+        }),
       ),
     };
   }

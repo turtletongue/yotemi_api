@@ -61,7 +61,7 @@ export default class UserEntity {
       isVerified: this.isVerified,
       topics: this.topics.map((topic) => topic.plain),
       followersCount: this.followersCount,
-      averagePoints: this.averagePoints,
+      averagePoints: +this.averagePoints.toFixed(1),
       reviewsCount: this.reviewsCount,
       isBlocked: this.isBlocked,
       isFollowing: this.isFollowing,

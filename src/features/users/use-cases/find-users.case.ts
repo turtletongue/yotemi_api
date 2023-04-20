@@ -32,18 +32,14 @@ export default class FindUsersCase {
             biography: {
               not: '',
             },
-            topics: {
-              some: {},
+            topicsIds: {
+              isEmpty: false,
             },
           }),
           ...(dto.topicIds &&
             dto.topicIds.length > 0 && {
-              topics: {
-                some: {
-                  id: {
-                    in: dto.topicIds,
-                  },
-                },
+              topicsIds: {
+                hasSome: dto.topicIds,
               },
             }),
           ...(dto.search && {
@@ -65,29 +61,17 @@ export default class FindUsersCase {
           ...(dto.executor &&
             dto.executor.kind === 'user' &&
             dto.hideSelf && {
-              accountAddress: {
-                not: dto.executor.accountAddress,
+              id: {
+                not: dto.executor.id,
               },
             }),
         },
         orderBy: {
           ...(dto.orderBy === 'rating' && {
-            reviews: {
-              where: {
-                isModerated: true,
-              },
-              _count: 'desc',
-            },
+            contentWeight: 'desc',
           }),
           ...(dto.orderBy === 'activity' && {
-            interviews: {
-              where: {
-                participantId: {
-                  not: null,
-                },
-              },
-              _count: 'desc',
-            },
+            interviewsCount: 'desc',
           }),
         },
       },
