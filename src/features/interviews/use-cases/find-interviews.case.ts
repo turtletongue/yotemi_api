@@ -64,12 +64,14 @@ export default class FindInterviewsCase {
         : await this.interviewsRepository.findAll(options);
 
     if (Array.isArray(interviews)) {
-      return interviews.map(this.interviewToResponse);
+      return interviews.map((interview) => this.interviewToResponse(interview));
     }
 
     return {
       ...interviews,
-      items: interviews.items.map(this.interviewToResponse),
+      items: interviews.items.map((interview) =>
+        this.interviewToResponse(interview),
+      ),
     };
   }
 
