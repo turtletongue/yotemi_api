@@ -3,6 +3,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import IdentifiersModule from '@common/identifiers';
 import PrismaModule from '@common/prisma';
+import PaginationModule from '@common/pagination';
 import TonModule from '@common/ton';
 import S3Module from '@common/s3';
 import UsersModule from '@features/users';
@@ -17,6 +18,7 @@ import InterviewsController, { interviewServices } from './controller';
   imports: [
     IdentifiersModule,
     PrismaModule,
+    PaginationModule,
     UsersModule,
     NotificationsModule,
     TonModule,

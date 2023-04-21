@@ -37,9 +37,9 @@ export default class InterviewsService {
     params: ListInterviewsParams,
     executor?: AdminEntity | UserEntity,
   ): Promise<ListInterviewsDto> {
-    const items = await this.findInterviewsCase.apply({ ...params, executor });
+    const result = await this.findInterviewsCase.apply({ ...params, executor });
 
-    return { items };
+    return 'items' in result ? result : { items: result };
   }
 
   public async addInterview(

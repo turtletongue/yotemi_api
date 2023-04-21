@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 
 import { PrismaService } from '@common/prisma';
+import { PaginationResult, PaginationService } from '@common/pagination';
 import InterviewContractService from '@common/ton/interview-contract.service';
 import { Id } from '@app/app.declarations';
+import BuildInterviewDto from './entities/dto/build-interview.dto';
 import { InterviewEntity, InterviewFactory, PlainInterview } from './entities';
 import { InterviewNotFoundException } from './exceptions';
 
@@ -27,6 +30,7 @@ const includeParticipantOptions = {
 export default class InterviewsRepository {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly pagination: PaginationService,
     private readonly interviewFactory: InterviewFactory,
     private readonly interviewContractService: InterviewContractService,
   ) {}
@@ -103,6 +107,34 @@ export default class InterviewsRepository {
     });
 
     return !!interview;
+  }
+
+  public async findPaginated(
+    page: number,
+    limit: number,
+    options?: Prisma.InterviewFindManyArgs,
+  ): Promise<PaginationResult<InterviewEntity>> {
+    const paginated = await this.pagination.paginate<
+      BuildInterviewDto & { price: Decimal }
+    >(this.prisma.interview, page, limit, {
+      ...options,
+      include: {
+        participant: includeParticipantOptions,
+      },
+    });
+
+    return {
+      ...paginated,
+      items: await Promise.all(
+        paginated.items.map(
+          async (interview) =>
+            await this.interviewFactory.build({
+              ...interview,
+              price: interview.price.toNumber(),
+            }),
+        ),
+      ),
+    };
   }
 
   public async findAll(

@@ -1,17 +1,20 @@
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { IsDate, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import { PaginatedDto, PaginationParams } from '@common/pagination';
 
 import { StringToDate } from '@common/decorators';
 import { Id } from '@app/app.declarations';
 import GetInterviewDto from './get-interview.dto';
 
-export class ListInterviewsParams {
+export class ListInterviewsParams extends PaginationParams {
   /**
    * Filter by creator of the interview.
    * @example '69a0526f-6f84-4072-9519-e566b549a9d6'
    */
   @IsString()
   @IsNotEmpty()
-  public creatorId: Id;
+  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  public creatorId?: Id;
 
   /**
    * Lowest boundary of interview's start date.
@@ -20,7 +23,8 @@ export class ListInterviewsParams {
   @IsDate()
   @StringToDate()
   @IsNotEmpty()
-  public from: Date;
+  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  public from?: Date;
 
   /**
    * Highest boundary of interview's start date.
@@ -29,12 +33,10 @@ export class ListInterviewsParams {
   @IsDate()
   @StringToDate()
   @IsNotEmpty()
-  public to: Date;
+  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  public to?: Date;
 }
 
-export default class ListInterviewsDto {
-  /**
-   * List of interviews.
-   */
-  public items: GetInterviewDto[];
-}
+export default class ListInterviewsDto extends PartialType(
+  PaginatedDto(GetInterviewDto),
+) {}
