@@ -32,6 +32,7 @@ export default class FindInterviewsCase {
     const options = {
       where: {
         creatorId: dto.creatorId,
+        participantId: dto.participantId,
         ...(dto.to &&
           dto.from && {
             startAt: {

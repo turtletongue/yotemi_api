@@ -1,5 +1,11 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
 import { PaginatedDto, PaginationParams } from '@common/pagination';
 
 import { StringToDate } from '@common/decorators';
@@ -13,8 +19,20 @@ export class ListInterviewsParams extends PaginationParams {
    */
   @IsString()
   @IsNotEmpty()
-  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  @ValidateIf(
+    (dto) =>
+      (dto.page === undefined && dto.pageSize === undefined) || !!dto.creatorId,
+  )
   public creatorId?: Id;
+
+  /**
+   * Filter by participant of the interview.
+   * @example 'a4fe386e-3411-46d2-a934-bdac252a1562'
+   */
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  public participantId?: Id;
 
   /**
    * Lowest boundary of interview's start date.
@@ -23,7 +41,10 @@ export class ListInterviewsParams extends PaginationParams {
   @IsDate()
   @StringToDate()
   @IsNotEmpty()
-  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  @ValidateIf(
+    (dto) =>
+      (dto.page === undefined && dto.pageSize === undefined) || !!dto.from,
+  )
   public from?: Date;
 
   /**
@@ -33,7 +54,9 @@ export class ListInterviewsParams extends PaginationParams {
   @IsDate()
   @StringToDate()
   @IsNotEmpty()
-  @ValidateIf((dto) => dto.page === undefined && dto.pageSize === undefined)
+  @ValidateIf(
+    (dto) => (dto.page === undefined && dto.pageSize === undefined) || !!dto.to,
+  )
   public to?: Date;
 }
 
