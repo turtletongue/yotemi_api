@@ -7,6 +7,7 @@ export default class BuildInterviewDto {
   public price: number;
   public startAt: Date;
   public endAt: Date;
+  public creator?: BuildUserDto;
   public creatorId: Id;
   public creatorPeerId?: string;
   public isCreatorPeerFresh?: boolean;

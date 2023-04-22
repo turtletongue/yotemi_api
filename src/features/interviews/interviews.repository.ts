@@ -10,7 +10,7 @@ import BuildInterviewDto from './entities/dto/build-interview.dto';
 import { InterviewEntity, InterviewFactory, PlainInterview } from './entities';
 import { InterviewNotFoundException } from './exceptions';
 
-const includeParticipantOptions = {
+const includeUserOptions = {
   include: {
     topics: {
       include: {
@@ -42,7 +42,7 @@ export default class InterviewsRepository {
           id,
         },
         include: {
-          participant: includeParticipantOptions,
+          participant: includeUserOptions,
         },
       })
       .catch(() => {
@@ -119,7 +119,8 @@ export default class InterviewsRepository {
     >(this.prisma.interview, page, limit, {
       ...options,
       include: {
-        participant: includeParticipantOptions,
+        participant: includeUserOptions,
+        creator: includeUserOptions,
       },
     });
 
@@ -143,7 +144,8 @@ export default class InterviewsRepository {
     const interviews = await this.prisma.interview.findMany({
       ...options,
       include: {
-        participant: includeParticipantOptions,
+        participant: includeUserOptions,
+        creator: includeUserOptions,
       },
     });
 
@@ -215,7 +217,7 @@ export default class InterviewsRepository {
   ): Promise<InterviewEntity> {
     const existingInterview = await this.findById(interview.id);
 
-    const { participant, ...data } = interview;
+    const { participant, creator, ...data } = interview;
 
     const result = await this.prisma.interview.update({
       where: {
@@ -223,10 +225,11 @@ export default class InterviewsRepository {
       },
       data: {
         ...data,
+        ...(creator && { creatorId: creator.id }),
         participantId: participant.id,
       },
       include: {
-        participant: includeParticipantOptions,
+        participant: includeUserOptions,
       },
     });
 
@@ -244,7 +247,7 @@ export default class InterviewsRepository {
         id: existingInterview.id,
       },
       include: {
-        participant: includeParticipantOptions,
+        participant: includeUserOptions,
       },
     });
 

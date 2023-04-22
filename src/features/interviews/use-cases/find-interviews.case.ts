@@ -77,6 +77,15 @@ export default class FindInterviewsCase {
   private interviewToResponse({ plain }: InterviewEntity): PlainInterview {
     return {
       ...plain,
+      creator: plain.creator && {
+        ...plain.creator,
+        avatarPath: plain.creator?.avatarPath
+          ? this.s3.getReadPath(plain.creator.avatarPath)
+          : null,
+        coverPath: plain.creator?.coverPath
+          ? this.s3.getReadPath(plain.creator.coverPath)
+          : null,
+      },
       participant: plain.participant && {
         ...plain.participant,
         avatarPath: plain.participant?.avatarPath

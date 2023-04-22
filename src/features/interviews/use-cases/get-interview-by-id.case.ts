@@ -21,6 +21,15 @@ export default class GetInterviewByIdCase {
       price: plain.price,
       startAt: plain.startAt,
       endAt: plain.endAt,
+      creator: plain.creator && {
+        ...plain.creator,
+        avatarPath: plain.creator?.avatarPath
+          ? this.s3.getReadPath(plain.creator.avatarPath)
+          : null,
+        coverPath: plain.creator?.coverPath
+          ? this.s3.getReadPath(plain.creator.coverPath)
+          : null,
+      },
       creatorId: plain.creatorId,
       participant: plain.participant && {
         ...plain.participant,

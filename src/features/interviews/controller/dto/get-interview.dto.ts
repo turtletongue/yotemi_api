@@ -10,6 +10,11 @@ export default class GetInterviewDto extends InterviewDto {
   public id: Id;
 
   /**
+   * User who created the interview.
+   */
+  public creator: GetUserDto | null;
+
+  /**
    * Identifier of interview's creator.
    * @example '3c7e64d7-65f3-4df4-ab1e-c78e76fa85d1'
    */

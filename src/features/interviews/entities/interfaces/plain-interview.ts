@@ -7,6 +7,7 @@ export default interface PlainInterview {
   price: number;
   startAt: Date;
   endAt: Date;
+  creator: PlainUser | null;
   creatorId: Id;
   participant: PlainUser | null;
   payerComment: string | null;

@@ -18,6 +18,7 @@ export default class InterviewFactory {
     price,
     startAt,
     endAt,
+    creator = null,
     creatorId,
     creatorPeerId = this.identifiers.generate(),
     isCreatorPeerFresh = true,
@@ -32,12 +33,17 @@ export default class InterviewFactory {
       ? await this.userFactory.build(participant)
       : null;
 
+    const creatorEntity = creator
+      ? await this.userFactory.build(creator)
+      : null;
+
     return new InterviewEntity(
       id,
       address,
       price,
       startAt,
       endAt,
+      creatorEntity,
       creatorId,
       creatorPeerId,
       isCreatorPeerFresh,

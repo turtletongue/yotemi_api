@@ -6,7 +6,7 @@ import { UserEntity, UserFactory } from '@features/users/entities';
 import { TopicFactory } from '@features/topics/entities';
 import FindInterviewsCase from './find-interviews.case';
 import InterviewsRepository from '../interviews.repository';
-import { InterviewFactory, InterviewEntity } from '../entities';
+import { InterviewFactory, InterviewEntity, PlainInterview } from '../entities';
 
 describe('The FindReviewsCase', () => {
   let findInterviewsCase: FindInterviewsCase;
@@ -46,6 +46,7 @@ describe('The FindReviewsCase', () => {
         0.001,
         new Date(),
         new Date(Date.now() + 10000),
+        null,
         'creatorId',
         'creatorPeerId',
         true,
@@ -61,9 +62,9 @@ describe('The FindReviewsCase', () => {
           null,
           false,
           [],
+          '0',
           0,
-          0,
-          0,
+          '0',
           false,
           false,
           new Date(),
@@ -80,11 +81,11 @@ describe('The FindReviewsCase', () => {
     });
 
     it('should return the interview', async () => {
-      const items = await findInterviewsCase.apply({
+      const items = (await findInterviewsCase.apply({
         creatorId: 'creatorId',
         from: new Date(),
         to: new Date(),
-      });
+      })) as PlainInterview[];
 
       expect(items.length).toEqual(1);
     });
