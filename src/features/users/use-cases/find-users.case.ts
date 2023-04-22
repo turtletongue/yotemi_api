@@ -66,14 +66,12 @@ export default class FindUsersCase {
               },
             }),
         },
-        orderBy: {
-          ...(dto.orderBy === 'rating' && {
-            contentWeight: 'desc',
-          }),
-          ...(dto.orderBy === 'activity' && {
-            interviewsCount: 'desc',
-          }),
-        },
+        ...(dto.orderBy && {
+          orderBy:
+            dto.orderBy === 'rating'
+              ? [{ contentWeight: 'desc' }, { averagePoints: 'desc' }]
+              : [{ interviewsCount: 'desc' }],
+        }),
       },
       dto.executor && dto.executor.kind === 'user'
         ? dto.executor.id
