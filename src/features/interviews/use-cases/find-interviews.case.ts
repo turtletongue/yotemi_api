@@ -19,7 +19,7 @@ export default class FindInterviewsCase {
   public async apply(
     dto: FindInterviewsDto,
   ): Promise<PaginationResult<PlainInterview> | PlainInterview[]> {
-    if (dto.to && dto.from) {
+    if (dto.to && dto.from && !dto.pageSize && !dto.page) {
       const isTimeFilterTooWide =
         dto.to.getTime() - dto.from.getTime() >
         MAX_DAYS_DIFF_FOR_FIND_INTERVIEWS_FILTER * MS_IN_DAY;
@@ -33,13 +33,12 @@ export default class FindInterviewsCase {
       where: {
         creatorId: dto.creatorId,
         participantId: dto.participantId,
-        ...(dto.to &&
-          dto.from && {
-            startAt: {
-              gte: dto.from,
-              lte: dto.to,
-            },
-          }),
+        ...((dto.to || dto.from) && {
+          startAt: {
+            gte: dto.from,
+            lte: dto.to,
+          },
+        }),
         ...(dto.executor &&
           dto.executor.kind === 'user' && {
             OR: [
