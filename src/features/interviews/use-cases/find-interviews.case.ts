@@ -49,7 +49,7 @@ export default class FindInterviewsCase {
           }),
       },
       orderBy: {
-        createdAt: 'asc',
+        startAt: 'asc',
       },
     } as const;
 
