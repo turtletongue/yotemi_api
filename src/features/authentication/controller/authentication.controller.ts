@@ -9,8 +9,8 @@ import AuthenticateAdminDto from './dto/authenticate-admin.dto';
 import AuthenticateUserDto from './dto/authenticate-user.dto';
 import AuthenticationService from './authentication.service';
 import RefreshTokensService from './refresh-tokens.service';
-import { Executor } from '../decorators';
-import { RefreshGuard } from '../guards';
+import { RefreshAdminGuard, RefreshUserGuard } from '../guards';
+import { Admin, User } from '../decorators';
 
 @ApiTags('authentication')
 @Controller('authentication')
@@ -67,20 +67,20 @@ export default class AuthenticationController {
   }
 
   /**
-   * Revoke refresh token and clear authentication cookie.
+   * Revoke admin refresh token and clear authentication cookie.
    */
   @ApiCookieAuth()
   @ApiCreatedResponse({
     description:
       'Refresh token has been revoked and cannot be used in future requests',
   })
-  @UseGuards(RefreshGuard)
-  @Post('revoke')
-  public async revokeRefreshToken(
+  @UseGuards(RefreshAdminGuard)
+  @Post('admin/revoke')
+  public async revokeAdminRefreshToken(
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<void> {
-    const token = request.cookies?.Refresh;
+    const token = request.cookies?.AdminRefresh;
     const cookie = await this.authentication.revokeRefreshToken(token);
     response.setHeader('Set-Cookie', cookie);
 
@@ -88,21 +88,70 @@ export default class AuthenticationController {
   }
 
   /**
-   * Refresh access token.
+   * Revoke user refresh token and clear authentication cookie.
+   */
+  @ApiCookieAuth()
+  @ApiCreatedResponse({
+    description:
+      'Refresh token has been revoked and cannot be used in future requests',
+  })
+  @UseGuards(RefreshUserGuard)
+  @Post('revoke')
+  public async revokeUserRefreshToken(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Promise<void> {
+    const token = request.cookies?.UserRefresh;
+    const cookie = await this.authentication.revokeRefreshToken(token);
+    response.setHeader('Set-Cookie', cookie);
+
+    response.send();
+  }
+
+  /**
+   * Refresh admin access token.
    */
   @ApiCookieAuth()
   @ApiCreatedResponse({
     type: AuthenticationResultDto,
     description: 'Use accessToken in the Authenticate header with Bearer',
   })
-  @UseGuards(RefreshGuard)
-  @Post('refresh')
-  public async refreshAccessToken(
+  @UseGuards(RefreshAdminGuard)
+  @Post('admin/refresh')
+  public async refreshAdminAccessToken(
     @Req() request: Request,
-    @Executor() executor: AdminEntity | UserEntity,
+    @Admin() executor: AdminEntity,
     @Res() response: Response,
   ): Promise<void> {
-    const token = request.cookies?.Refresh;
+    const token = request.cookies?.AdminRefresh;
+    const accessToken = await this.authentication.refreshAccess(token);
+    const cookie = await this.refreshTokens.createRefreshTokenCookie(
+      executor.id,
+      executor.kind,
+    );
+
+    response.setHeader('Set-Cookie', cookie);
+    response.json({
+      accessToken,
+    });
+  }
+
+  /**
+   * Refresh user access token.
+   */
+  @ApiCookieAuth()
+  @ApiCreatedResponse({
+    type: AuthenticationResultDto,
+    description: 'Use accessToken in the Authenticate header with Bearer',
+  })
+  @UseGuards(RefreshUserGuard)
+  @Post('refresh')
+  public async refreshUserAccessToken(
+    @Req() request: Request,
+    @User() executor: UserEntity,
+    @Res() response: Response,
+  ): Promise<void> {
+    const token = request.cookies?.UserRefresh;
     const accessToken = await this.authentication.refreshAccess(token);
     const cookie = await this.refreshTokens.createRefreshTokenCookie(
       executor.id,

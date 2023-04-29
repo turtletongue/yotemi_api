@@ -97,7 +97,9 @@ export default class AuthenticationService {
       tokens.filter((token) => token.id !== tokenId),
     );
 
-    return 'Refresh=; HttpOnly; Path=/; Max-Age=0';
+    const cookiePrefix = kind === 'admin' ? 'Admin' : 'User';
+
+    return `${cookiePrefix}Refresh=; HttpOnly; Path=/; Max-Age=0`;
   }
 
   public async refreshAccess(refreshToken: string): Promise<string> {

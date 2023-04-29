@@ -55,8 +55,10 @@ export default class RefreshTokensService {
       },
     );
 
+    const cookiePrefix = kind === 'admin' ? 'Admin' : 'User';
+
     // Refresh token MUST BE in Http Only cookies
-    return `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.config.refresh.expiresIn}`;
+    return `${cookiePrefix}Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.config.refresh.expiresIn}`;
   }
 
   public async saveValidTokens(

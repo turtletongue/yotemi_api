@@ -1,6 +1,11 @@
 import AccessJwtStrategy from './access-jwt.strategy';
-import RefreshJwtStrategy from './refresh-jwt.strategy';
+import RefreshAdminJwtStrategy from './refresh-admin-jwt.strategy';
+import RefreshUserJwtStrategy from './refresh-user-jwt.strategy';
 
-const authenticationStrategies = [AccessJwtStrategy, RefreshJwtStrategy];
+const authenticationStrategies = [
+  AccessJwtStrategy,
+  RefreshUserJwtStrategy,
+  RefreshAdminJwtStrategy,
+];
 
 export default authenticationStrategies;
