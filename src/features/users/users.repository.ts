@@ -198,6 +198,33 @@ export default class UsersRepository {
       options,
     );
 
+    const usersIds = paginated.items.map(({ id }) => id);
+
+    const topics = await this.prisma.topic.findMany({
+      where: {
+        users: {
+          some: {
+            id: {
+              in: usersIds,
+            },
+          },
+        },
+      },
+      include: {
+        labels: true,
+        users: {
+          where: {
+            id: {
+              in: usersIds,
+            },
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
     return {
       ...paginated,
       items: await Promise.all(
@@ -208,6 +235,9 @@ export default class UsersRepository {
 
           return await this.userFactory.build({
             ...user,
+            topics: topics.filter(
+              (topic) => !!topic.users.find(({ id }) => id === user.id),
+            ),
             isFollowing,
           });
         }),
