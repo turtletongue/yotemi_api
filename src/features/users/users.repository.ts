@@ -223,6 +223,9 @@ export default class UsersRepository {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return {
