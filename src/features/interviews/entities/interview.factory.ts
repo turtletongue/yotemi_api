@@ -26,6 +26,7 @@ export default class InterviewFactory {
     participantPeerId = this.identifiers.generate(),
     isParticipantPeerFresh = true,
     payerComment = null,
+    isDeployed = false,
     createdAt = new Date(),
     updatedAt = new Date(),
   }: BuildInterviewDto): Promise<InterviewEntity> {
@@ -51,6 +52,7 @@ export default class InterviewFactory {
       participantPeerId,
       isParticipantPeerFresh,
       payerComment,
+      isDeployed,
       createdAt,
       updatedAt,
     );

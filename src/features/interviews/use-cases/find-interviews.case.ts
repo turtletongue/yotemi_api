@@ -33,6 +33,7 @@ export default class FindInterviewsCase {
       where: {
         creatorId: dto.creatorId,
         participantId: dto.participantId,
+        isDeployed: true,
         ...((dto.to || dto.from) && {
           startAt: {
             gte: dto.from,

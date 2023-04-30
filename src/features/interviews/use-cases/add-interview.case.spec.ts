@@ -112,6 +112,7 @@ describe('The AddInterviewCase', () => {
         'participantPeerId',
         true,
         'Some long comment',
+        true,
         new Date(),
         new Date(),
       );

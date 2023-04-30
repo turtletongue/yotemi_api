@@ -16,11 +16,7 @@ export default class GetInterviewByIdCase {
     const { plain } = await this.interviewsRepository.findById(id);
 
     return {
-      id: plain.id,
-      address: plain.address,
-      price: plain.price,
-      startAt: plain.startAt,
-      endAt: plain.endAt,
+      ...plain,
       creator: plain.creator && {
         ...plain.creator,
         avatarPath: plain.creator?.avatarPath
@@ -30,7 +26,6 @@ export default class GetInterviewByIdCase {
           ? this.s3.getReadPath(plain.creator.coverPath)
           : null,
       },
-      creatorId: plain.creatorId,
       participant: plain.participant && {
         ...plain.participant,
         avatarPath: plain.participant?.avatarPath
@@ -40,9 +35,6 @@ export default class GetInterviewByIdCase {
           ? this.s3.getReadPath(plain.participant.coverPath)
           : null,
       },
-      payerComment: plain.payerComment,
-      createdAt: plain.createdAt,
-      updatedAt: plain.updatedAt,
     };
   }
 }

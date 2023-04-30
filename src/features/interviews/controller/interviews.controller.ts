@@ -36,6 +36,7 @@ import {
   ContractMalformedException,
   InterviewHasTimeConflictException,
   InterviewInPastException,
+  InterviewNotDeployedException,
   InterviewNotFoundException,
   InterviewNotPaidException,
   InterviewsTimeFilterTooWideException,
@@ -154,6 +155,28 @@ export default class InterviewsController {
   }
 
   /**
+   * Mark interview as deployed.
+   */
+  @Post(':id/mark-deployed')
+  @ApiBearerAuth()
+  @ApiException(() => InterviewNotFoundException, {
+    description: 'Cannot find interview to take peer id.',
+  })
+  @ApiException(() => ForbiddenException, {
+    description: 'Must be interview creator to mark as deployed.',
+  })
+  @ApiException(() => InterviewNotDeployedException, {
+    description: 'Interview is not actually deployed to blockchain.',
+  })
+  @UseGuards(AccessGuard, RoleGuard('user'))
+  public async markAsDeployed(
+    @Param('id') id: Id,
+    @User() executor: UserEntity,
+  ): Promise<void> {
+    return await this.interviewsService.markAsDeployed(id, executor);
+  }
+
+  /**
    * Take interview peer id.
    */
   @Post(':id/take-peer')
@@ -162,7 +185,8 @@ export default class InterviewsController {
     description: 'Cannot find interview to take peer id.',
   })
   @ApiException(() => ForbiddenException, {
-    description: 'Must be interview participant or creator to take his peer id',
+    description:
+      'Must be interview participant or creator to take his peer id.',
   })
   @UseGuards(AccessGuard, RoleGuard('user'))
   public async takePeerIds(

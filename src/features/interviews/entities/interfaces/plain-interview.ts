@@ -11,6 +11,7 @@ export default interface PlainInterview {
   creatorId: Id;
   participant: PlainUser | null;
   payerComment: string | null;
+  isDeployed: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

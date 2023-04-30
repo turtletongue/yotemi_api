@@ -93,6 +93,7 @@ model Interview {
   participantPeerId      String             @default(uuid())
   isParticipantPeerFresh Boolean            @default(true)
   payerComment           String?
+  isDeployed             Boolean            @default(false)
   messages               InterviewMessage[]
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt

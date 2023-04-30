@@ -17,6 +17,7 @@ export default class InterviewEntity {
     public participantPeerId: string,
     public isParticipantPeerFresh: boolean,
     public payerComment: string | null,
+    public isDeployed: boolean,
     public createdAt: Date,
     public updatedAt: Date,
   ) {}
@@ -32,6 +33,7 @@ export default class InterviewEntity {
       creatorId: this.creatorId,
       participant: this.participant?.plain ?? null,
       payerComment: this.payerComment,
+      isDeployed: this.isDeployed,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

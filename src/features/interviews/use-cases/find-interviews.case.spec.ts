@@ -73,6 +73,7 @@ describe('The FindReviewsCase', () => {
         'participantPeerId',
         true,
         'Some long comment',
+        true,
         new Date(),
         new Date(),
       );

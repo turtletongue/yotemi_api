@@ -15,6 +15,7 @@ export default class BuildInterviewDto {
   public participantPeerId?: string;
   public isParticipantPeerFresh?: boolean;
   public payerComment?: string | null;
+  public isDeployed?: boolean;
   public createdAt?: Date;
   public updatedAt?: Date;
 }

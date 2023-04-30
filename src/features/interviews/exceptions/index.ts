@@ -17,3 +17,5 @@ export { default as ContractMalformedException } from './contract-malformed.exce
 export { default as InterviewHasTimeConflictException } from './interview-has-time-conflict.exception';
 
 export { default as PaymentAlreadyConfirmedException } from './payment-already-confirmed.exception';
+
+export { default as InterviewNotDeployedException } from './interview-not-deployed.exception';

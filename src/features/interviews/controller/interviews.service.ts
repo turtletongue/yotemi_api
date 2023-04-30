@@ -16,6 +16,7 @@ import GetInterviewByIdCase from '../use-cases/get-interview-by-id.case';
 import AddInterviewCase from '../use-cases/add-interview.case';
 import ConfirmPaymentCase from '../use-cases/confirm-payment.case';
 import CheckInterviewTimeConflictCase from '../use-cases/check-interview-time-conflict.case';
+import MarkInterviewAsDeployedCase from '../use-cases/mark-interview-as-deployed.case';
 import TakePeerIdsCase from '../use-cases/take-peer-ids.case';
 
 @Injectable()
@@ -26,6 +27,7 @@ export default class InterviewsService {
     private readonly addInterviewCase: AddInterviewCase,
     private readonly checkInterviewTimeConflictCase: CheckInterviewTimeConflictCase,
     private readonly confirmPaymentCase: ConfirmPaymentCase,
+    private readonly markInterviewAsDeployedCase: MarkInterviewAsDeployedCase,
     private readonly takePeerIdsCase: TakePeerIdsCase,
   ) {}
 
@@ -65,6 +67,10 @@ export default class InterviewsService {
     executor: UserEntity,
   ): Promise<GetInterviewDto> {
     return await this.confirmPaymentCase.apply({ ...dto, id, executor });
+  }
+
+  public async markAsDeployed(id: Id, executor: UserEntity): Promise<void> {
+    return await this.markInterviewAsDeployedCase.apply({ id, executor });
   }
 
   public async takePeerIds(
