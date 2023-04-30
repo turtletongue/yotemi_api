@@ -5,7 +5,6 @@ import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from '@common/prisma';
 import { PaginationResult, PaginationService } from '@common/pagination';
 import InterviewContractService from '@common/ton/interview-contract.service';
-import { MS_IN_SECOND } from '@app/app.constants';
 import { Id } from '@app/app.declarations';
 import BuildInterviewDto from './entities/dto/build-interview.dto';
 import { InterviewEntity, InterviewFactory, PlainInterview } from './entities';
@@ -60,6 +59,7 @@ export default class InterviewsRepository {
     const interview = await this.prisma.interview.findFirst({
       where: {
         address,
+        isDeployed: true,
       },
     });
 
@@ -166,9 +166,10 @@ export default class InterviewsRepository {
     endAt: Date,
     creatorId: Id,
   ): Promise<boolean> {
-    const interviews = await this.prisma.interview.findMany({
+    const interview = await this.prisma.interview.findFirst({
       where: {
         creatorId,
+        isDeployed: true,
         OR: [
           {
             startAt: {
@@ -190,16 +191,7 @@ export default class InterviewsRepository {
       },
     });
 
-    const isConflict = await Promise.all(
-      interviews.map(async (interview) => {
-        return (
-          Date.now() - interview.createdAt.getTime() > 15 * MS_IN_SECOND &&
-          (await this.interviewContractService.isDeployed(interview.address))
-        );
-      }),
-    );
-
-    return isConflict.some(Boolean);
+    return !!interview;
   }
 
   public async create(interview: PlainInterview): Promise<InterviewEntity> {
