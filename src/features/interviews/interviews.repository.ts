@@ -228,7 +228,7 @@ export default class InterviewsRepository {
       data: {
         ...data,
         ...(creator && { creatorId: creator.id }),
-        participantId: participant.id,
+        ...(participant && { participantId: participant.id }),
       },
       include: {
         participant: includeUserOptions,
