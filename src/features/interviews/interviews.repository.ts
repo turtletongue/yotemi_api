@@ -172,19 +172,23 @@ export default class InterviewsRepository {
         isDeployed: true,
         OR: [
           {
+            startAt,
+            endAt,
+          },
+          {
             startAt: {
-              lte: startAt,
+              lt: startAt,
             },
             endAt: {
-              gte: startAt,
+              gt: startAt,
             },
           },
           {
             startAt: {
-              lte: endAt,
+              lt: endAt,
             },
             endAt: {
-              gte: endAt,
+              gt: endAt,
             },
           },
         ],
