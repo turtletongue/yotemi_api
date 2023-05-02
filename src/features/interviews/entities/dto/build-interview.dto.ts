@@ -10,10 +10,8 @@ export default class BuildInterviewDto {
   public creator?: BuildUserDto;
   public creatorId: Id;
   public creatorPeerId?: string;
-  public isCreatorPeerFresh?: boolean;
   public participant?: BuildUserDto | null;
   public participantPeerId?: string;
-  public isParticipantPeerFresh?: boolean;
   public payerComment?: string | null;
   public isDeployed?: boolean;
   public createdAt?: Date;

@@ -49,7 +49,6 @@ describe('The FindReviewsCase', () => {
         null,
         'creatorId',
         'creatorPeerId',
-        true,
         new UserEntity(
           'id',
           'tom',
@@ -71,7 +70,6 @@ describe('The FindReviewsCase', () => {
           new Date(),
         ),
         'participantPeerId',
-        true,
         'Some long comment',
         true,
         new Date(),

@@ -87,11 +87,9 @@ model Interview {
   creator                User               @relation(fields: [creatorId], references: [id], name: "ownInterviews", onDelete: Cascade)
   creatorId              String
   creatorPeerId          String             @default(uuid())
-  isCreatorPeerFresh     Boolean            @default(true)
   participant            User?              @relation(fields: [participantId], references: [id], name: "interviews", onDelete: SetNull)
   participantId          String?
   participantPeerId      String             @default(uuid())
-  isParticipantPeerFresh Boolean            @default(true)
   payerComment           String?
   isDeployed             Boolean            @default(false)
   messages               InterviewMessage[]

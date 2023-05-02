@@ -88,7 +88,6 @@ describe('The AddInterviewCase', () => {
         null,
         'creatorId',
         'creatorPeerId',
-        true,
         new UserEntity(
           'id',
           'tom',
@@ -110,7 +109,6 @@ describe('The AddInterviewCase', () => {
           new Date(),
         ),
         'participantPeerId',
-        true,
         'Some long comment',
         true,
         new Date(),
