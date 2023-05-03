@@ -3,13 +3,13 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import MarkNotificationAsSeenDto from './dto/mark-notification-as-seen.dto';
 import NotificationsRepository from '../notifications.repository';
 import { PlainNotification } from '../entities';
-import NotificationsGateway from '../notifications.gateway';
+import NotificationsProducer from '../notifications.producer';
 
 @Injectable()
 export default class MarkNotificationAsSeenCase {
   constructor(
     private readonly notificationsRepository: NotificationsRepository,
-    private readonly notificationsGateway: NotificationsGateway,
+    private readonly notificationsProducer: NotificationsProducer,
   ) {}
 
   public async apply({
@@ -30,7 +30,7 @@ export default class MarkNotificationAsSeenCase {
       executor.id,
     );
 
-    this.notificationsGateway.updateNotification(plain.userId, plain);
+    await this.notificationsProducer.updateNotification(plain.userId, plain);
 
     return {
       id: plain.id,

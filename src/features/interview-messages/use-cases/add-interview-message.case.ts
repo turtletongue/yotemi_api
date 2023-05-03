@@ -4,7 +4,7 @@ import { checkInterviewMembership } from '@common/utils';
 import InterviewsRepository from '@features/interviews/interviews.repository';
 import AddInterviewMessageDto from './dto/add-interview-message.dto';
 import InterviewMessagesRepository from '../interview-messages.repository';
-import InterviewMessagesGateway from '../interview-messages.gateway';
+import InterviewMessagesProducer from '../interview-messages.producer';
 import { InterviewMessageFactory, PlainInterviewMessage } from '../entities';
 
 @Injectable()
@@ -13,7 +13,7 @@ export default class AddInterviewMessageCase {
     private readonly interviewMessagesRepository: InterviewMessagesRepository,
     private readonly interviewsRepository: InterviewsRepository,
     private readonly interviewMessageFactory: InterviewMessageFactory,
-    private readonly interviewMessagesGateway: InterviewMessagesGateway,
+    private readonly interviewMessagesProducer: InterviewMessagesProducer,
   ) {}
 
   public async apply(
@@ -34,12 +34,12 @@ export default class AddInterviewMessageCase {
       interviewMessage.plain,
     );
 
-    this.interviewMessagesGateway.sendInterviewMessage(
+    await this.interviewMessagesProducer.sendInterviewMessage(
       interview.participant.id,
       plain,
     );
 
-    this.interviewMessagesGateway.sendInterviewMessage(
+    await this.interviewMessagesProducer.sendInterviewMessage(
       interview.creatorId,
       plain,
     );

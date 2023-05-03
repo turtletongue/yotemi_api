@@ -4,13 +4,13 @@ import MarkAllNotificationsAsSeenDto from './dto/mark-all-notifications-as-seen.
 import NotificationsRepository from '../notifications.repository';
 import { PlainNotification } from '../entities';
 import { FOLLOWING_NOTIFICATIONS } from '../notifications.constants';
-import NotificationsGateway from '../notifications.gateway';
+import NotificationsProducer from '../notifications.producer';
 
 @Injectable()
 export default class MarkAllNotificationsAsSeenCase {
   constructor(
     private readonly notificationsRepository: NotificationsRepository,
-    private readonly notificationsGateway: NotificationsGateway,
+    private readonly notificationsProducer: NotificationsProducer,
   ) {}
 
   public async apply({
@@ -49,9 +49,14 @@ export default class MarkAllNotificationsAsSeenCase {
       executor.id,
     );
 
-    results.forEach((result) => {
-      this.notificationsGateway.updateNotification(result.userId, result.plain);
-    });
+    await Promise.all(
+      results.map(async (result) => {
+        await this.notificationsProducer.updateNotification(
+          result.userId,
+          result.plain,
+        );
+      }),
+    );
 
     return results.map(({ plain }) => ({
       id: plain.id,

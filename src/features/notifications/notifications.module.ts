@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 
-import PrismaModule from '@common/prisma';
 import IdentifiersModule from '@common/identifiers';
 import PaginationModule from '@common/pagination';
-import GatewaysModule from '@common/gateways';
+import PrismaModule from '@common/prisma';
+import PubsubModule from '@common/pubsub';
 import { NotificationFactory } from './entities';
 import NotificationsRepository from './notifications.repository';
-import NotificationsGateway from './notifications.gateway';
+import NotificationsProducer from './notifications.producer';
 import notificationUseCases from './use-cases';
 import NotificationsController, { notificationServices } from './controllers';
 
 @Module({
-  imports: [IdentifiersModule, PaginationModule, PrismaModule, GatewaysModule],
+  imports: [IdentifiersModule, PaginationModule, PrismaModule, PubsubModule],
   providers: [
     NotificationFactory,
     NotificationsRepository,
-    NotificationsGateway,
+    NotificationsProducer,
     ...notificationUseCases,
     ...notificationServices,
   ],

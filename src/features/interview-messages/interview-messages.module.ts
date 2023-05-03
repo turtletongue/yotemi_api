@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 
 import IdentifiersModule from '@common/identifiers';
 import PrismaModule from '@common/prisma';
-import GatewaysModule from '@common/gateways';
+import PubsubModule from '@common/pubsub';
 import InterviewsModule from '@features/interviews';
 import InterviewMessagesRepository from './interview-messages.repository';
-import InterviewMessagesGateway from './interview-messages.gateway';
+import InterviewMessagesProducer from './interview-messages.producer';
 import { InterviewMessageFactory } from './entities';
 import interviewMessageUseCases from './use-cases';
 import InterviewMessagesController, {
@@ -13,12 +13,12 @@ import InterviewMessagesController, {
 } from './controller';
 
 @Module({
-  imports: [IdentifiersModule, PrismaModule, InterviewsModule, GatewaysModule],
+  imports: [IdentifiersModule, PrismaModule, InterviewsModule, PubsubModule],
   controllers: [InterviewMessagesController],
   providers: [
     InterviewMessageFactory,
     InterviewMessagesRepository,
-    InterviewMessagesGateway,
+    InterviewMessagesProducer,
     ...interviewMessageUseCases,
     ...interviewMessageServices,
   ],

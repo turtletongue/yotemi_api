@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import GatewaysModule from '@common/gateways';
+import PubsubModule from '@common/pubsub';
 import InterviewsModule from '@features/interviews';
 import PeersService from './controllers/peers.service';
 import PeersController from './controllers/peers.controller';
-import PeersGateway from './peers.gateway';
+import PeersProducer from './peers.producer';
 
 @Module({
-  imports: [GatewaysModule, InterviewsModule],
+  imports: [InterviewsModule, PubsubModule],
   controllers: [PeersController],
-  providers: [PeersService, PeersGateway],
+  providers: [PeersService, PeersProducer],
 })
 export default class PeersModule {}

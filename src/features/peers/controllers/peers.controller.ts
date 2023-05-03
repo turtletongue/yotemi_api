@@ -11,7 +11,7 @@ import { AccessGuard, RoleGuard } from '@features/authentication/guards';
 import { User } from '@features/authentication/decorators';
 import { UserEntity } from '@features/users/entities';
 import PeersService from './peers.service';
-import PeersGateway from '../peers.gateway';
+import PeersProducer from '../peers.producer';
 import { GeneratePeerResponse } from '../peers.types';
 
 @ApiTags('peers')
@@ -20,7 +20,7 @@ import { GeneratePeerResponse } from '../peers.types';
 export default class PeersController {
   constructor(
     private readonly peers: PeersService,
-    private readonly peersGateway: PeersGateway,
+    private readonly peersProducer: PeersProducer,
   ) {}
 
   @Post(':interviewId')
@@ -56,9 +56,9 @@ export default class PeersController {
     const otherUserId = await this.peers.getOtherUserId(interviewId, executor);
 
     if (type === 'video') {
-      this.peersGateway.sendVideoMuted(otherUserId, interviewId);
+      await this.peersProducer.sendVideoMuted(otherUserId, interviewId);
     } else {
-      this.peersGateway.sendAudioMuted(otherUserId, interviewId);
+      await this.peersProducer.sendAudioMuted(otherUserId, interviewId);
     }
   }
 
@@ -77,9 +77,9 @@ export default class PeersController {
     const otherUserId = await this.peers.getOtherUserId(interviewId, executor);
 
     if (type === 'video') {
-      this.peersGateway.sendVideoUnmuted(otherUserId, interviewId);
+      await this.peersProducer.sendVideoUnmuted(otherUserId, interviewId);
     } else {
-      this.peersGateway.sendAudioUnmuted(otherUserId, interviewId);
+      await this.peersProducer.sendAudioUnmuted(otherUserId, interviewId);
     }
   }
 
@@ -96,6 +96,6 @@ export default class PeersController {
 
     const otherUserId = await this.peers.getOtherUserId(interviewId, executor);
 
-    this.peersGateway.sendDisconnected(otherUserId, interviewId);
+    await this.peersProducer.sendDisconnected(otherUserId, interviewId);
   }
 }

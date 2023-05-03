@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import CheckUserAuthIdDto from './dto/check-user-auth-id.dto';
 import UsersRepository from '../users.repository';
 import { PlainUser, UserFactory } from '../entities';
+import { Id } from '@app/app.declarations';
 
 @Injectable()
 export default class CheckUserAuthIdCase {
@@ -14,7 +15,7 @@ export default class CheckUserAuthIdCase {
   public async apply({
     accountAddress,
     authId,
-  }: CheckUserAuthIdDto): Promise<PlainUser> {
+  }: CheckUserAuthIdDto): Promise<PlainUser & { followingsIds: Id[] }> {
     const user = await this.usersRepository.findByAccountAddress(
       accountAddress,
     );
@@ -28,8 +29,12 @@ export default class CheckUserAuthIdCase {
       authId: undefined,
     });
 
-    return await this.usersRepository
-      .update(userWithNewAuthId.plain)
-      .then(({ plain }) => plain);
+    const { plain } = await this.usersRepository.update(
+      userWithNewAuthId.plain,
+    );
+
+    const followingsIds = await this.usersRepository.findFollowingIds(plain.id);
+
+    return { ...plain, followingsIds };
   }
 }

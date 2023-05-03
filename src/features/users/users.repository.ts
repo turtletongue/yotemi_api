@@ -248,6 +248,23 @@ export default class UsersRepository {
     };
   }
 
+  public async findFollowingIds(id: Id): Promise<Id[]> {
+    const followings = await this.prisma.user.findMany({
+      where: {
+        followers: {
+          some: {
+            id,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return followings.map((following) => following.id);
+  }
+
   public async create(user: PlainUser): Promise<UserEntity> {
     const { topics, ...data } = user;
 
