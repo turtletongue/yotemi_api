@@ -7,6 +7,8 @@ import CheckAdminPasswordCase from '@features/admins/use-cases/check-admin-passw
 import { AdminNotFoundException } from '@features/admins/exceptions';
 import { UserNotFoundException } from '@features/users/exceptions';
 import CheckUserAuthIdCase from '@features/users/use-cases/check-user-auth-id.case';
+import UsersRepository from '@features/users/users.repository';
+import AdminsRepository from '@features/admins/admins.repository';
 import AuthenticationResultDto from './dto/authentication-result.dto';
 import AuthenticateAdminDto from './dto/authenticate-admin.dto';
 import RefreshTokensService from './refresh-tokens.service';
@@ -19,6 +21,8 @@ export default class AuthenticationService {
     private readonly checkUserAuthIdCase: CheckUserAuthIdCase,
     private readonly refreshTokens: RefreshTokensService,
     private readonly ton: WalletAuthenticationService,
+    private readonly usersRepository: UsersRepository,
+    private readonly adminsRepository: AdminsRepository,
   ) {}
 
   public async authenticateAdmin(
@@ -115,6 +119,31 @@ export default class AuthenticationService {
       refreshToken,
     );
 
-    return await this.jwt.signAsync({ executorId, kind });
+    const userFollowingsIds =
+      kind === 'user'
+        ? await this.usersRepository.findFollowingIds(executorId)
+        : null;
+
+    const admin =
+      kind === 'admin'
+        ? await this.adminsRepository.findById(executorId)
+        : null;
+
+    return await this.jwt.signAsync({
+      executorId,
+      kind,
+      ...(userFollowingsIds && {
+        executor: {
+          id: executorId,
+          followingsIds: userFollowingsIds,
+        },
+      }),
+      ...(admin && {
+        executor: {
+          id: executorId,
+          username: admin.username,
+        },
+      }),
+    });
   }
 }
