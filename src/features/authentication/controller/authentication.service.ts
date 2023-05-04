@@ -30,7 +30,10 @@ export default class AuthenticationService {
       const accessToken = await this.jwt.signAsync({
         kind: 'admin',
         executorId: admin.id,
-        executor: admin,
+        executor: {
+          id: admin.id,
+          username: admin.username,
+        },
       });
 
       return {
@@ -71,7 +74,10 @@ export default class AuthenticationService {
       const accessToken = await this.jwt.signAsync({
         kind: 'user',
         executorId: user.id,
-        executor: user,
+        executor: {
+          id: user.id,
+          followingsIds: user.followingsIds,
+        },
       });
 
       return {
