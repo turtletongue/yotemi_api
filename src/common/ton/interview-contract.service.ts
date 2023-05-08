@@ -29,7 +29,7 @@ export default class InterviewContractService {
   ): Promise<boolean> {
     const creator = Address.parse(creatorAddress);
     const data = beginCell()
-      .storeUint(toNano(interview.price.toString()), 64)
+      .storeUint(toNano(interview.price.toFixed(9)), 64)
       .storeAddress(creator)
       .storeAddress(creator)
       .storeUint(Math.floor(interview.startAt.getTime() / 1000), 32)
