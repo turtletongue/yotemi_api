@@ -121,12 +121,14 @@ export default class WalletAuthenticationService {
 
       return Point.fromHex(data.publicKey);
     } catch (error: unknown) {
-      console.log(error);
       if (!(error instanceof AxiosError)) {
         throw error;
       }
 
-      if (error.code === '400' || error.code === '500') {
+      const isWalletNotInitialized =
+        error.response.data.error === 'wallet is not initialized';
+
+      if (isWalletNotInitialized) {
         throw new AccountIsNotInitializedException();
       }
 
