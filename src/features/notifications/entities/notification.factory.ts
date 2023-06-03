@@ -30,10 +30,10 @@ export default class NotificationFactory {
   }
 
   public async buildMany(
-    data: BuildNotificationDto[],
+    notifications: BuildNotificationDto[],
   ): Promise<NotificationEntity[]> {
     return await Promise.all(
-      data.map(async (notification) => await this.build(notification)),
+      notifications.map(async (notification) => await this.build(notification)),
     );
   }
 
