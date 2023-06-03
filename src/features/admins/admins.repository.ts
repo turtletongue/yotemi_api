@@ -74,14 +74,11 @@ export default class AdminsRepository {
 
     return {
       ...paginated,
-      items: await Promise.all(
-        paginated.items.map(
-          async (admin) =>
-            await this.adminFactory.build({
-              ...admin,
-              passwordHash: admin.password,
-            }),
-        ),
+      items: await this.adminFactory.buildMany(
+        paginated.items.map((admin) => ({
+          ...admin,
+          passwordHash: admin.password,
+        })),
       ),
     };
   }

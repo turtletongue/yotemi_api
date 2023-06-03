@@ -9,8 +9,8 @@ export default class UnfollowUserCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   public async apply(dto: UnfollowUserDto): Promise<void> {
-    const isFollowing = await this.usersRepository.isFollowing(
-      dto.followingId,
+    const [isFollowing] = await this.usersRepository.isFollowing(
+      [dto.followingId],
       dto.followerId,
     );
 

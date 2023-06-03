@@ -35,4 +35,10 @@ export default class ReviewFactory {
       updatedAt,
     );
   }
+
+  public async buildMany(reviews: BuildReviewDto[]): Promise<ReviewEntity[]> {
+    return await Promise.all(
+      reviews.map(async (review) => await this.build(review)),
+    );
+  }
 }

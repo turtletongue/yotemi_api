@@ -79,11 +79,7 @@ export default class ReviewsRepository {
 
     return {
       ...paginated,
-      items: await Promise.all(
-        paginated.items.map(
-          async (review) => await this.reviewFactory.build(review),
-        ),
-      ),
+      items: await this.reviewFactory.buildMany(paginated.items),
     };
   }
 

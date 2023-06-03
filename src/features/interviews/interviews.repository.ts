@@ -127,14 +127,11 @@ export default class InterviewsRepository {
 
     return {
       ...paginated,
-      items: await Promise.all(
-        paginated.items.map(
-          async (interview) =>
-            await this.interviewFactory.build({
-              ...interview,
-              price: interview.price.toNumber(),
-            }),
-        ),
+      items: await this.interviewFactory.buildMany(
+        paginated.items.map((interview) => ({
+          ...interview,
+          price: interview.price.toNumber(),
+        })),
       ),
     };
   }
@@ -150,14 +147,11 @@ export default class InterviewsRepository {
       },
     });
 
-    return await Promise.all(
-      interviews.map(
-        async (interview) =>
-          await this.interviewFactory.build({
-            ...interview,
-            price: interview.price.toNumber(),
-          }),
-      ),
+    return await this.interviewFactory.buildMany(
+      interviews.map((interview) => ({
+        ...interview,
+        price: interview.price.toNumber(),
+      })),
     );
   }
 

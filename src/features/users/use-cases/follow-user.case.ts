@@ -22,8 +22,8 @@ export default class FollowUserCase {
       throw new SelfFollowingNotAllowedException();
     }
 
-    const isFollowing = await this.usersRepository.isFollowing(
-      dto.followingId,
+    const [isFollowing] = await this.usersRepository.isFollowing(
+      [dto.followingId],
       dto.followerId,
     );
 

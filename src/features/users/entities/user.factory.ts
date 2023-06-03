@@ -57,4 +57,8 @@ export default class UserFactory {
       updatedAt,
     );
   }
+
+  public async buildMany(users: BuildUserDto[]): Promise<UserEntity[]> {
+    return await Promise.all(users.map(async (user) => await this.build(user)));
+  }
 }

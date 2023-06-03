@@ -53,4 +53,12 @@ export default class InterviewFactory {
       updatedAt,
     );
   }
+
+  public async buildMany(
+    interviews: BuildInterviewDto[],
+  ): Promise<InterviewEntity[]> {
+    return await Promise.all(
+      interviews.map(async (interview) => await this.build(interview)),
+    );
+  }
 }

@@ -56,9 +56,7 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(id);
-    const isFollowing = followerId
-      ? await this.isFollowing(id, followerId)
-      : null;
+    const [isFollowing] = await this.isFollowing([id], followerId);
 
     return await this.userFactory.build({
       ...user,
@@ -100,9 +98,7 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(user.id);
-    const isFollowing = followerId
-      ? await this.isFollowing(user.id, followerId)
-      : null;
+    const [isFollowing] = await this.isFollowing([user.id], followerId);
 
     return await this.userFactory.build({
       ...user,
@@ -144,9 +140,7 @@ export default class UsersRepository {
       });
 
     const reviewsAverage = await this.getReviewsAverage(user.id);
-    const isFollowing = followerId
-      ? await this.isFollowing(user.id, followerId)
-      : null;
+    const [isFollowing] = await this.isFollowing([user.id], followerId);
 
     return await this.userFactory.build({
       ...user,
@@ -199,6 +193,7 @@ export default class UsersRepository {
     );
 
     const usersIds = paginated.items.map(({ id }) => id);
+    const isFollowingChecks = await this.isFollowing(usersIds, followerId);
 
     const topics = await this.prisma.topic.findMany({
       where: {
@@ -230,20 +225,14 @@ export default class UsersRepository {
 
     return {
       ...paginated,
-      items: await Promise.all(
-        paginated.items.map(async (user) => {
-          const isFollowing = followerId
-            ? await this.isFollowing(user.id, followerId)
-            : null;
-
-          return await this.userFactory.build({
-            ...user,
-            topics: topics.filter(
-              (topic) => !!topic.users.find(({ id }) => id === user.id),
-            ),
-            isFollowing,
-          });
-        }),
+      items: await this.userFactory.buildMany(
+        paginated.items.map((user, index) => ({
+          ...user,
+          topics: topics.filter(
+            (topic) => !!topic.users.find(({ id }) => id === user.id),
+          ),
+          isFollowing: isFollowingChecks[index],
+        })),
       ),
     };
   }
@@ -365,18 +354,33 @@ export default class UsersRepository {
     });
   }
 
-  public async isFollowing(followingId: Id, followerId: Id): Promise<boolean> {
-    const follower = await this.findById(followerId);
-    const following = await this.findById(followingId);
+  public async isFollowing(
+    followingIds: Id[],
+    followerId?: Id,
+  ): Promise<boolean[]> {
+    if (!followerId) {
+      return new Array(followingIds.length).fill(false);
+    }
 
-    const subscription = await this.prisma.subscription.findFirst({
+    const follower = await this.findById(followerId);
+
+    const subscriptions = await this.prisma.subscription.findMany({
       where: {
+        followingId: {
+          in: followingIds,
+        },
         followerId: follower.id,
-        followingId: following.id,
       },
     });
 
-    return !!subscription;
+    const followingIdToSubscription = subscriptions.reduce(
+      (map, current) => ({ ...map, [current.followingId]: current }),
+      {},
+    );
+
+    return followingIds.map(
+      (followingId) => !!followingIdToSubscription[followingId],
+    );
   }
 
   public async unfollow(followingId: Id, followerId: Id): Promise<void> {

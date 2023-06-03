@@ -44,4 +44,10 @@ export default class AdminFactory {
       isPasswordsMatch,
     );
   }
+
+  public async buildMany(admins: BuildAdminDto[]): Promise<AdminEntity[]> {
+    return await Promise.all(
+      admins.map(async (admin) => await this.build(admin)),
+    );
+  }
 }

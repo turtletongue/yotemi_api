@@ -25,4 +25,12 @@ export default class InterviewMessageFactory {
       updatedAt,
     );
   }
+
+  public async buildMany(
+    interviewMessages: BuildInterviewMessageDto[],
+  ): Promise<InterviewMessageEntity[]> {
+    return await Promise.all(
+      interviewMessages.map(async (message) => await this.build(message)),
+    );
+  }
 }

@@ -38,12 +38,7 @@ export default class InterviewMessagesRepository {
       options,
     );
 
-    return await Promise.all(
-      interviewMessages.map(
-        async (interviewMessage) =>
-          await this.interviewMessageFactory.build(interviewMessage),
-      ),
-    );
+    return await this.interviewMessageFactory.buildMany(interviewMessages);
   }
 
   public async create(

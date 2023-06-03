@@ -60,11 +60,7 @@ export default class TopicsRepository {
 
     return {
       ...paginated,
-      items: await Promise.all(
-        paginated.items.map(
-          async (topic) => await this.topicFactory.build(topic),
-        ),
-      ),
+      items: await this.topicFactory.buildMany(paginated.items),
     };
   }
 
@@ -80,9 +76,7 @@ export default class TopicsRepository {
       },
     });
 
-    return await Promise.all(
-      topics.map(async (topic) => await this.topicFactory.build(topic)),
-    );
+    return await this.topicFactory.buildMany(topics);
   }
 
   public async create(topic: PlainTopic): Promise<TopicEntity> {

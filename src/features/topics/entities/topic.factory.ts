@@ -29,4 +29,10 @@ export default class TopicFactory {
       updatedAt,
     );
   }
+
+  public async buildMany(topics: BuildTopicDto[]): Promise<TopicEntity[]> {
+    return await Promise.all(
+      topics.map(async (topic) => await this.build(topic)),
+    );
+  }
 }
