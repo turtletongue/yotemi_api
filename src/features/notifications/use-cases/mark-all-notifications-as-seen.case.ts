@@ -18,30 +18,6 @@ export default class MarkAllNotificationsAsSeenCase {
   }: MarkAllNotificationsAsSeenDto): Promise<PlainNotification[]> {
     const notifications = await this.notificationsRepository.findAll(
       executor.id,
-      {
-        where: {
-          OR: [
-            {
-              type: {
-                notIn: FOLLOWING_NOTIFICATIONS,
-              },
-              userId: executor.id,
-            },
-            {
-              type: {
-                in: FOLLOWING_NOTIFICATIONS,
-              },
-              user: {
-                followers: {
-                  some: {
-                    id: executor.id,
-                  },
-                },
-              },
-            },
-          ],
-        },
-      },
     );
 
     const results = await this.notificationsRepository.markAllAsSeen(

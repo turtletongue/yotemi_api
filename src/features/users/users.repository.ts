@@ -249,20 +249,16 @@ export default class UsersRepository {
   }
 
   public async findFollowingIds(id: Id): Promise<Id[]> {
-    const followings = await this.prisma.user.findMany({
+    const subscriptions = await this.prisma.subscription.findMany({
       where: {
-        followers: {
-          some: {
-            id,
-          },
-        },
+        followerId: id,
       },
       select: {
-        id: true,
+        followingId: true,
       },
     });
 
-    return followings.map((following) => following.id);
+    return subscriptions.map(({ followingId }) => followingId);
   }
 
   public async create(user: PlainUser): Promise<UserEntity> {
@@ -348,45 +344,46 @@ export default class UsersRepository {
   }
 
   public async follow(followingId: Id, followerId: Id): Promise<void> {
-    await this.prisma.user.update({
-      where: {
-        id: followerId,
-      },
-      data: {
-        following: {
-          connect: { id: followingId },
+    await this.prisma.$transaction(async (prisma) => {
+      const existingSubscription = await prisma.subscription.findFirst({
+        where: {
+          followerId,
+          followingId,
         },
-      },
+      });
+
+      if (existingSubscription) {
+        return;
+      }
+
+      await prisma.subscription.create({
+        data: {
+          followerId,
+          followingId,
+        },
+      });
     });
   }
 
   public async isFollowing(followingId: Id, followerId: Id): Promise<boolean> {
-    const following = await this.findById(followingId);
     const follower = await this.findById(followerId);
+    const following = await this.findById(followingId);
 
-    const user = await this.prisma.user.findFirst({
+    const subscription = await this.prisma.subscription.findFirst({
       where: {
-        id: follower.id,
-        following: {
-          some: {
-            id: following.id,
-          },
-        },
+        followerId: follower.id,
+        followingId: following.id,
       },
     });
 
-    return !!user;
+    return !!subscription;
   }
 
   public async unfollow(followingId: Id, followerId: Id): Promise<void> {
-    await this.prisma.user.update({
+    await this.prisma.subscription.deleteMany({
       where: {
-        id: followerId,
-      },
-      data: {
-        following: {
-          disconnect: { id: followingId },
-        },
+        followingId,
+        followerId,
       },
     });
   }

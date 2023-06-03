@@ -6,7 +6,7 @@ export default interface PlainNotification {
   id: Id;
   type: NotificationType;
   content: Record<string, unknown> | null;
-  isSeen: boolean;
+  isSeen: boolean | null;
   userId: Id;
   createdAt: Date;
   updatedAt: Date;

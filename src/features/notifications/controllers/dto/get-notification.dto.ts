@@ -25,7 +25,7 @@ export default class GetNotificationDto {
    * Is notification seen.
    * @example false
    */
-  public isSeen: boolean;
+  public isSeen: boolean | null;
 
   /**
    * Identifier of the user who received notification.

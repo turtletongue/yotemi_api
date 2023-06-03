@@ -8,7 +8,7 @@ export default class NotificationEntity {
     public id: Id,
     public type: NotificationType,
     public content: Record<string, unknown> | null,
-    public isSeen: boolean,
+    public isSeen: boolean | null,
     public userId: Id,
     public createdAt: Date,
     public updatedAt: Date,

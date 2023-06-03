@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { NotificationView } from '@prisma/client';
 
 import { IdentifiersService } from '@common/identifiers';
 import NotificationEntity from './notification.entity';
@@ -12,7 +13,7 @@ export default class NotificationFactory {
     id = this.identifiers.generate(),
     type,
     content = null,
-    views = [],
+    views = null,
     userId,
     createdAt = new Date(),
     updatedAt = new Date(),
@@ -21,10 +22,62 @@ export default class NotificationFactory {
       id,
       type,
       content,
-      !!views.length,
+      views && !!views.length,
       userId,
       createdAt,
       updatedAt,
+    );
+  }
+
+  public async buildMany(
+    data: BuildNotificationDto[],
+  ): Promise<NotificationEntity[]> {
+    return await Promise.all(
+      data.map(async (notification) => await this.build(notification)),
+    );
+  }
+
+  public rebuildWithViews(
+    notification: BuildNotificationDto,
+    views: NotificationView[],
+  ): NotificationEntity {
+    return new NotificationEntity(
+      notification.id,
+      notification.type,
+      notification.content,
+      !!views.length,
+      notification.userId,
+      notification.createdAt,
+      notification.updatedAt,
+    );
+  }
+
+  public rebuildManyWithViews(
+    notifications: BuildNotificationDto[],
+    views: NotificationView[],
+  ): NotificationEntity[] {
+    const notificationIdToViews = views.reduce(
+      (map, current) => ({
+        ...map,
+        [current.notificationId]: [
+          ...(map[current.notificationId] ?? []),
+          current,
+        ],
+      }),
+      {},
+    );
+
+    return notifications.map(
+      (notification) =>
+        new NotificationEntity(
+          notification.id,
+          notification.type,
+          notification.content,
+          !!(notificationIdToViews[notification.id] ?? []).length,
+          notification.userId,
+          notification.createdAt,
+          notification.updatedAt,
+        ),
     );
   }
 }

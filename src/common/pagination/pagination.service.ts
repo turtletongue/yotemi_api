@@ -9,7 +9,7 @@ export default class PaginationService {
   constructor(private readonly prisma: PrismaService) {}
 
   public async paginate<T extends Record<string, any>>(
-    model: Model,
+    model: Pick<Model, 'findMany' | 'aggregate'>,
     page = 1,
     limit = 10,
     options?: any,

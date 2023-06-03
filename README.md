@@ -27,6 +27,10 @@ DATABASE_CONNECTION=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRE
 
 REDIS_CONNECTION=redis://:@meetlane-redis-dev:6379
 
+# Pubsub Configuration
+
+PUBSUB_CONNECTION=redis://:@meetlane-redis-dev:6379
+
 # JWT Configuration
 
 ACCESS_SECRET=secret_with_length_of_25_characters

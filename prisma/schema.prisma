@@ -35,8 +35,8 @@ model User {
   topics                 Topic[]
   feedbacks              Review[]           @relation(name: "reviewOfUser")
   reviews                Review[]           @relation(name: "reviewFromUser")
-  followers              User[]             @relation(name: "subscriptions")
-  following              User[]             @relation(name: "subscriptions")
+  followers              Subscription[]     @relation(name: "followers")
+  following              Subscription[]     @relation(name: "following")
   ownInterviews          Interview[]        @relation(name: "ownInterviews")
   interviews             Interview[]        @relation(name: "interviews")
   messages               InterviewMessage[]
@@ -47,6 +47,18 @@ model User {
   updatedAt              DateTime           @updatedAt
 
   @@map("users")
+}
+
+model Subscription {
+  follower               User               @relation(fields: [followerId], references: [id], onDelete: Cascade, name: "followers")
+  followerId             String
+  following              User               @relation(fields: [followingId], references: [id], onDelete: Cascade, name: "following")
+  followingId            String
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  @@id([followerId, followingId])
+  @@map("subscriptions")
 }
 
 model Topic {

@@ -3,7 +3,7 @@ import { Notification, NotificationView, Prisma } from '@prisma/client';
 
 import { PaginationResult, PaginationService } from '@common/pagination';
 import { PrismaService } from '@common/prisma';
-import { Id } from '@app/app.declarations';
+import { Id, Model } from '@app/app.declarations';
 import {
   NotificationEntity,
   NotificationFactory,
@@ -11,6 +11,30 @@ import {
 } from './entities';
 import { NotificationNotFoundException } from './exceptions';
 import BuildNotificationDto from './entities/dto/build-notification.dto';
+import { FOLLOWING_NOTIFICATIONS } from './notifications.constants';
+
+const getRawNotificationsWhere = (viewerId: Id) => Prisma.sql`
+    WHERE NOT EXISTS((
+        SELECT id
+        FROM notification_views
+        WHERE "notificationId" = notifications.id AND
+              "viewerId" = ${viewerId}
+    )) AND (
+        (
+            type NOT IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
+            "userId" = ${viewerId}
+        ) OR (
+            type IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
+            EXISTS((
+                SELECT *
+                FROM subscriptions
+                WHERE "followingId" = notifications."userId" AND
+                      "followerId" = ${viewerId} AND
+                      "createdAt" <= notifications."createdAt"
+            ))
+        )
+    )
+`;
 
 @Injectable()
 export default class NotificationsRepository {
@@ -57,83 +81,77 @@ export default class NotificationsRepository {
     page: number,
     limit: number,
     viewerId: Id,
-    options?: Prisma.NotificationFindManyArgs,
-  ): Promise<PaginationResult<NotificationEntity> & { notSeenCount: number }> {
-    const paginated = await this.paginate.paginate<
-      Notification & { views: NotificationView[] }
-    >(this.prisma.notification, page, limit, {
-      ...(options ?? {}),
-      include: {
-        views: {
-          where: {
-            viewerId,
-          },
-        },
+  ): Promise<PaginationResult<NotificationEntity>> {
+    const rawModel = {
+      findMany: ({ take, skip }: Prisma.NotificationFindManyArgs) => {
+        return this.prisma.$queryRaw`
+            SELECT *
+            FROM notifications
+            ${getRawNotificationsWhere(viewerId)}
+            LIMIT ${take}
+            OFFSET ${skip}
+        `;
       },
-    });
+      aggregate: () => {
+        return this.prisma.$queryRaw`
+            SELECT COUNT(id)
+            FROM notifications
+            ${getRawNotificationsWhere(viewerId)}
+        `;
+      },
+    } as const;
 
-    const notSeenCount = await this.prisma.notification.count({
-      where: {
-        ...options.where,
-        views: {
-          none: {
-            viewerId,
-          },
-        },
-      },
-    });
+    const paginated = await this.paginate.paginate<Notification>(
+      rawModel as Pick<Model, 'findMany' | 'aggregate'>,
+      page,
+      limit,
+    );
 
     return {
       ...paginated,
-      notSeenCount,
-      items: await Promise.all(
-        paginated.items.map(
-          async (notification) =>
-            await this.notificationFactory.build(
-              this.mapToBuildDto(notification),
-            ),
-        ),
+      items: await this.notificationFactory.buildMany(
+        paginated.items.map(this.mapToBuildDto),
       ),
     };
   }
 
-  public async findAll(
-    viewerId: Id,
-    options?: Prisma.NotificationFindManyArgs,
-  ): Promise<{ items: NotificationEntity[]; notSeenCount: number }> {
-    const notifications = await this.prisma.notification.findMany({
-      ...(options ?? {}),
-      include: {
-        views: {
-          where: {
-            viewerId,
-          },
-        },
-      },
-    });
-
-    const notSeenCount = await this.prisma.notification.count({
-      where: {
-        ...options.where,
-        views: {
-          none: {
-            viewerId,
-          },
-        },
-      },
-    });
+  public async findAll(viewerId: Id): Promise<{ items: NotificationEntity[] }> {
+    const notifications: Notification[] = await this.prisma.$queryRaw`
+      SELECT *
+      FROM notifications
+      ${getRawNotificationsWhere(viewerId)}
+      ORDER BY "createdAt" DESC
+    `;
 
     return {
-      notSeenCount,
-      items: await Promise.all(
-        notifications.map(
-          async (notification) =>
-            await this.notificationFactory.build(
-              this.mapToBuildDto(notification),
-            ),
-        ),
+      items: await this.notificationFactory.buildMany(
+        notifications.map(this.mapToBuildDto),
       ),
     };
+  }
+
+  public async findViews(
+    notificationsIds: Id[],
+    viewerId: Id,
+  ): Promise<NotificationView[]> {
+    return await this.prisma.notificationView.findMany({
+      where: {
+        notificationId: {
+          in: notificationsIds,
+        },
+        viewerId,
+      },
+    });
+  }
+
+  public async countNotSeen(viewerId: Id): Promise<number> {
+    const [{ count }]: [{ count: number }] = await this.prisma.$queryRaw`
+        SELECT COUNT(id)
+        FROM notifications
+        ${getRawNotificationsWhere(viewerId)}
+    `;
+
+    return count;
   }
 
   public async create(
