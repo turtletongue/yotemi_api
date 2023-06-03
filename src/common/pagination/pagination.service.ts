@@ -16,12 +16,7 @@ export default class PaginationService {
   ): Promise<InstanceType<ReturnType<typeof PaginatedDto<T>>>> {
     const skip = this.getSkipCount(page, limit);
 
-    const [
-      items,
-      {
-        _count: { id: count },
-      },
-    ] = await this.prisma.$transaction([
+    const [items, aggregation] = await this.prisma.$transaction([
       (model as any).findMany({
         ...(options ?? {}),
         skip,
@@ -34,6 +29,10 @@ export default class PaginationService {
         },
       }),
     ]);
+
+    const count = Array.isArray(aggregation)
+      ? Number(aggregation[0].count)
+      : aggregation._count.id;
 
     return {
       page,

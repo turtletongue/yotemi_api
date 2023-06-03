@@ -151,7 +151,7 @@ export default class NotificationsRepository {
         ${getRawNotificationsWhere(viewerId)}
     `;
 
-    return count;
+    return Number(count);
   }
 
   public async create(
