@@ -21,10 +21,10 @@ const getRawNotificationsWhere = (viewerId: Id) => Prisma.sql`
               "viewerId" = ${viewerId}
     )) AND (
         (
-            type NOT IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
+            type::text NOT IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
             "userId" = ${viewerId}
         ) OR (
-            type IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
+            type::text IN (${Prisma.join(FOLLOWING_NOTIFICATIONS)}) AND
             EXISTS((
                 SELECT *
                 FROM subscriptions
