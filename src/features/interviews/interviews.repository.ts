@@ -59,7 +59,6 @@ export default class InterviewsRepository {
     const interview = await this.prisma.interview.findFirst({
       where: {
         address,
-        isDeployed: true,
       },
     });
 
