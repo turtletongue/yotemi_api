@@ -6,8 +6,6 @@ export { default as InvalidInterviewEndDateException } from './invalid-interview
 
 export { default as InterviewsTimeFilterTooWideException } from './interviews-time-filter-too-wide.exception';
 
-export { default as AddressNotUniqueException } from './address-not-unique.exception';
-
 export { default as InterviewNotPaidException } from './interview-not-paid.exception';
 
 export { default as NotPayerException } from './not-payer.exception';

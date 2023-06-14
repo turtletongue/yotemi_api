@@ -5,10 +5,7 @@ import AddInterviewDto from './dto/add-interview.dto';
 import CheckInterviewTimeConflictCase from './check-interview-time-conflict.case';
 import InterviewsRepository from '../interviews.repository';
 import { InterviewFactory, PlainInterview } from '../entities';
-import {
-  AddressNotUniqueException,
-  ContractMalformedException,
-} from '../exceptions';
+import { ContractMalformedException } from '../exceptions';
 
 @Injectable()
 export default class AddInterviewCase {
@@ -20,12 +17,12 @@ export default class AddInterviewCase {
   ) {}
 
   public async apply(dto: AddInterviewDto): Promise<PlainInterview> {
-    const isAddressTaken = await this.interviewsRepository.isAddressTaken(
+    const existingInterview = await this.interviewsRepository.findByAddress(
       dto.address,
     );
 
-    if (isAddressTaken) {
-      throw new AddressNotUniqueException();
+    if (existingInterview) {
+      return existingInterview.plain;
     }
 
     await this.checkInterviewTimeConflictCase.apply(dto);

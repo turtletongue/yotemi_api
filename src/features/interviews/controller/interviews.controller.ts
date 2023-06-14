@@ -32,7 +32,6 @@ import PostInterviewTimeCheckDto from './dto/post-interview-time-check.dto';
 import PostPeerIdsDto from './dto/post-peer-ids.dto';
 import InterviewsService from './interviews.service';
 import {
-  AddressNotUniqueException,
   ContractMalformedException,
   InterviewHasTimeConflictException,
   InterviewInPastException,
@@ -86,9 +85,6 @@ export default class InterviewsController {
   })
   @ApiException(() => InvalidInterviewEndDateException, {
     description: 'End date of interview cannot be before start date.',
-  })
-  @ApiException(() => AddressNotUniqueException, {
-    description: 'There is already interview with this smart contract address.',
   })
   @ApiException(() => InterviewHasTimeConflictException, {
     description: 'Two interviews have conflict in time.',
