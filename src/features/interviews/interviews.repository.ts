@@ -55,19 +55,19 @@ export default class InterviewsRepository {
     });
   }
 
-  public async findByAddress(address: string): Promise<InterviewEntity> {
-    const interview = await this.prisma.interview
-      .findUniqueOrThrow({
-        where: {
-          address,
-        },
-        include: {
-          participant: includeUserOptions,
-        },
-      })
-      .catch(() => {
-        throw new InterviewNotFoundException();
-      });
+  public async findByAddress(address: string): Promise<InterviewEntity | null> {
+    const interview = await this.prisma.interview.findUnique({
+      where: {
+        address,
+      },
+      include: {
+        participant: includeUserOptions,
+      },
+    });
+
+    if (!interview) {
+      return null;
+    }
 
     return await this.interviewFactory.build({
       ...interview,
