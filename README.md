@@ -75,11 +75,11 @@ docker-compose down
 
 ## Project Structure
 
-`/prisma` folder contains database schema. If you want to add a new
+`./prisma` folder contains database schema. If you want to add a new
 table to database, you should modify schema.prisma file.
 
 Learn more about prisma in [documentation](https://www.prisma.io/).
 
-`/src/common` folder contains useful services, modules, functions and decorators.
+`./src/common` folder contains useful services, modules, functions and decorators.
 
-`/src/features` folder contains domain features.
+`./src/features` folder contains domain features.
